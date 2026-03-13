@@ -256,7 +256,7 @@ export default function LabAnalyzerPage() {
                                             <label htmlFor="report-upload">
                                                 <Button
                                                     asChild
-                                                    className="bg-[#D6F32F] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] font-poppins font-bold"
+                                                    className="bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] font-poppins font-bold"
                                                 >
                                                     <span className="cursor-pointer">
                                                         Choose Report
@@ -296,7 +296,7 @@ export default function LabAnalyzerPage() {
                             <Button
                                 onClick={analyzeLabReport}
                                 disabled={!image || isAnalyzing}
-                                className="w-full bg-[#D6F32F] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] disabled:opacity-50 disabled:cursor-not-allowed font-poppins font-bold text-lg py-6"
+                                className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] disabled:opacity-50 disabled:cursor-not-allowed font-poppins font-bold text-lg py-6"
                             >
                                 {isAnalyzing ? (
                                     <>
@@ -337,7 +337,7 @@ export default function LabAnalyzerPage() {
                                     <Badge className={`font-poppins ${getRiskColor(analysis.overallAssessment.riskLevel)}`}>
                                         {analysis.overallAssessment.riskLevel} Risk
                                     </Badge>
-                                    <Badge className="bg-[#D6F32F] text-[#151616] font-poppins">
+                                    <Badge className="bg-[#f9c80e] text-[#151616] font-poppins">
                                         {analysis.confidence}% Confidence
                                     </Badge>
                                     <Badge variant="outline" className="border-[#151616] font-poppins">
@@ -561,7 +561,7 @@ export default function LabAnalyzerPage() {
                             <CardContent>
                                 <div className="space-y-3">
                                     {analysis.nextSteps.map((step, idx) => (
-                                        <div key={idx} className="p-3 bg-[#D6F32F]/20 rounded border border-[#D6F32F]">
+                                        <div key={idx} className="p-3 bg-[#f9c80e]/20 rounded border border-[#f9c80e]">
                                             <div className="flex items-center gap-2">
                                                 <ArrowRight className="w-4 h-4 text-[#151616] flex-shrink-0" />
                                                 <p className="font-poppins text-[#151616]">{step}</p>
@@ -573,7 +573,7 @@ export default function LabAnalyzerPage() {
                         </Card>
 
                         {/* Set Reminder Section */}
-                        <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] bg-[#D6F32F]/10">
+                        <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] bg-[#f9c80e]/10">
                             <CardHeader>
                                 <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
                                     <Calendar className="w-5 h-5" />
@@ -598,7 +598,7 @@ export default function LabAnalyzerPage() {
                                 <Button
                                     onClick={setReminder}
                                     disabled={isSettingReminder}
-                                    className="w-full bg-[#D6F32F] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] disabled:opacity-50 disabled:cursor-not-allowed font-poppins font-bold text-lg py-6"
+                                    className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] disabled:opacity-50 disabled:cursor-not-allowed font-poppins font-bold text-lg py-6"
                                 >
                                     {isSettingReminder ? (
                                         <>

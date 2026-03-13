@@ -106,7 +106,7 @@ export default function PatientInfoPage() {
           <Button
             onClick={onSubmit}
             disabled={!canSubmit}
-            className="w-full bg-[#D6F32F] hover:bg-[#D6F32F]/90 text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 font-poppins font-bold py-6"
+            className="w-full bg-[#f9c80e] hover:bg-[#f9c80e]/90 text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 font-poppins font-bold py-6"
           >
             {saving ? "Saving..." : "Continue"}
           </Button>

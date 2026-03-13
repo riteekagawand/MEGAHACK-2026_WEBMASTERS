@@ -238,7 +238,7 @@ export default function VideoTaskVerification({
                                 <CardTitle className="text-lg font-poppins font-bold text-[#151616]">
                                     {task.title}
                                 </CardTitle>
-                                <Badge className="bg-[#D6F32F] text-[#151616] border-[#151616]">
+                                <Badge className="bg-[#f9c80e] text-[#151616] border-[#151616]">
                                     {task.coins} coins + bonus
                                 </Badge>
                             </div>
@@ -274,7 +274,7 @@ export default function VideoTaskVerification({
                                         <Button
                                             onClick={submitForVerification}
                                             disabled={isUploading}
-                                            className="bg-[#D6F32F] hover:bg-[#D6F32F]/80 text-[#151616] font-poppins font-bold border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all"
+                                            className="bg-[#f9c80e] hover:bg-[#f9c80e]/80 text-[#151616] font-poppins font-bold border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all"
                                         >
                                             {isUploading ? (
                                                 <>
@@ -312,7 +312,7 @@ export default function VideoTaskVerification({
                                         {!streamRef.current ? (
                                             <Button
                                                 onClick={startCamera}
-                                                className="bg-[#D6F32F] hover:bg-[#D6F32F]/80 text-[#151616] font-poppins font-bold border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all"
+                                                className="bg-[#f9c80e] hover:bg-[#f9c80e]/80 text-[#151616] font-poppins font-bold border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all"
                                             >
                                                 <Camera className="w-4 h-4 mr-2" />
                                                 Start Camera
@@ -389,13 +389,13 @@ export default function VideoTaskVerification({
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 {verification.taskCompleted && verification.transaction && (
-                                    <div className="flex items-center gap-2 p-3 bg-[#D6F32F]/20 rounded-xl border border-[#151616]/20">
+                                    <div className="flex items-center gap-2 p-3 bg-[#f9c80e]/20 rounded-xl border border-[#151616]/20">
                                         <Award className="h-5 w-5 text-[#151616]" />
                                         <span className="font-poppins font-bold text-[#151616]">
                                             +{verification.transaction.coinsEarned} coins earned!
                                         </span>
                                         {verification.transaction.bonusCoins > 0 && (
-                                            <Badge className="bg-[#D6F32F] text-[#151616] border-[#151616]">
+                                            <Badge className="bg-[#f9c80e] text-[#151616] border-[#151616]">
                                                 +{verification.transaction.bonusCoins} bonus
                                             </Badge>
                                         )}
@@ -450,7 +450,7 @@ export default function VideoTaskVerification({
                                     {!verification.taskCompleted && (
                                         <Button
                                             onClick={resetRecording}
-                                            className="bg-[#D6F32F] hover:bg-[#D6F32F]/80 text-[#151616] font-poppins font-bold border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all"
+                                            className="bg-[#f9c80e] hover:bg-[#f9c80e]/80 text-[#151616] font-poppins font-bold border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all"
                                         >
                                             Try Again
                                         </Button>

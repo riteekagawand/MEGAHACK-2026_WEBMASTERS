@@ -48,8 +48,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
             <button
               className={`flex justify-between items-center w-full text-left p-4 rounded-xl border-2 border-[#151616] transition-all duration-300 ${
                 isOpen && selectedItem?.value === item.value
-                  ? "bg-gradient-to-r from-[#D6F32F] to-[#D6F32F]/80 shadow-[4px_4px_0px_0px_#151616] translate-y-1" 
-                  : "bg-gradient-to-r from-[#FFFFF4] to-white shadow-[4px_4px_0px_0px_#D6F32F] hover:bg-gradient-to-r hover:from-[#D6F32F]/20 hover:to-[#D6F32F]/10 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#D6F32F]"
+                  ? "bg-gradient-to-r from-[#f9c80e] to-[#f9c80e]/80 shadow-[4px_4px_0px_0px_#151616] translate-y-1" 
+                  : "bg-gradient-to-r from-[#FFFFF4] to-white shadow-[4px_4px_0px_0px_#f9c80e] hover:bg-gradient-to-r hover:from-[#f9c80e]/20 hover:to-[#f9c80e]/10 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#f9c80e]"
               }`}
               onClick={() => {
                 const newIsOpen = !(isOpen && selectedItem?.value === item.value);
@@ -71,7 +71,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="bg-white/95 backdrop-blur-0 p-4 rounded-b-xl border-2 border-t-0 border-[#151616] shadow-[2px_2px_0px_0px_#D6F32F]"
+                  className="bg-white/95 backdrop-blur-0 p-4 rounded-b-xl border-2 border-t-0 border-[#151616] shadow-[2px_2px_0px_0px_#f9c80e]"
                 >
                   {item.content || <p className="text-[#151616]/80 leading-relaxed">{item.value}</p>}
                 </motion.div>
@@ -89,8 +89,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full flex justify-between items-center p-3 rounded-xl border-2 border-[#151616] transition-all duration-300 ${
           isOpen
-            ? "bg-gradient-to-r from-[#D6F32F] to-[#D6F32F]/80 shadow-[4px_4px_0px_0px_#151616] translate-y-1"
-            : "bg-gradient-to-r from-[#FFFFF4] to-white shadow-[4px_4px_0px_0px_#D6F32F] hover:bg-gradient-to-r hover:from-[#D6F32F]/20 hover:to-[#D6F32F]/10 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#D6F32F]"
+            ? "bg-gradient-to-r from-[#f9c80e] to-[#f9c80e]/80 shadow-[4px_4px_0px_0px_#151616] translate-y-1"
+            : "bg-gradient-to-r from-[#FFFFF4] to-white shadow-[4px_4px_0px_0px_#f9c80e] hover:bg-gradient-to-r hover:from-[#f9c80e]/20 hover:to-[#f9c80e]/10 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#f9c80e]"
         }`}
       >
         <span className="text-[#151616] font-medium">
@@ -110,13 +110,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-0 border-2 border-[#151616] rounded-xl shadow-[4px_4px_0px_0px_#D6F32F] z-50 overflow-hidden"
+            className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-0 border-2 border-[#151616] rounded-xl shadow-[4px_4px_0px_0px_#f9c80e] z-50 overflow-hidden"
           >
             {items.map((item, index) => (
               <button
                 key={index}
                 onClick={() => handleSelect(item)}
-                className="w-full text-left p-3 text-[#151616] hover:bg-gradient-to-r hover:from-[#D6F32F]/20 hover:to-[#D6F32F]/10 transition-all duration-200 border-b border-[#151616]/10 last:border-b-0"
+                className="w-full text-left p-3 text-[#151616] hover:bg-gradient-to-r hover:from-[#f9c80e]/20 hover:to-[#f9c80e]/10 transition-all duration-200 border-b border-[#151616]/10 last:border-b-0"
               >
                 {item.label}
               </button>
@@ -159,8 +159,8 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full flex justify-between items-center p-3 rounded-xl border-2 border-[#151616] transition-all duration-300 font-medium ${
           isOpen
-            ? "bg-gradient-to-r from-[#D6F32F]/30 to-[#D6F32F]/20 shadow-[2px_2px_0px_0px_#151616] translate-y-0.5"
-            : "bg-gradient-to-r from-[#FFFFF4] to-white shadow-[3px_3px_0px_0px_#151616] hover:bg-gradient-to-r hover:from-[#D6F32F]/10 hover:to-[#D6F32F]/5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#151616]"
+            ? "bg-gradient-to-r from-[#f9c80e]/30 to-[#f9c80e]/20 shadow-[2px_2px_0px_0px_#151616] translate-y-0.5"
+            : "bg-gradient-to-r from-[#FFFFF4] to-white shadow-[3px_3px_0px_0px_#151616] hover:bg-gradient-to-r hover:from-[#f9c80e]/10 hover:to-[#f9c80e]/5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#151616]"
         }`}
       >
         <span className={`${selectedOption ? "text-[#151616]" : "text-[#151616]/60"}`}>
@@ -180,7 +180,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-0 border-2 border-[#151616] rounded-xl shadow-[4px_4px_0px_0px_#D6F32F] z-50 overflow-hidden max-h-60 overflow-y-auto"
+            className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-0 border-2 border-[#151616] rounded-xl shadow-[4px_4px_0px_0px_#f9c80e] z-50 overflow-hidden max-h-60 overflow-y-auto"
           >
             {options.map((option, index) => (
               <button
@@ -189,8 +189,8 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
                 onClick={() => handleSelect(option.value)}
                 className={`w-full text-left p-3 transition-all duration-200 border-b border-[#151616]/10 last:border-b-0 ${
                   value === option.value
-                    ? "bg-gradient-to-r from-[#D6F32F]/30 to-[#D6F32F]/20 text-[#151616] font-medium"
-                    : "text-[#151616] hover:bg-gradient-to-r hover:from-[#D6F32F]/15 hover:to-[#D6F32F]/10"
+                    ? "bg-gradient-to-r from-[#f9c80e]/30 to-[#f9c80e]/20 text-[#151616] font-medium"
+                    : "text-[#151616] hover:bg-gradient-to-r hover:from-[#f9c80e]/15 hover:to-[#f9c80e]/10"
                 }`}
               >
                 {option.label}

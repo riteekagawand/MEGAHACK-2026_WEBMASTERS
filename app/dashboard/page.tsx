@@ -62,7 +62,7 @@ export default function Dashboard() {
       value: "24",
       change: "+12%",
       icon: Brain,
-      color: "#D6F32F"
+      color: "#f9c80e"
     },
     {
       title: "Active Cases",
@@ -76,7 +76,7 @@ export default function Dashboard() {
       value: "48",
       change: "+15%",
       icon: Users,
-      color: "#D6F32F"
+      color: "#f9c80e"
     },
     {
       title: "Patient Satisfaction",
@@ -119,11 +119,11 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between">
                     <div
                       className="w-10 h-10 rounded-xl border-2 border-[#151616] flex items-center justify-center"
-                      style={{ backgroundColor: stat.color === "#D6F32F" ? "#D6F32F" : "white" }}
+                      style={{ backgroundColor: stat.color === "#f9c80e" ? "#f9c80e" : "white" }}
                     >
                       <Icon
                         className="w-5 h-5"
-                        style={{ color: stat.color === "#D6F32F" ? "#151616" : "#151616" }}
+                        style={{ color: stat.color === "#f9c80e" ? "#151616" : "#151616" }}
                       />
                     </div>
                     <span className="text-sm font-poppins font-medium text-green-600">
@@ -206,7 +206,7 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <button className="w-full flex items-center gap-3 p-3 bg-[#D6F32F] rounded-xl border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all duration-200 font-poppins font-medium text-[#151616]">
+                <button className="w-full flex items-center gap-3 p-3 bg-[#f9c80e] rounded-xl border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all duration-200 font-poppins font-medium text-[#151616]">
                   <Brain className="w-4 h-4" />
                   Start AI Diagnosis
                 </button>

@@ -188,7 +188,7 @@ export default function TestCamPage() {
                                             <label htmlFor="image-upload">
                                                 <Button
                                                     asChild
-                                                    className="bg-[#D6F32F] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] font-poppins font-bold"
+                                                    className="bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] font-poppins font-bold"
                                                 >
                                                     <span className="cursor-pointer">
                                                         Choose Image
@@ -228,7 +228,7 @@ export default function TestCamPage() {
                             <Button
                                 onClick={analyzeMedicine}
                                 disabled={!image || isAnalyzing}
-                                className="w-full bg-[#D6F32F] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] disabled:opacity-50 disabled:cursor-not-allowed font-poppins font-bold text-lg py-6"
+                                className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] disabled:opacity-50 disabled:cursor-not-allowed font-poppins font-bold text-lg py-6"
                             >
                                 {isAnalyzing ? (
                                     <>
@@ -275,7 +275,7 @@ export default function TestCamPage() {
                                         }`}>
                                         {analysis.doctorConsultationRequired ? "Doctor Required" : "Self-Medication OK"}
                                     </Badge>
-                                    <Badge className="bg-[#D6F32F] text-[#151616] font-poppins">
+                                    <Badge className="bg-[#f9c80e] text-[#151616] font-poppins">
                                         {analysis.confidence}% Confidence
                                     </Badge>
                                 </div>

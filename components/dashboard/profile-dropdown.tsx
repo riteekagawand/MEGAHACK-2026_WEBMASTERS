@@ -42,8 +42,8 @@ export function ProfileDropdown() {
                 onClick={() => setIsOpen(!isOpen)}
                 className={`flex items-center gap-3 px-4 py-2 border-2 border-[#151616] transition-all duration-300 font-poppins font-medium text-[#151616] ${
                     isOpen
-                        ? "bg-gradient-to-r from-[#f9c80e] to-[#f9c80e]/80 shadow-[4px_4px_0px_0px_#151616] translate-y-1"
-                        : "bg-gradient-to-r from-[#FFFFF4] to-white shadow-[4px_4px_0px_0px_#f9c80e] hover:bg-gradient-to-r hover:from-[#f9c80e]/20 hover:to-[#f9c80e]/10 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#f9c80e]"
+                        ? "bg-gradient-to-r from-[#D6F32F] to-[#D6F32F]/80 shadow-[4px_4px_0px_0px_#151616] translate-y-1"
+                        : "bg-gradient-to-r from-[#FFFFF4] to-white shadow-[4px_4px_0px_0px_#D6F32F] hover:bg-gradient-to-r hover:from-[#D6F32F]/20 hover:to-[#D6F32F]/10 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#D6F32F]"
                 }`}
             >
                 <Avatar className="w-8 h-8 border-2 border-[#151616]">
@@ -51,7 +51,7 @@ export function ProfileDropdown() {
                         src={session.user.image || ""}
                         alt={session.user.name || "User"}
                     />
-                    <AvatarFallback className="bg-[#f9c80e] text-[#151616] font-bold text-sm">
+                    <AvatarFallback className="bg-[#D6F32F] text-[#151616] font-bold text-sm">
                         {session.user.name?.charAt(0) || "U"}
                     </AvatarFallback>
                 </Avatar>
@@ -81,7 +81,7 @@ export function ProfileDropdown() {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -10, scale: 0.95 }}
                             transition={{ duration: 0.2, ease: "easeOut" }}
-                            className="absolute right-0 top-full mt-2 w-64 bg-white/95 backdrop-blur-0 border-2 border-[#151616] shadow-[4px_4px_0px_0px_#f9c80e] rounded-xl z-50"
+                            className="absolute right-0 top-full mt-2 w-64 bg-white/95 backdrop-blur-0 border-2 border-[#151616] shadow-[4px_4px_0px_0px_#D6F32F] rounded-xl z-50"
                         >
                             {/* User Info */}
                             <div className="p-4 border-b-2 border-[#151616]">
@@ -91,7 +91,7 @@ export function ProfileDropdown() {
                                             src={session.user.image || ""}
                                             alt={session.user.name || "User"}
                                         />
-                                        <AvatarFallback className="bg-[#f9c80e] text-[#151616] font-bold">
+                                        <AvatarFallback className="bg-[#D6F32F] text-[#151616] font-bold">
                                             {session.user.name?.charAt(0) || "U"}
                                         </AvatarFallback>
                                     </Avatar>
@@ -103,7 +103,7 @@ export function ProfileDropdown() {
                                             {session.user.email}
                                         </p>
                                         <div className="flex items-center gap-1 mt-1">
-                                            <Shield className="w-3 h-3 text-[#f9c80e]" />
+                                            <Shield className="w-3 h-3 text-[#D6F32F]" />
                                             <span className="text-xs font-poppins text-[#151616]/60">
                                                 Medical Professional
                                             </span>
@@ -119,7 +119,7 @@ export function ProfileDropdown() {
                                         setIsOpen(false)
                                         router.push('/profile')
                                     }}
-                                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gradient-to-r hover:from-[#f9c80e]/15 hover:to-[#f9c80e]/10 transition-all duration-200 font-poppins text-[#151616] text-sm"
+                                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gradient-to-r hover:from-[#D6F32F]/15 hover:to-[#D6F32F]/10 transition-all duration-200 font-poppins text-[#151616] text-sm"
                                 >
                                     <User className="w-4 h-4" />
                                     <span>View Profile</span>
@@ -130,7 +130,7 @@ export function ProfileDropdown() {
                                         setIsOpen(false)
                                         // Add settings navigation logic here
                                     }}
-                                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gradient-to-r hover:from-[#f9c80e]/15 hover:to-[#f9c80e]/10 transition-all duration-200 font-poppins text-[#151616] text-sm"
+                                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gradient-to-r hover:from-[#D6F32F]/15 hover:to-[#D6F32F]/10 transition-all duration-200 font-poppins text-[#151616] text-sm"
                                 >
                                     <Settings className="w-4 h-4" />
                                     <span>Settings</span>

@@ -3,11 +3,15 @@
 
 import { TranslatorAgent } from "@/lib/agents/translatorAgent";
 import { SymptomAnalyzerAgent, PatientInput } from "@/lib/agents/symptomAnalyzer";
+import { MedicalResearcherAgent } from "@/lib/agents/medicalResearchAgent";
+import { RiskAssessmentAgent } from "@/lib/agents/riskAssessmentAgent";
 
 // Agent registry for easy access
 const agents = {
   translator: new TranslatorAgent(),
   symptomAnalyzer: new SymptomAnalyzerAgent(),
+  medicalResearch: new MedicalResearcherAgent(),
+  riskAssessment: new RiskAssessmentAgent(),
 };
 
 // Test scenarios for quick testing
@@ -59,6 +63,40 @@ const testScenarios = {
       },
     },
   },
+  medicalResearch: {
+    chestPain: {
+      symptoms: "Chest pain, shortness of breath, fatigue",
+      location: "Mumbai",
+    },
+    fever: {
+      symptoms: "High fever, chills, body aches",
+      location: "Delhi",
+    },
+  },
+  riskAssessment: {
+    cardiacRisk: {
+      symptoms: "Chest pain radiating to arm, sweating, nausea",
+      context: {
+        age: 60,
+        gender: "male",
+        location: "Chennai",
+        medicalHistory: ["high cholesterol", "smoking"],
+        familyHistory: ["heart disease", "stroke"],
+        lifestyle: "sedentary, smoker",
+      },
+    },
+    diabetesRisk: {
+      symptoms: "Frequent urination, excessive thirst, unexplained weight loss",
+      context: {
+        age: 45,
+        gender: "female",
+        location: "Hyderabad",
+        medicalHistory: ["gestational diabetes"],
+        familyHistory: ["type 2 diabetes"],
+        lifestyle: "overweight, desk job",
+      },
+    },
+  },
 };
 
 // Health check endpoint
@@ -98,6 +136,34 @@ export async function GET(request: Request) {
           ],
           testScenarios: Object.keys(testScenarios.symptomAnalyzer),
         },
+        {
+          id: "medicalResearch",
+          name: "Medical Researcher Agent",
+          description: "Finds relevant medical studies, guidelines, and regional health patterns",
+          model: "Google Gemini 2.5 Flash",
+          envVar: "GEMINI_API_KEY",
+          capabilities: [
+            "Medical literature search",
+            "ICMR guidelines lookup",
+            "WHO protocols reference",
+            "Regional disease pattern analysis",
+          ],
+          testScenarios: Object.keys(testScenarios.medicalResearch),
+        },
+        {
+          id: "riskAssessment",
+          name: "Risk Assessment Agent",
+          description: "Comprehensive risk stratification with lifestyle and family history",
+          model: "Google Gemini 2.5 Flash",
+          envVar: "GEMINI_API_KEY",
+          capabilities: [
+            "Risk factor identification",
+            "Family history analysis",
+            "Lifestyle risk assessment",
+            "Disease probability ranking",
+          ],
+          testScenarios: Object.keys(testScenarios.riskAssessment),
+        },
       ],
       usage: {
         testTranslator: "POST /api/test-agents with { agent: 'translator', symptoms: '...', language: '...' }",
@@ -114,7 +180,7 @@ export async function GET(request: Request) {
     provider: "Google Gemini",
     model: "gemini-2.5-flash",
     requiredEnvVar: "GEMINI_API_KEY",
-    availableAgents: ["translator", "symptomAnalyzer"],
+    availableAgents: ["translator", "symptomAnalyzer", "medicalResearch", "riskAssessment"],
     endpoints: {
       info: "GET /api/test-agents?action=info",
       test: "POST /api/test-agents",
@@ -133,7 +199,7 @@ export async function POST(request: Request) {
       return Response.json(
         {
           error: "Invalid or missing agent",
-          availableAgents: ["translator", "symptomAnalyzer"],
+          availableAgents: ["translator", "symptomAnalyzer", "medicalResearch", "riskAssessment"],
         },
         { status: 400 }
       );
@@ -195,6 +261,66 @@ export async function POST(request: Request) {
         success: true,
         agent: "symptomAnalyzer",
         agentName: "Lakshan",
+        testInput: testParams,
+        result,
+        timing: {
+          duration: Date.now() - startTime,
+          unit: "ms",
+        },
+      });
+    }
+
+    // Test Medical Research Agent
+    if (agent === "medicalResearch") {
+      let testParams;
+      if (scenario && testScenarios.medicalResearch[scenario as keyof typeof testScenarios.medicalResearch]) {
+        testParams = testScenarios.medicalResearch[scenario as keyof typeof testScenarios.medicalResearch];
+      } else {
+        testParams = {
+          symptoms: params.symptoms || "No symptoms provided",
+          location: params.location || params.context?.location || "",
+        };
+      }
+
+      result = await agents.medicalResearch.researchConditions(
+        testParams.symptoms,
+        testParams.location
+      );
+
+      return Response.json({
+        success: true,
+        agent: "medicalResearch",
+        agentName: "Medical Researcher Agent",
+        testInput: testParams,
+        result,
+        timing: {
+          duration: Date.now() - startTime,
+          unit: "ms",
+        },
+      });
+    }
+
+    // Test Risk Assessment Agent
+    if (agent === "riskAssessment") {
+      let testParams;
+      if (scenario && testScenarios.riskAssessment[scenario as keyof typeof testScenarios.riskAssessment]) {
+        testParams = testScenarios.riskAssessment[scenario as keyof typeof testScenarios.riskAssessment];
+      } else {
+        testParams = {
+          symptoms: params.symptoms || "No symptoms provided",
+          context: params.context || {},
+        };
+      }
+
+      result = await agents.riskAssessment.assessRisk(
+        testParams.context,
+        testParams.symptoms
+      );
+
+      return Response.json({
+        success: true,
+        agent: "riskAssessment",
+        agentName: "Risk Assessment Agent",
         testInput: testParams,
         result,
         timing: {

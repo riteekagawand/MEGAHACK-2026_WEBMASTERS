@@ -16,9 +16,9 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "CuraLink - Complete Medical AI Diagnosis System",
+  title: "Okra - Complete Medical AI Diagnosis System",
   description:
-    "CuraLink is a comprehensive AI-powered Medical Diagnosis System built with LangChain and Perplexity Sonar models, designed for the Indian healthcare ecosystem with multi-agent AI collaboration, multilingual support, and advanced medical image processing.",
+    "Okra is a comprehensive AI-powered Medical Diagnosis System built with LangChain and Perplexity Sonar models, designed for the Indian healthcare ecosystem with multi-agent AI collaboration, multilingual support, and advanced medical image processing.",
 };
 
 

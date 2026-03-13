@@ -133,7 +133,7 @@ export default function SelectRolePage() {
               <Brain className="w-10 h-10 text-[#151616]" />
             </motion.div>
             <h1 className="text-4xl font-instrument-serif font-bold text-[#151616] mb-4">
-              Welcome to CuraLink
+              Welcome to Okra
             </h1>
             <p className="text-xl text-[#151616]/70 font-poppins max-w-2xl mx-auto">
               Choose your role to access the appropriate AI-powered medical platform designed for your needs

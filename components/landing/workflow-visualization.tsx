@@ -87,7 +87,7 @@ export const WorkflowVisualization = () => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="mt-16 text-center"
         >
-          <div className="bg-white p-8 rounded-2xl border-2 border-[#151616] shadow-[4px_4px_0px_0px_#f9c80e ] max-w-4xl mx-auto">
+          <div className="bg-white p-8 rounded-2xl border-2 border-[#151616] shadow-[4px_4px_0px_0px_#f9c80e] max-w-4xl mx-auto">
             <h3 className="text-2xl font-poppins font-bold text-[#151616] mb-4">
               Result: Smart Assistant Team
             </h3>
@@ -96,13 +96,13 @@ export const WorkflowVisualization = () => {
               Isse diagnosis fast, evidence-based aur accurate hoga.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
-              <span className="bg-[#f9c80e ] px-4 py-2 rounded-full border-2 border-[#151616] text-[#151616] font-poppins font-medium text-sm">
+              <span className="bg-[#f9c80e] px-4 py-2 rounded-full border-2 border-[#151616] text-[#151616] font-poppins font-medium text-sm">
                 Fast Diagnosis
               </span>
-              <span className="bg-[#f9c80e ] px-4 py-2 rounded-full border-2 border-[#151616] text-[#151616] font-poppins font-medium text-sm">
+              <span className="bg-[#f9c80e] px-4 py-2 rounded-full border-2 border-[#151616] text-[#151616] font-poppins font-medium text-sm">
                 Evidence-Based
               </span>
-              <span className="bg-[#f9c80e ] px-4 py-2 rounded-full border-2 border-[#151616] text-[#151616] font-poppins font-medium text-sm">
+              <span className="bg-[#f9c80e] px-4 py-2 rounded-full border-2 border-[#151616] text-[#151616] font-poppins font-medium text-sm">
                 Accurate Results
               </span>
             </div>

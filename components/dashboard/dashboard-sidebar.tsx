@@ -25,7 +25,7 @@ const sidebarItems = [
     },
     {
         title: "AI Diagnosis",
-        href: "/medical/diagnosis",
+        href: "/medical/ai-orchestration",
         icon: Brain,
     },
     {

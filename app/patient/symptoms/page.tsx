@@ -71,13 +71,13 @@ export default function SymptomCheckerPage() {
               value={symptoms}
               onChange={(e) => setSymptoms(e.target.value)}
               rows={4}
-              className="border-2 border-[#151616] font-poppins focus:border-[#f9c80e ] resize-none"
+              className="border-2 border-[#151616] font-poppins focus:border-[#f9c80e] resize-none"
             />
 
             <Button
               onClick={handleAnalyze}
               disabled={isLoading || !symptoms.trim()}
-              className="w-full bg-[#f9c80e ] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 font-poppins font-bold"
+              className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 font-poppins font-bold"
             >
               {isLoading ? (
                 <>
@@ -119,7 +119,7 @@ export default function SymptomCheckerPage() {
                     {result.structuredSymptoms.map((s, idx) => (
                       <Badge
                         key={`${s}-${idx}`}
-                        className="bg-[#f9c80e ] text-[#151616] border-[#151616] font-poppins text-xs"
+                        className="bg-[#f9c80e] text-[#151616] border-[#151616] font-poppins text-xs"
                       >
                         {s}
                       </Badge>

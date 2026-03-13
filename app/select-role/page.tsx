@@ -81,7 +81,7 @@ export default function SelectRolePage() {
         "Advanced analytics dashboard",
         "Collaboration tools"
       ],
-      color: "#D6F32F"
+      color: "#f9c80e"
     },
     {
       id: "patient",
@@ -128,7 +128,7 @@ export default function SelectRolePage() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              className="mx-auto w-20 h-20 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center mb-6"
+              className="mx-auto w-20 h-20 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center mb-6"
             >
               <Brain className="w-10 h-10 text-[#151616]" />
             </motion.div>
@@ -156,7 +156,7 @@ export default function SelectRolePage() {
                 >
                   <Card 
                     className={`border-2 border-[#151616] shadow-[8px_8px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_#151616] transition-all duration-200 cursor-pointer h-full ${
-                      isSelected ? 'ring-4 ring-[#D6F32F]' : ''
+                      isSelected ? 'ring-4 ring-[#f9c80e]' : ''
                     }`}
                     onClick={() => !loading && handleRoleSelection(role.id)}
                   >
@@ -192,7 +192,7 @@ export default function SelectRolePage() {
                         <ul className="space-y-1">
                           {role.features.map((feature, idx) => (
                             <li key={idx} className="flex items-center gap-2 text-sm font-poppins text-[#151616]/70">
-                              <div className="w-1.5 h-1.5 bg-[#D6F32F] rounded-full"></div>
+                              <div className="w-1.5 h-1.5 bg-[#f9c80e] rounded-full"></div>
                               {feature}
                             </li>
                           ))}
@@ -202,8 +202,8 @@ export default function SelectRolePage() {
                       <Button
                         disabled={loading}
                         className={`w-full mt-6 border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all duration-200 font-poppins font-medium ${
-                          role.color === "#D6F32F" 
-                            ? "bg-[#D6F32F] hover:bg-[#D6F32F]/90 text-[#151616]"
+                          role.color === "#f9c80e" 
+                            ? "bg-[#f9c80e] hover:bg-[#f9c80e]/90 text-[#151616]"
                             : "bg-white hover:bg-[#FFFFF4] text-[#151616]"
                         }`}
                         onClick={(e) => {

@@ -54,7 +54,7 @@ export function DashboardSidebar() {
             {/* Logo */}
             <div className="p-6 border-b-2 border-[#151616]">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center">
+                    <div className="w-10 h-10 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center">
                         <Brain className="w-6 h-6 text-[#151616]" />
                     </div>
                     <div>
@@ -87,7 +87,7 @@ export function DashboardSidebar() {
                                     className={cn(
                                         "flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 font-poppins font-medium group",
                                         isActive
-                                            ? "bg-[#D6F32F] border-[#151616] shadow-[2px_2px_0px_0px_#151616] text-[#151616]"
+                                            ? "bg-[#f9c80e] border-[#151616] shadow-[2px_2px_0px_0px_#151616] text-[#151616]"
                                             : "border-transparent hover:border-[#151616] hover:bg-[#FFFFF4] hover:shadow-[2px_2px_0px_0px_#151616] text-[#151616]/70 hover:text-[#151616]"
                                     )}
                                 >

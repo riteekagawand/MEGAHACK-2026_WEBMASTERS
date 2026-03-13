@@ -15,12 +15,6 @@ import {
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import {
-<<<<<<< HEAD
-  Heart,
-  LogOut,
-  ClipboardList,
-  Brain,
-=======
   Home,
   Activity,
   Calendar,
@@ -35,18 +29,11 @@ import {
   Stethoscope,
   ClipboardList,
   HeartHandshake
->>>>>>> 35f01d5eda1f295cc14a306f087c8e1aa5807690
 } from "lucide-react"
 import { signOut } from "next-auth/react"
 
 const navigationItems = [
   {
-<<<<<<< HEAD
-    title: "Symptom Analyzer",
-    href: "/patient/symptoms",
-    icon: Brain,
-    description: "AI-powered symptom analysis"
-=======
     title: "Dashboard",
     href: "/patient/dashboard",
     icon: Home,
@@ -57,7 +44,6 @@ const navigationItems = [
     href: "/patient/medicine",
     icon: Pill,
     description: "AI-powered medicine analysis"
->>>>>>> 35f01d5eda1f295cc14a306f087c8e1aa5807690
   },
   {
     title: "Prescription",
@@ -65,8 +51,6 @@ const navigationItems = [
     icon: ClipboardList,
     description: "Lab reports and prescriptions"
   },
-<<<<<<< HEAD
-=======
   {
     title: "Appointments",
     href: "/patient/appointments",
@@ -91,7 +75,6 @@ const navigationItems = [
     icon: TrendingUp,
     description: "Appointments & payments"
   }
->>>>>>> 35f01d5eda1f295cc14a306f087c8e1aa5807690
 ]
 
 export function PatientSidebar() {
@@ -104,11 +87,7 @@ export function PatientSidebar() {
         <Link href="/patient/dashboard" className="flex items-center gap-3">
           <motion.div
             whileHover={{ scale: 1.05 }}
-<<<<<<< HEAD
-            className="w-10 h-10 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center"
-=======
             className="w-10 h-10 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center"
->>>>>>> 35f01d5eda1f295cc14a306f087c8e1aa5807690
           >
             <Heart className="w-6 h-6 text-[#151616]" />
           </motion.div>
@@ -141,11 +120,7 @@ export function PatientSidebar() {
                 <Link
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 font-poppins font-medium group ${isActive
-<<<<<<< HEAD
-                    ? "bg-[#f9c80e] border-[#151616] shadow-[2px_2px_0px_0px_#151616] text-[#151616]"
-=======
                     ? "bg-[#D6F32F] border-[#151616] shadow-[2px_2px_0px_0px_#151616] text-[#151616]"
->>>>>>> 35f01d5eda1f295cc14a306f087c8e1aa5807690
                     : "border-transparent hover:border-[#151616] hover:bg-[#FFFFF4] hover:shadow-[2px_2px_0px_0px_#151616] text-[#151616]/70 hover:text-[#151616]"
                     }`}
                 >

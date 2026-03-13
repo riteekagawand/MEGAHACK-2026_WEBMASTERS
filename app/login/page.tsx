@@ -88,7 +88,7 @@ export default function Login() {
                             </motion.div>
                             <div>
                                 <CardTitle className="text-3xl font-instrument-serif font-bold text-[#151616] mb-2">
-                                    Welcome to Okra
+                                    Welcome to Orka
                                 </CardTitle>
                                 <CardDescription className="text-[#151616]/70 font-poppins text-lg">
                                     Join the future of AI-powered medical diagnosis

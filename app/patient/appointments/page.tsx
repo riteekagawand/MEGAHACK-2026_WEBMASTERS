@@ -180,7 +180,7 @@ export default function AppointmentsPage() {
         key: orderData.keyId,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "Okra",
+        name: "Orka",
         description: `Consultation with ${selectedDoctor.name}`,
         order_id: orderData.orderId,
         handler: async function (response: any) {

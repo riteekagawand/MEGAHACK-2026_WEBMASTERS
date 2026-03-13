@@ -1,17 +1,39 @@
+import type { Metadata } from "next";
+import { Instrument_Serif, Poppins } from "next/font/google";
 import "./globals.css";
-import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
+import { SessionProvider } from "./providers";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+});
 
-export const metadata = {
-  title: "Chatbot App",
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
+
+export const metadata: Metadata = {
+  title: "CuraLink - Complete Medical AI Diagnosis System",
+  description:
+    "CuraLink is a comprehensive AI-powered Medical Diagnosis System built with LangChain and Perplexity Sonar models, designed for the Indian healthcare ecosystem with multi-agent AI collaboration, multilingual support, and advanced medical image processing.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
-      <body>{children}</body>
+    <html lang="en">
+      <body
+        className={`${instrumentSerif.variable} ${poppins.variable} antialiased`}
+      >
+        <SessionProvider>{children}</SessionProvider>
+      </body>
     </html>
   );
 }

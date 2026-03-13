@@ -38,6 +38,7 @@ export async function POST(request: Request) {
     
     const updateData = {
       userId: session.user.email,
+      hasCompletedInfo: true,
       personalInfo: {
         name: session.user.name || '',
         email: session.user.email,
@@ -104,6 +105,7 @@ export async function GET() {
     
     return NextResponse.json({
       role: patient?.role || null,
+      hasCompletedInfo: patient?.hasCompletedInfo ?? false,
       personalInfo: patient?.personalInfo || {},
       medicalHistory: patient?.medicalHistory || {}
     });

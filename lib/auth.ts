@@ -1,30 +1,34 @@
-import { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import connectDB from './mongodb';
 import Patient from './models/Patient';
 
-// Cache for user roles to avoid repeated DB calls
-const roleCache = new Map<string, { role?: string; timestamp: number }>();
+// Cache for user state to avoid repeated DB calls
+const userStateCache = new Map<
+  string,
+  { role?: string; hasCompletedInfo?: boolean; timestamp: number }
+>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-async function getUserRole(email: string) {
-  const cached = roleCache.get(email);
+async function getUserState(email: string) {
+  const cached = userStateCache.get(email);
   const now = Date.now();
   
   // Return cached data if it's still valid
   if (cached && (now - cached.timestamp) < CACHE_DURATION) {
-    return { role: cached.role };
+    return { role: cached.role, hasCompletedInfo: cached.hasCompletedInfo };
   }
   
   try {
     await connectDB();
     const patient = await Patient.findOne({ userId: email }).lean();
     const result = {
-      role: patient?.role
+      role: patient?.role,
+      hasCompletedInfo: patient?.hasCompletedInfo ?? false,
     };
     
     // Cache the result
-    roleCache.set(email, {
+    userStateCache.set(email, {
       ...result,
       timestamp: now
     });
@@ -32,13 +36,13 @@ async function getUserRole(email: string) {
     return result;
   } catch (error) {
     console.error('Error fetching user role:', error);
-    return { role: undefined };
+    return { role: undefined, hasCompletedInfo: undefined };
   }
 }
 
-// Function to invalidate cache when role changes
+// Function to invalidate cache when role/info changes
 export function invalidateRoleCache(email: string) {
-  roleCache.delete(email);
+  userStateCache.delete(email);
 }
 
 export const authOptions: NextAuthOptions = {
@@ -63,10 +67,11 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = account.access_token;
       }
       
-      // Only fetch role on initial sign-in or when explicitly triggered
-      if (token.email && (!token.role || trigger === 'update')) {
-        const { role } = await getUserRole(token.email);
+      // Fetch role + completion status on initial sign-in or when explicitly triggered
+      if (token.email && (trigger === 'update' || token.role === undefined || token.hasCompletedInfo === undefined)) {
+        const { role, hasCompletedInfo } = await getUserState(token.email);
         token.role = role;
+        token.hasCompletedInfo = hasCompletedInfo;
       }
       
       return token;
@@ -74,19 +79,13 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       session.accessToken = token.accessToken;
       session.role = token.role;
+      session.hasCompletedInfo = token.hasCompletedInfo;
       return session;
     },
-    async redirect({ url, baseUrl, token }) {
-      // Smart redirects based on user state
-      if (url.startsWith(baseUrl)) {
-        // If user has role, redirect to appropriate dashboard
-        if (token?.role === 'clinician') {
-          return `${baseUrl}/medical/dashboard`;
-        } else if (token?.role === 'patient') {
-          return `${baseUrl}/patient/dashboard`;
-        }
-        return `${baseUrl}/select-role`;
-      }
+    async redirect({ url, baseUrl }) {
+      // Keep redirects on-site; otherwise fall back to app entry.
+      if (url.startsWith(baseUrl)) return url;
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
       return `${baseUrl}/select-role`;
     },
   },

@@ -4,6 +4,7 @@ export interface IDiagnosisHistory extends Document {
   patientName: string;
   patientAge: string;
   patientGender: string;
+  patientEmail?: string;
   medicalHistory: string;
   symptoms: string;
   diagnosisResults: {
@@ -38,6 +39,11 @@ const DiagnosisHistorySchema: Schema = new Schema({
     type: String,
     required: true,
     enum: ['male', 'female', 'other']
+  },
+  patientEmail: {
+    type: String,
+    default: null,
+    index: true
   },
   medicalHistory: {
     type: String,

@@ -36,11 +36,19 @@ export async function POST(request: Request) {
       );
     }
 
+    // Determine if the logged-in user is the patient or the doctor
+    // If patientName matches the user's email name, they're the patient
+    const userEmail = session.user.email;
+    const userName = userEmail.split('@')[0].toLowerCase();
+    const isPatient = patientName.toLowerCase().includes(userName) || 
+                      userName.includes(patientName.toLowerCase());
+    
     // Create new diagnosis history record
     const diagnosisHistory = new DiagnosisHistory({
       patientName: patientName.trim(),
       patientAge,
       patientGender,
+      patientEmail: isPatient ? userEmail : null, // Store patient email only if user is the patient
       medicalHistory: medicalHistory || '',
       symptoms,
       diagnosisResults: {

@@ -34,7 +34,7 @@ const FeatureCard = ({
     transition={{ duration: 0.5, delay }}
     className="bg-white p-6 rounded-2xl border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200"
   >
-    <div className="w-12 h-12 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center mb-4">
+    <div className="w-12 h-12 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center mb-4">
       <Icon className="w-6 h-6 text-[#151616]" />
     </div>
     <h3 className="text-lg font-poppins font-bold text-[#151616] mb-2">{title}</h3>
@@ -158,14 +158,14 @@ const NavBar = () => {
           <div className="flex items-center gap-4">
             <a
               href="/login"
-              className="rounded-md font-poppins font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center bg-gradient-to-b from-[#D6F32F] to-[#D6F32F]/80 text-[#151616] shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset] px-4 py-2 text-sm border-2 border-[#151616]"
+              className="rounded-md font-poppins font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center bg-gradient-to-b from-[#f9c80e] to-[#f9c80e]/80 text-[#151616] shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset] px-4 py-2 text-sm border-2 border-[#151616]"
             >
               Log In
             </a>
 
             <a
               href="/dashboard"
-              className="rounded-md font-poppins font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center bg-gradient-to-b from-[#D6F32F] to-[#D6F32F]/80 text-[#151616] shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset] px-4 py-2 text-sm border-2 border-[#151616]"
+              className="rounded-md font-poppins font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center bg-gradient-to-b from-[#f9c80e] to-[#f9c80e]/80 text-[#151616] shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset] px-4 py-2 text-sm border-2 border-[#151616]"
             >
               Get Started
             </a>
@@ -225,13 +225,13 @@ const NavBar = () => {
               <div className="border-t border-[#151616]/20 pt-4 mt-4 flex flex-col space-y-3">
                 <a
                   href="/login"
-                  className="px-4 py-3 text-lg font-poppins font-bold text-center bg-gradient-to-b from-[#D6F32F] to-[#D6F32F]/80 text-[#151616] rounded-lg shadow-lg hover:-translate-y-0.5 transition-all duration-200 border-2 border-[#151616]"
+                  className="px-4 py-3 text-lg font-poppins font-bold text-center bg-gradient-to-b from-[#f9c80e] to-[#f9c80e]/80 text-[#151616] rounded-lg shadow-lg hover:-translate-y-0.5 transition-all duration-200 border-2 border-[#151616]"
                 >
                   Log In
                 </a>
                 <a
                   href="/dashboard"
-                  className="px-4 py-3 text-lg font-poppins font-bold text-center bg-gradient-to-b from-[#D6F32F] to-[#D6F32F]/80 text-[#151616] rounded-lg shadow-lg hover:-translate-y-0.5 transition-all duration-200 border-2 border-[#151616]"
+                  className="px-4 py-3 text-lg font-poppins font-bold text-center bg-gradient-to-b from-[#f9c80e] to-[#f9c80e]/80 text-[#151616] rounded-lg shadow-lg hover:-translate-y-0.5 transition-all duration-200 border-2 border-[#151616]"
                 >
                   Get Started
                 </a>
@@ -306,7 +306,7 @@ const Footer = () => (
     <div className="container mx-auto px-6">
       <div className="grid md:grid-cols-4 gap-8">
         <div>
-          <h3 className="text-xl font-bold mb-4 text-[#D6F32F]">Orka</h3>
+          <h3 className="text-xl font-bold mb-4 text-[#f9c80e]">Orka</h3>
           <p className="text-sm text-gray-400">
             Empowering healthcare professionals with AI-driven diagnostic insights and
             multi-agent collaboration for better patient outcomes.
@@ -318,7 +318,7 @@ const Footer = () => (
             <li>
               <a
                 href="#features"
-                className="text-sm text-gray-400 hover:text-[#D6F32F] transition-colors"
+                className="text-sm text-gray-400 hover:text-[#f9c80e] transition-colors"
               >
                 AI Agents
               </a>
@@ -326,7 +326,7 @@ const Footer = () => (
             <li>
               <a
                 href="#benefits"
-                className="text-sm text-gray-400 hover:text-[#D6F32F] transition-colors"
+                className="text-sm text-gray-400 hover:text-[#f9c80e] transition-colors"
               >
                 Benefits
               </a>
@@ -334,7 +334,7 @@ const Footer = () => (
             <li>
               <a
                 href="/dashboard"
-                className="text-sm text-gray-400 hover:text-[#D6F32F] transition-colors"
+                className="text-sm text-gray-400 hover:text-[#f9c80e] transition-colors"
               >
                 Dashboard
               </a>
@@ -342,7 +342,7 @@ const Footer = () => (
             <li>
               <a
                 href="#faq"
-                className="text-sm text-gray-400 hover:text-[#D6F32F] transition-colors"
+                className="text-sm text-gray-400 hover:text-[#f9c80e] transition-colors"
               >
                 FAQ
               </a>
@@ -355,7 +355,7 @@ const Footer = () => (
             <li>
               <a
                 href="/medical"
-                className="text-sm text-gray-400 hover:text-[#D6F32F] transition-colors"
+                className="text-sm text-gray-400 hover:text-[#f9c80e] transition-colors"
               >
                 Medical Tools
               </a>
@@ -363,7 +363,7 @@ const Footer = () => (
             <li>
               <a
                 href="/lab-analyzer"
-                className="text-sm text-gray-400 hover:text-[#D6F32F] transition-colors"
+                className="text-sm text-gray-400 hover:text-[#f9c80e] transition-colors"
               >
                 Lab Analyzer
               </a>
@@ -371,7 +371,7 @@ const Footer = () => (
             <li>
               <a
                 href="/nutrition-ai"
-                className="text-sm text-gray-400 hover:text-[#D6F32F] transition-colors"
+                className="text-sm text-gray-400 hover:text-[#f9c80e] transition-colors"
               >
                 Nutrition AI
               </a>
@@ -379,7 +379,7 @@ const Footer = () => (
             <li>
               <a
                 href="/consultations"
-                className="text-sm text-gray-400 hover:text-[#D6F32F] transition-colors"
+                className="text-sm text-gray-400 hover:text-[#f9c80e] transition-colors"
               >
                 Consultations
               </a>
@@ -392,7 +392,7 @@ const Footer = () => (
             <li>
               <a
                 href="mailto:support@Orka.com"
-                className="text-sm text-gray-400 hover:text-[#D6F32F] transition-colors"
+                className="text-sm text-gray-400 hover:text-[#f9c80e] transition-colors"
               >
                 support@Orka.com
               </a>
@@ -400,7 +400,7 @@ const Footer = () => (
             <li>
               <a
                 href="tel:+1-800-Orka"
-                className="text-sm text-gray-400 hover:text-[#D6F32F] transition-colors"
+                className="text-sm text-gray-400 hover:text-[#f9c80e] transition-colors"
               >
                 +1 (800) Orka
               </a>
@@ -426,12 +426,12 @@ const Footer = () => (
           <div className="flex items-center space-x-4">
             <span className="text-xs text-gray-500">Powered by AI</span>
             <div className="flex space-x-3">
-              <a href="#" className="text-gray-400 hover:text-[#D6F32F] transition-colors">
+              <a href="#" className="text-gray-400 hover:text-[#f9c80e] transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                 </svg>
               </a>
-              <a href="#" className="text-gray-400 hover:text-[#D6F32F] transition-colors">
+              <a href="#" className="text-gray-400 hover:text-[#f9c80e] transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
                 </svg>
@@ -471,13 +471,13 @@ const FinancialAdvisorLanding = () => {
             transition={{ duration: 0.8 }}
           >
             <motion.div
-              className="inline-flex items-center gap-2 bg-[#151616] text-white rounded-full px-4 py-2 mb-6 border-2 border-[#151616] shadow-[4px_4px_0px_0px_#D6F32F]"
+              className="inline-flex items-center gap-2 bg-[#151616] text-white rounded-full px-4 py-2 mb-6 border-2 border-[#151616] shadow-[4px_4px_0px_0px_#f9c80e]"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
               <motion.div
-                className="w-2 h-2 bg-[#D6F32F] rounded-full"
+                className="w-2 h-2 bg-[#f9c80e] rounded-full"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
               />
@@ -489,7 +489,7 @@ const FinancialAdvisorLanding = () => {
               <div className="relative inline-block mx-2">
                 <span className="relative z-10">Smarter, Faster</span>
                 <motion.div
-                  className="absolute bottom-2 left-0 right-0 h-4 bg-[#D6F32F] -z-10"
+                  className="absolute bottom-2 left-0 right-0 h-4 bg-[#f9c80e] -z-10"
                   initial={{ width: 0 }}
                   animate={{ width: "100%" }}
                   transition={{ duration: 0.8, delay: 0.5 }}
@@ -505,7 +505,7 @@ const FinancialAdvisorLanding = () => {
             <div className="flex gap-4 justify-center">
               <motion.a
                 href="/login"
-                className="bg-[#D6F32F] px-8 py-4 rounded-2xl text-xl font-poppins font-bold text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 flex items-center gap-2"
+                className="bg-[#f9c80e] px-8 py-4 rounded-2xl text-xl font-poppins font-bold text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 flex items-center gap-2"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -514,7 +514,7 @@ const FinancialAdvisorLanding = () => {
               </motion.a>
               <motion.a
                 href="#how-it-works"
-                className="px-8 py-4 rounded-2xl text-xl font-poppins font-bold border-2 border-[#151616] hover:bg-[#151616]/5 transition-all duration-200 text-[#151616] shadow-[4px_4px_0px_0px_#D6F32F] flex items-center gap-2"
+                className="px-8 py-4 rounded-2xl text-xl font-poppins font-bold border-2 border-[#151616] hover:bg-[#151616]/5 transition-all duration-200 text-[#151616] shadow-[4px_4px_0px_0px_#f9c80e] flex items-center gap-2"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -587,7 +587,7 @@ const FinancialAdvisorLanding = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="bg-[#FFFFF4] p-6 rounded-2xl border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]"
             >
-              <div className="w-12 h-12 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center mb-4">
                 <Stethoscope className="w-6 h-6 text-[#151616]" />
               </div>
               <h3 className="text-xl font-poppins font-bold mb-3 text-[#151616]">For Doctors</h3>
@@ -601,7 +601,7 @@ const FinancialAdvisorLanding = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="bg-[#FFFFF4] p-6 rounded-2xl border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]"
             >
-              <div className="w-12 h-12 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center mb-4">
                 <Activity className="w-6 h-6 text-[#151616]" />
               </div>
               <h3 className="text-xl font-poppins font-bold mb-3 text-[#151616]">For Hospitals</h3>
@@ -615,7 +615,7 @@ const FinancialAdvisorLanding = () => {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="bg-[#FFFFF4] p-6 rounded-2xl border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]"
             >
-              <div className="w-12 h-12 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center mb-4">
                 <Target className="w-6 h-6 text-[#151616]" />
               </div>
               <h3 className="text-xl font-poppins font-bold mb-3 text-[#151616]">For Patients</h3>
@@ -632,7 +632,7 @@ const FinancialAdvisorLanding = () => {
           >
             <a
               href="/login"
-              className="inline-block bg-[#D6F32F] px-8 py-4 rounded-2xl text-xl font-poppins font-bold text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200"
+              className="inline-block bg-[#f9c80e] px-8 py-4 rounded-2xl text-xl font-poppins font-bold text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200"
             >
               Start Using Orka
             </a>
@@ -706,7 +706,7 @@ const FinancialAdvisorLanding = () => {
             </div>
           </div>
           <div className="text-center mt-10">
-            <a href="#case-studies" className="inline-block px-8 py-4 rounded-2xl text-xl font-bold border-2 border-[#151616] hover:bg-[#151616]/5 text-[#151616] shadow-[4px_4px_0px_0px_#D6F32F]">See case studies</a>
+            <a href="#case-studies" className="inline-block px-8 py-4 rounded-2xl text-xl font-bold border-2 border-[#151616] hover:bg-[#151616]/5 text-[#151616] shadow-[4px_4px_0px_0px_#f9c80e]">See case studies</a>
           </div>
         </div>
       </section>

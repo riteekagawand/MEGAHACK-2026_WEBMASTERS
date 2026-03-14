@@ -59,7 +59,7 @@ export function DashboardSidebar() {
                     </div>
                     <div>
                         <h1 className="text-xl font-instrument-serif font-bold text-[#151616]">
-                            Okra
+                            orka
                         </h1>
                         <p className="text-sm font-poppins text-[#151616]/60">
                             AI Medical Platform

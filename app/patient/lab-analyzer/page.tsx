@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { FileText, Upload, Send, TrendingUp, AlertTriangle, CheckCircle, Clock, Activity, BarChart3, Zap, Leaf, Apple, Calendar, ArrowRight, Shield, Heart, Target } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -47,7 +47,6 @@ export default function LabAnalyzerPage() {
     const [isAnalyzing, setIsAnalyzing] = useState(false)
     const [analysis, setAnalysis] = useState<LabAnalysis | null>(null)
     const [error, setError] = useState<string | null>(null)
-    const [isSettingReminder, setIsSettingReminder] = useState(false)
     const [reminderMessage, setReminderMessage] = useState<string | null>(null)
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,42 +115,229 @@ export default function LabAnalyzerPage() {
         }
     }
 
-    const setReminder = async () => {
-        setIsSettingReminder(true)
-        setReminderMessage(null)
+    const [reminders, setReminders] = useState<{id: string, title: string, time: string, type: string, enabled: boolean}[]>([])
+    const [newReminderTitle, setNewReminderTitle] = useState("")
+    const [newReminderTime, setNewReminderTime] = useState("")
+    const [newReminderType, setNewReminderType] = useState("medication")
+    const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | "default">("default")
+    const DEFAULT_RECEIVER_NUMBER = "917709209944" // Patient's phone number (RECEIVER)
+    const [receiverNumber, setReceiverNumber] = useState(DEFAULT_RECEIVER_NUMBER)
+    const [whatsappEnabled, setWhatsappEnabled] = useState(true)
+    const [messageLog, setMessageLog] = useState<{time: string, message: string, status: 'sent' | 'failed' | 'pending', method: string}[]>([])
 
-        try {
-            const reminderTime = new Date()
-            reminderTime.setHours(reminderTime.getHours() + 24)
+    const addReminder = () => {
+        if (!newReminderTitle || !newReminderTime) {
+            setReminderMessage("Please enter both reminder title and time")
+            return
+        }
 
-            const requestBody = {
-                message: "Reminder set successfully! You will be notified about your medicine schedule✅",
-                user: "Hemant",
-                time: reminderTime.toISOString()
-            }
-            
-            const webhookUrl = 'https://n8n.alightbeast.in/webhook/aaaa8f9d-0979-48da-aefd-1f6ecc1ad44e'
+        const reminder = {
+            id: Date.now().toString(),
+            title: newReminderTitle,
+            time: newReminderTime,
+            type: newReminderType,
+            enabled: true
+        }
 
-            const response = await fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestBody)
-            })
+        setReminders([...reminders, reminder])
+        setNewReminderTitle("")
+        setNewReminderTime("")
+        setReminderMessage(`Reminder "${reminder.title}" added for ${reminder.time}`)
+        
+        // Clear message after 3 seconds
+        setTimeout(() => setReminderMessage(null), 3000)
+    }
 
-            if (response.ok) {
-                setReminderMessage("Reminder set successfully! You will be notified about your medicine schedule.")
-            } else {
-                throw new Error('Failed to set reminder')
-            }
-        } catch (error) {
-            console.error('Error setting reminder:', error)
-            setReminderMessage("Failed to set reminder. Please try again.")
-        } finally {
-            setIsSettingReminder(false)
+    const toggleReminder = (id: string) => {
+        setReminders(reminders.map(r => 
+            r.id === id ? { ...r, enabled: !r.enabled } : r
+        ))
+    }
+
+    const deleteReminder = (id: string) => {
+        setReminders(reminders.filter(r => r.id !== id))
+    }
+
+    const getReminderTypeIcon = (type: string) => {
+        switch (type) {
+            case "medication": return <Activity className="w-4 h-4" />
+            case "exercise": return <TrendingUp className="w-4 h-4" />
+            case "diet": return <Apple className="w-4 h-4" />
+            case "appointment": return <Calendar className="w-4 h-4" />
+            default: return <Clock className="w-4 h-4" />
         }
     }
+
+    const getReminderTypeColor = (type: string) => {
+        switch (type) {
+            case "medication": return "bg-blue-100 text-blue-700 border-blue-300"
+            case "exercise": return "bg-green-100 text-green-700 border-green-300"
+            case "diet": return "bg-orange-100 text-orange-700 border-orange-300"
+            case "appointment": return "bg-purple-100 text-purple-700 border-purple-300"
+            default: return "bg-gray-100 text-gray-700 border-gray-300"
+        }
+    }
+
+    // Request notification permission
+    const requestNotificationPermission = async () => {
+        if ("Notification" in window) {
+            const permission = await Notification.requestPermission()
+            setNotificationPermission(permission)
+            return permission === "granted"
+        }
+        return false
+    }
+
+    // Send browser notification
+    const sendNotification = (title: string, body: string) => {
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification(title, {
+                body,
+                icon: "/favicon.ico",
+                badge: "/favicon.ico",
+                tag: "health-reminder",
+                requireInteraction: true,
+            })
+        }
+    }
+
+    // Send WhatsApp notification using UltraMsg (FREE tier available)
+    const sendWhatsAppNotification = async (phoneNumber: string, message: string) => {
+        try {
+            // Remove any non-digit characters
+            const cleanNumber = phoneNumber.replace(/\D/g, '')
+            
+            // Try multiple free WhatsApp APIs
+            
+            // Method 1: CallMeBot (if API key is configured)
+            const callMeBotKey = process.env.NEXT_PUBLIC_CALLMEBOT_API_KEY
+            if (callMeBotKey && callMeBotKey !== "your_callmebot_api_key") {
+                const callMeUrl = `https://api.callmebot.com/whatsapp.php?phone=${cleanNumber}&text=${encodeURIComponent(message)}&apikey=${callMeBotKey}`
+                const response = await fetch(callMeUrl)
+                if (response.ok) {
+                    console.log('WhatsApp sent via CallMeBot')
+                    return { success: true, method: 'CallMeBot' }
+                }
+            }
+            
+            // Method 2: Use our own API endpoint (we'll create this)
+            // This will use a WhatsApp Business API or similar service
+            const apiResponse = await fetch('/api/send-whatsapp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    phone: cleanNumber,
+                    message: message
+                })
+            })
+            
+            if (apiResponse.ok) {
+                const result = await apiResponse.json()
+                console.log('WhatsApp sent via API:', result)
+                return { success: true, method: 'API' }
+            }
+            
+            return { success: false, error: 'All methods failed' }
+        } catch (error) {
+            console.error('Error sending WhatsApp:', error)
+            return { success: false, error: error }
+        }
+    }
+
+    // Alternative: Open WhatsApp Web with pre-filled message
+    const openWhatsAppWeb = (phoneNumber: string, message: string) => {
+        const cleanNumber = phoneNumber.replace(/\D/g, '')
+        const url = `https://web.whatsapp.com/send?phone=${cleanNumber}&text=${encodeURIComponent(message)}`
+        window.open(url, '_blank')
+    }
+
+    // Check reminders every minute
+    useEffect(() => {
+        const checkReminders = () => {
+            const now = new Date()
+            const currentTime = now.toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            })
+
+            console.log('Checking reminders at:', currentTime, 'Reminders:', reminders)
+
+            reminders.forEach(reminder => {
+                console.log('Checking reminder:', reminder.time, 'vs current:', currentTime, 'enabled:', reminder.enabled)
+                if (reminder.enabled && reminder.time === currentTime) {
+                    console.log('Sending notification for:', reminder.title)
+                    
+                    // Browser notification
+                    sendNotification(
+                        `Health Reminder: ${reminder.type.toUpperCase()}`,
+                        `It's time for: ${reminder.title}`
+                    )
+                    
+                    // WhatsApp notification
+                    if (whatsappEnabled && receiverNumber) {
+                        const message = `🏥 *Orka Health Reminder*\n\n📋 ${reminder.type.toUpperCase()}\n⏰ Time: ${reminder.time}\n📝 ${reminder.title}\n\nStay healthy! 💪`
+                        
+                        // Add to log as pending
+                        const logEntry = {
+                            time: new Date().toLocaleTimeString(),
+                            message: reminder.title,
+                            status: 'pending' as const,
+                            method: 'WhatsApp'
+                        }
+                        setMessageLog(prev => [logEntry, ...prev])
+                        
+                        // Send and update log
+                        sendWhatsAppNotification(receiverNumber, message).then(result => {
+                            setMessageLog(prev => prev.map((log, idx) => 
+                                idx === 0 ? { ...log, status: result.success ? 'sent' : 'failed', method: result.method || 'WhatsApp' } : log
+                            ))
+                        })
+                    }
+                }
+            })
+        }
+
+        // Check immediately and then every 30 seconds (more responsive)
+        checkReminders()
+        const interval = setInterval(checkReminders, 30000)
+
+        return () => clearInterval(interval)
+    }, [reminders])
+
+    // Also check when page becomes visible (for when user returns to tab)
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                // Check immediately when page becomes visible
+                const now = new Date()
+                const currentTime = now.toLocaleTimeString('en-US', { 
+                    hour12: false, 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                })
+                
+                reminders.forEach(reminder => {
+                    if (reminder.enabled && reminder.time === currentTime) {
+                        sendNotification(
+                            `Health Reminder: ${reminder.type.toUpperCase()}`,
+                            `It's time for: ${reminder.title}`
+                        )
+                    }
+                })
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }, [reminders])
+
+    // Request permission on component mount
+    useEffect(() => {
+        if ("Notification" in window) {
+            setNotificationPermission(Notification.permission)
+        }
+    }, [])
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -326,39 +512,85 @@ export default function LabAnalyzerPage() {
                         transition={{ duration: 0.6 }}
                         className="space-y-6"
                     >
-                        {/* Overall Assessment */}
-                        <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]">
-                            <CardHeader>
-                                <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
-                                    <BarChart3 className="w-5 h-5" />
-                                    Overall Assessment - {analysis.reportType}
-                                </CardTitle>
-                                <div className="flex gap-2">
-                                    <Badge className={`font-poppins ${getRiskColor(analysis.overallAssessment.riskLevel)}`}>
-                                        {analysis.overallAssessment.riskLevel} Risk
-                                    </Badge>
-                                    <Badge className="bg-[#f9c80e] text-[#151616] font-poppins">
-                                        {analysis.confidence}% Confidence
-                                    </Badge>
-                                    <Badge variant="outline" className="border-[#151616] font-poppins">
-                                        {analysis.testDate}
-                                    </Badge>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className={`p-4 rounded-xl border-2 ${analysis.overallAssessment.status === "Normal" ? "bg-green-50 border-green-500" :
-                                    analysis.overallAssessment.status === "Attention Needed" ? "bg-yellow-50 border-yellow-500" :
-                                        "bg-red-50 border-red-500"
-                                    }`}>
-                                    <h4 className="font-poppins font-bold text-[#151616] mb-2">
-                                        Status: {analysis.overallAssessment.status}
-                                    </h4>
-                                    <p className="font-poppins text-[#151616]">
-                                        {analysis.overallAssessment.summary}
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
+                        {/* Overall Assessment and Critical Alerts - Side by Side */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* Overall Assessment */}
+                            <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]">
+                                <CardHeader>
+                                    <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
+                                        <BarChart3 className="w-5 h-5" />
+                                        Overall Assessment
+                                    </CardTitle>
+                                    <div className="flex gap-2 flex-wrap">
+                                        <Badge className={`font-poppins ${getRiskColor(analysis.overallAssessment.riskLevel)}`}>
+                                            {analysis.overallAssessment.riskLevel} Risk
+                                        </Badge>
+                                        <Badge className="bg-[#f9c80e] text-[#151616] font-poppins">
+                                            {analysis.confidence}% Confidence
+                                        </Badge>
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className={`p-4 rounded-xl border-2 ${analysis.overallAssessment.status === "Normal" ? "bg-green-50 border-green-500" :
+                                        analysis.overallAssessment.status === "Attention Needed" ? "bg-yellow-50 border-yellow-500" :
+                                            "bg-red-50 border-red-500"
+                                        }`}>
+                                        <h4 className="font-poppins font-bold text-[#151616] mb-2">
+                                            {analysis.reportType}
+                                        </h4>
+                                        <p className="text-sm font-poppins text-[#151616]/70 mb-2">
+                                            {analysis.testDate}
+                                        </p>
+                                        <p className="font-poppins text-[#151616]">
+                                            {analysis.overallAssessment.summary}
+                                        </p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Critical Alerts */}
+                            {analysis.redFlags.length > 0 ? (
+                                <Card className="border-2 border-red-500 shadow-[4px_4px_0px_0px_#dc2626] bg-red-50">
+                                    <CardHeader>
+                                        <CardTitle className="font-poppins font-bold text-red-700 flex items-center gap-2">
+                                            <AlertTriangle className="w-5 h-5" />
+                                            Critical Alerts
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="space-y-2">
+                                            {analysis.redFlags.map((flag, idx) => (
+                                                <div key={idx} className="p-3 bg-red-100 rounded border border-red-300">
+                                                    <div className="flex items-center gap-2">
+                                                        <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                                                        <p className="font-poppins text-red-800 text-sm">{flag}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ) : (
+                                <Card className="border-2 border-green-500 shadow-[4px_4px_0px_0px_#16a34a] bg-green-50">
+                                    <CardHeader>
+                                        <CardTitle className="font-poppins font-bold text-green-700 flex items-center gap-2">
+                                            <CheckCircle className="w-5 h-5" />
+                                            No Critical Alerts
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="p-3 bg-green-100 rounded border border-green-300">
+                                            <div className="flex items-center gap-2">
+                                                <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+                                                <p className="font-poppins text-green-800 text-sm">
+                                                    All values are within acceptable ranges. No immediate action required.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </div>
 
                         {/* Key Findings */}
                         <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]">
@@ -402,30 +634,6 @@ export default function LabAnalyzerPage() {
                                 </div>
                             </CardContent>
                         </Card>
-
-                        {/* Red Flags */}
-                        {analysis.redFlags.length > 0 && (
-                            <Card className="border-2 border-red-500 shadow-[4px_4px_0px_0px_red-500] bg-red-50">
-                                <CardHeader>
-                                    <CardTitle className="font-poppins font-bold text-red-700 flex items-center gap-2">
-                                        <AlertTriangle className="w-5 h-5" />
-                                        Critical Alerts
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-2">
-                                        {analysis.redFlags.map((flag, idx) => (
-                                            <div key={idx} className="p-3 bg-red-100 rounded border border-red-300">
-                                                <div className="flex items-center gap-2">
-                                                    <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
-                                                    <p className="font-poppins text-red-800">{flag}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
 
                         {/* Trends */}
                         {analysis.trends.length > 0 && (
@@ -483,21 +691,21 @@ export default function LabAnalyzerPage() {
                                 </CardContent>
                             </Card>
 
-                            {/* Lifestyle Changes */}
+                            {/* Follow-up */}
                             <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]">
                                 <CardHeader>
                                     <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
-                                        <CheckCircle className="w-5 h-5" />
-                                        Lifestyle Recommendations
+                                        <Clock className="w-5 h-5" />
+                                        Follow-up Actions
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
-                                        {analysis.recommendations.lifestyle.map((rec, idx) => (
-                                            <div key={idx} className="p-3 bg-green-50 rounded border border-green-200">
+                                        {analysis.recommendations.followUp.map((follow, idx) => (
+                                            <div key={idx} className="p-3 bg-purple-50 rounded border border-purple-200">
                                                 <div className="flex items-center gap-2">
-                                                    <Leaf className="w-4 h-4 text-green-600 flex-shrink-0" />
-                                                    <p className="font-poppins text-[#151616]">{rec}</p>
+                                                    <Calendar className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                                                    <p className="font-poppins text-[#151616]">{follow}</p>
                                                 </div>
                                             </div>
                                         ))}
@@ -527,21 +735,21 @@ export default function LabAnalyzerPage() {
                                 </CardContent>
                             </Card>
 
-                            {/* Follow-up */}
+                            {/* Lifestyle Changes */}
                             <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]">
                                 <CardHeader>
                                     <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
-                                        <Clock className="w-5 h-5" />
-                                        Follow-up Actions
+                                        <CheckCircle className="w-5 h-5" />
+                                        Lifestyle Recommendations
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
-                                        {analysis.recommendations.followUp.map((follow, idx) => (
-                                            <div key={idx} className="p-3 bg-purple-50 rounded border border-purple-200">
+                                        {analysis.recommendations.lifestyle.map((rec, idx) => (
+                                            <div key={idx} className="p-3 bg-green-50 rounded border border-green-200">
                                                 <div className="flex items-center gap-2">
-                                                    <Calendar className="w-4 h-4 text-purple-600 flex-shrink-0" />
-                                                    <p className="font-poppins text-[#151616]">{follow}</p>
+                                                    <Leaf className="w-4 h-4 text-green-600 flex-shrink-0" />
+                                                    <p className="font-poppins text-[#151616]">{rec}</p>
                                                 </div>
                                             </div>
                                         ))}
@@ -572,21 +780,22 @@ export default function LabAnalyzerPage() {
                             </CardContent>
                         </Card>
 
-                        {/* Set Reminder Section */}
+                        {/* Health Reminders Section */}
                         <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] bg-[#f9c80e]/10">
                             <CardHeader>
                                 <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
                                     <Calendar className="w-5 h-5" />
-                                    Set Medicine Reminder
+                                    Health Reminders
                                 </CardTitle>
                                 <CardDescription className="font-poppins">
-                                    Set a reminder to take your medicines based on the analysis recommendations
+                                    Set personalized reminders for medications, exercise, diet, and appointments based on your lab results
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
+                                {/* Success/Error Message */}
                                 {reminderMessage && (
-                                    <Alert className={`border-2 ${reminderMessage.includes('successfully') ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
-                                        {reminderMessage.includes('successfully') ? 
+                                    <Alert className={`border-2 ${reminderMessage.includes('added') ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
+                                        {reminderMessage.includes('added') ? 
                                             <CheckCircle className="h-4 w-4" /> : 
                                             <AlertTriangle className="h-4 w-4" />
                                         }
@@ -595,27 +804,193 @@ export default function LabAnalyzerPage() {
                                         </AlertDescription>
                                     </Alert>
                                 )}
-                                <Button
-                                    onClick={setReminder}
-                                    disabled={isSettingReminder}
-                                    className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] disabled:opacity-50 disabled:cursor-not-allowed font-poppins font-bold text-lg py-6"
-                                >
-                                    {isSettingReminder ? (
-                                        <>
-                                            <motion.div
-                                                animate={{ rotate: 360 }}
-                                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                                className="w-5 h-5 border-2 border-[#151616] border-t-transparent rounded-full mr-2"
+
+                                {/* Smart Suggested Reminders Based on Lab Results */}
+                                <div className="bg-blue-50 p-4 rounded-xl border-2 border-blue-200">
+                                    <h4 className="font-poppins font-bold text-blue-800 mb-3 flex items-center gap-2">
+                                        <Target className="w-5 h-5" />
+                                        AI-Suggested Reminders
+                                    </h4>
+                                    <p className="text-sm font-poppins text-blue-700 mb-3">
+                                        Based on your lab results, we recommend these reminders:
+                                    </p>
+                                    <div className="space-y-2">
+                                        {analysis.recommendations.immediate.slice(0, 3).map((rec, idx) => {
+                                            // Generate smart time based on recommendation type
+                                            const getSmartTime = () => {
+                                                const hour = 8 + idx * 4; // 8am, 12pm, 4pm
+                                                return `${hour.toString().padStart(2, '0')}:00`;
+                                            };
+                                            const smartTime = getSmartTime();
+                                            const shortTitle = rec.split(' ').slice(0, 4).join(' ');
+                                            
+                                            return (
+                                                <div key={idx} className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-200">
+                                                    <div>
+                                                        <p className="font-poppins font-medium text-[#151616] text-sm">{shortTitle}...</p>
+                                                        <p className="text-xs font-poppins text-[#151616]/60">Suggested time: {smartTime}</p>
+                                                    </div>
+                                                    <Button
+                                                        onClick={() => {
+                                                            setNewReminderTitle(shortTitle);
+                                                            setNewReminderTime(smartTime);
+                                                            setNewReminderType(idx === 0 ? 'medication' : idx === 1 ? 'diet' : 'exercise');
+                                                            // Auto-add the reminder
+                                                            setTimeout(() => addReminder(), 100);
+                                                        }}
+                                                        size="sm"
+                                                        className="bg-blue-500 text-white border-2 border-blue-600 hover:bg-blue-600 font-poppins"
+                                                    >
+                                                        Add at {smartTime}
+                                                    </Button>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* Add New Reminder Form */}
+                                <div className="bg-white p-4 rounded-xl border-2 border-[#151616] space-y-3">
+                                    <h4 className="font-poppins font-bold text-[#151616]">Add Custom Reminder</h4>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="text-xs font-poppins text-[#151616]/70 mb-1 block">Reminder Title</label>
+                                            <input
+                                                type="text"
+                                                placeholder="e.g., Take Iron Supplement"
+                                                value={newReminderTitle}
+                                                onChange={(e) => setNewReminderTitle(e.target.value)}
+                                                className="w-full px-3 py-2 border-2 border-[#151616] rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-[#f9c80e]"
                                             />
-                                            Setting Reminder...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Calendar className="w-5 h-5 mr-2" />
-                                            Set Medicine Reminder
-                                        </>
-                                    )}
-                                </Button>
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-poppins text-[#151616]/70 mb-1 block">Time</label>
+                                            <input
+                                                type="time"
+                                                value={newReminderTime}
+                                                onChange={(e) => setNewReminderTime(e.target.value)}
+                                                className="w-full px-3 py-2 border-2 border-[#151616] rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-[#f9c80e]"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-xs font-poppins text-[#151616]/70 mb-2 block">Reminder Type</label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {[
+                                                { value: "medication", label: "Medication", icon: Activity },
+                                                { value: "exercise", label: "Exercise", icon: TrendingUp },
+                                                { value: "diet", label: "Diet", icon: Apple },
+                                                { value: "appointment", label: "Appointment", icon: Calendar },
+                                            ].map((type) => (
+                                                <button
+                                                    key={type.value}
+                                                    onClick={() => setNewReminderType(type.value)}
+                                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 font-poppins text-sm transition-all ${
+                                                        newReminderType === type.value
+                                                            ? "bg-[#f9c80e] border-[#151616] text-[#151616]"
+                                                            : "bg-white border-[#151616]/30 text-[#151616]/70 hover:border-[#151616]"
+                                                    }`}
+                                                >
+                                                    <type.icon className="w-4 h-4" />
+                                                    {type.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <Button
+                                        onClick={addReminder}
+                                        className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] font-poppins font-bold"
+                                    >
+                                        <Calendar className="w-4 h-4 mr-2" />
+                                        Add Reminder
+                                    </Button>
+                                </div>
+
+                                {/* Reminders List */}
+                                {reminders.length > 0 && (
+                                    <div className="space-y-2">
+                                        <h4 className="font-poppins font-bold text-[#151616] flex items-center gap-2">
+                                            <Clock className="w-4 h-4" />
+                                            Your Reminders ({reminders.length})
+                                        </h4>
+                                        <div className="space-y-2 max-h-64 overflow-y-auto">
+                                            {reminders.map((reminder) => (
+                                                <div
+                                                    key={reminder.id}
+                                                    className={`flex items-center justify-between p-3 rounded-lg border-2 transition-all ${
+                                                        reminder.enabled 
+                                                            ? "bg-white border-[#151616]" 
+                                                            : "bg-gray-100 border-gray-300 opacity-60"
+                                                    }`}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={`p-2 rounded-lg border ${getReminderTypeColor(reminder.type)}`}>
+                                                            {getReminderTypeIcon(reminder.type)}
+                                                        </div>
+                                                        <div>
+                                                            <p className={`font-poppins font-medium ${reminder.enabled ? "text-[#151616]" : "text-[#151616]/50 line-through"}`}>
+                                                                {reminder.title}
+                                                            </p>
+                                                            <p className="text-xs font-poppins text-[#151616]/60">
+                                                                {reminder.time} • {reminder.type.charAt(0).toUpperCase() + reminder.type.slice(1)}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <button
+                                                            onClick={() => toggleReminder(reminder.id)}
+                                                            className={`p-2 rounded-lg border-2 transition-all ${
+                                                                reminder.enabled
+                                                                    ? "bg-green-100 border-green-500 text-green-700"
+                                                                    : "bg-gray-100 border-gray-300 text-gray-500"
+                                                            }`}
+                                                            title={reminder.enabled ? "Disable" : "Enable"}
+                                                        >
+                                                            {reminder.enabled ? <CheckCircle className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => deleteReminder(reminder.id)}
+                                                            className="p-2 rounded-lg border-2 border-red-300 bg-red-50 text-red-600 hover:bg-red-100 transition-all"
+                                                            title="Delete"
+                                                        >
+                                                            <AlertTriangle className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Quick Suggestions Based on Analysis */}
+                                {analysis.recommendations.immediate.length > 0 && reminders.length === 0 && (
+                                    <div className="bg-blue-50 p-4 rounded-xl border-2 border-blue-200">
+                                        <h4 className="font-poppins font-bold text-blue-800 mb-2 flex items-center gap-2">
+                                            <Target className="w-4 h-4" />
+                                            Suggested Reminders
+                                        </h4>
+                                        <p className="text-sm font-poppins text-blue-700 mb-3">
+                                            Based on your lab results, consider setting reminders for:
+                                        </p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {analysis.recommendations.immediate.slice(0, 3).map((rec, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => {
+                                                        setNewReminderTitle(rec.split(' ').slice(0, 4).join(' ') + "...")
+                                                        setNewReminderType("medication")
+                                                    }}
+                                                    className="text-xs px-3 py-1 bg-white border border-blue-300 rounded-full font-poppins text-blue-700 hover:bg-blue-100 transition-all"
+                                                >
+                                                    + {rec.split(' ').slice(0, 3).join(' ')}...
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
 

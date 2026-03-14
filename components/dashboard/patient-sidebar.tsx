@@ -94,7 +94,7 @@ export function PatientSidebar() {
           {!isCollapsed && (
             <div>
               <h1 className="text-xl font-instrument-serif font-bold text-[#151616]">
-                Okra
+                orka
               </h1>
               <p className="text-sm font-poppins text-[#151616]/70">
                 Patient Portal

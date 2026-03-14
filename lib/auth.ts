@@ -3,6 +3,10 @@ import GoogleProvider from "next-auth/providers/google";
 import connectDB from './mongodb';
 import Patient from './models/Patient';
 
+// Debug: Log env vars (remove after fixing)
+console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID?.slice(0, 20) + "...");
+console.log("GOOGLE_CLIENT_SECRET exists:", !!process.env.GOOGLE_CLIENT_SECRET);
+
 // Cache for user state to avoid repeated DB calls
 const userStateCache = new Map<
   string,
@@ -58,6 +62,9 @@ export const authOptions: NextAuthOptions = {
           response_type: "code",
           select_account: true,
         },
+      },
+      httpOptions: {
+        timeout: 30000,
       },
     }),
   ],

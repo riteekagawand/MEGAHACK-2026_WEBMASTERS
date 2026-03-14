@@ -82,7 +82,7 @@ export default function Login() {
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                                className="mx-auto w-16 h-16 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center"
+                                className="mx-auto w-16 h-16 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center"
                             >
                                 <Brain className="w-8 h-8 text-[#151616]" />
                             </motion.div>
@@ -100,34 +100,34 @@ export default function Login() {
                             {/* Features Preview */}
                             <div className="space-y-3">
                                 <div className="flex items-center gap-3 p-3 bg-[#FFFFF4] rounded-xl border border-[#151616]/20">
-                                    <div className="w-8 h-8 bg-[#D6F32F] rounded-lg border border-[#151616] flex items-center justify-center">
+                                    <div className="w-8 h-8 bg-[#f9c80e] rounded-lg border border-[#151616] flex items-center justify-center">
                                         <Brain className="w-4 h-4 text-[#151616]" />
                                     </div>
                                     <span className="text-sm font-poppins text-[#151616]">AI Agent Team for Smart Diagnosis</span>
                                 </div>
                                 <div className="flex items-center gap-3 p-3 bg-[#FFFFF4] rounded-xl border border-[#151616]/20">
-                                    <div className="w-8 h-8 bg-[#D6F32F] rounded-lg border border-[#151616] flex items-center justify-center">
+                                    <div className="w-8 h-8 bg-[#f9c80e] rounded-lg border border-[#151616] flex items-center justify-center">
                                         <Stethoscope className="w-4 h-4 text-[#151616]" />
                                     </div>
                                     <span className="text-sm font-poppins text-[#151616]">Evidence-Based Medical Insights</span>
                                 </div>
                                 <div className="flex items-center gap-3 p-3 bg-[#FFFFF4] rounded-xl border border-[#151616]/20">
-                                    <div className="w-8 h-8 bg-[#D6F32F] rounded-lg border border-[#151616] flex items-center justify-center">
+                                    <div className="w-8 h-8 bg-[#f9c80e] rounded-lg border border-[#151616] flex items-center justify-center">
                                         <Users className="w-4 h-4 text-[#151616]" />
                                     </div>
                                     <span className="text-sm font-poppins text-[#151616]">Collaborative Healthcare Platform</span>
                                 </div>
                             </div>
 
-                            <GoogleSignInButton className="w-full bg-[#D6F32F] hover:bg-[#D6F32F]/90 text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 font-poppins font-bold text-lg py-6" />
+                            <GoogleSignInButton className="w-full bg-[#f9c80e] hover:bg-[#f9c80e]/90 text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 font-poppins font-bold text-lg py-6" />
 
                             <p className="text-center text-sm text-[#151616]/60 font-poppins">
                                 By continuing, you agree to our{" "}
-                                <a href="#" className="text-[#151616] hover:text-[#D6F32F] font-medium">
+                                <a href="#" className="text-[#151616] hover:text-[#f9c80e] font-medium">
                                     Terms of Service
                                 </a>{" "}
                                 and{" "}
-                                <a href="#" className="text-[#151616] hover:text-[#D6F32F] font-medium">
+                                <a href="#" className="text-[#151616] hover:text-[#f9c80e] font-medium">
                                     Privacy Policy
                                 </a>
                             </p>

@@ -33,7 +33,7 @@ export default function MediSupportPage() {
                         Access comprehensive AI-powered medical support services for diagnosis, consultation, and health guidance
                     </p>
                     <div className="flex items-center justify-center gap-2 flex-wrap">
-                        <Badge className="bg-[#D6F32F] text-[#151616] border-[#151616]">
+                        <Badge className="bg-[#f9c80e] text-[#151616] border-[#151616]">
                             <Heart className="w-3 h-3 mr-1" />
                             24/7 Available
                         </Badge>

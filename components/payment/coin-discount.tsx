@@ -147,14 +147,14 @@ export default function CoinDiscount({
         <Card className="border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616]">
             <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 font-instrument-serif font-bold text-[#151616]">
-                    <Sparkles className="h-5 w-5 text-[#D6F32F]" />
+                    <Sparkles className="h-5 w-5 text-[#f9c80e]" />
                     Coin Discount Available
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-[#D6F32F]/10 rounded-xl border border-[#151616]/20">
+                <div className="flex items-center justify-between p-3 bg-[#f9c80e]/10 rounded-xl border border-[#151616]/20">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center">
+                        <div className="w-10 h-10 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center">
                             <Coins className="h-5 w-5 text-[#151616]" />
                         </div>
                         <div>
@@ -170,7 +170,7 @@ export default function CoinDiscount({
                         checked={useCoinDiscount}
                         onCheckedChange={handleToggleDiscount}
                         disabled={!discountData?.canUseDiscount}
-                        className="data-[state=checked]:bg-[#D6F32F]"
+                        className="data-[state=checked]:bg-[#f9c80e]"
                     />
                 </div>
 

@@ -192,7 +192,7 @@ export default function AppointmentsPage() {
           contact: "9999999999"
         },
         theme: {
-          color: "#D6F32F"
+          color: "#f9c80e"
         },
         modal: {
           ondismiss: function () {
@@ -231,9 +231,14 @@ export default function AppointmentsPage() {
         if (appointment && appointment.id) {
           await recordPayment(verifyData.paymentId, orderId, appointment.id)
         }
+      } else {
+        alert("Payment verification failed: " + (verifyData.error || "Unknown error"))
       }
     } catch (error) {
       console.error("Payment verification failed:", error)
+      alert("Payment verification failed: " + (error instanceof Error ? error.message : "Unknown error"))
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -385,7 +390,7 @@ export default function AppointmentsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center">
+                    <div className="w-16 h-16 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center">
                       <Stethoscope className="w-8 h-8 text-[#151616]" />
                     </div>
                     <div>
@@ -401,7 +406,7 @@ export default function AppointmentsPage() {
                     </div>
                   </div>
                   <p className="text-[#151616]/70 text-sm">{selectedDoctor.bio}</p>
-                  <div className="flex items-center gap-2 p-3 bg-[#D6F32F]/20 rounded-xl border-2 border-[#151616]">
+                  <div className="flex items-center gap-2 p-3 bg-[#f9c80e]/20 rounded-xl border-2 border-[#151616]">
                     <IndianRupee className="w-5 h-5 text-green-600" />
                     <span className="font-bold text-[#151616]">
                       ₹{selectedDoctor.consultationFee.toLocaleString()}
@@ -457,8 +462,8 @@ export default function AppointmentsPage() {
                             key={slot}
                             onClick={() => setSelectedTime(slot)}
                             className={`text-sm font-medium border-2 border-[#151616] transition-all ${selectedTime === slot
-                                ? "bg-[#D6F32F] text-[#151616] shadow-[2px_2px_0px_0px_#151616]"
-                                : "bg-white text-[#151616] hover:bg-[#D6F32F]/20 shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616]"
+                                ? "bg-[#f9c80e] text-[#151616] shadow-[2px_2px_0px_0px_#151616]"
+                                : "bg-white text-[#151616] hover:bg-[#f9c80e]/20 shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616]"
                               }`}
                           >
                             {slot}
@@ -518,7 +523,7 @@ export default function AppointmentsPage() {
                   <Button
                     onClick={handleBookAppointment}
                     disabled={!selectedDay || !selectedTime || loading}
-                    className="w-full bg-[#D6F32F] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#151616] disabled:opacity-50 disabled:cursor-not-allowed font-poppins font-bold"
+                    className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#151616] disabled:opacity-50 disabled:cursor-not-allowed font-poppins font-bold"
                   >
                     <CreditCard className="w-4 h-4 mr-2" />
                     {loading
@@ -617,7 +622,7 @@ export default function AppointmentsPage() {
               <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 cursor-pointer h-full">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-16 h-16 bg-[#D6F32F] rounded-xl border-2 border-[#151616] flex items-center justify-center">
+                    <div className="w-16 h-16 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center">
                       <Stethoscope className="w-8 h-8 text-[#151616]" />
                     </div>
                     <div>
@@ -668,7 +673,7 @@ export default function AppointmentsPage() {
 
                   <Button
                     onClick={() => handleDoctorSelect(doctor)}
-                    className="w-full bg-[#D6F32F] text-[#151616] border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all duration-200 font-poppins font-medium"
+                    className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] transition-all duration-200 font-poppins font-medium"
                   >
                     <Calendar className="w-4 h-4 mr-2" />
                     Book Appointment

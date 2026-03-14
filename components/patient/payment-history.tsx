@@ -161,11 +161,7 @@ export function PaymentHistory() {
             ))}
             
             {payments.length > 0 && (
-<<<<<<< HEAD
-              <div className="mt-6 p-4 bg-[#D6F32F]/20 rounded-xl border-2 border-[#151616]">
-=======
               <div className="mt-6 p-4 bg-[#f9c80e]/20 rounded-xl border-2 border-[#151616]">
->>>>>>> 8a66e73bf0e9b4ff34bcef945abd63c08833c20c
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-poppins font-bold text-[#151616]">Total Spent</h4>

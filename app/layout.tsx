@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Poppins } from "next/font/google";
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 import { SessionProvider } from "./providers";
+
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",

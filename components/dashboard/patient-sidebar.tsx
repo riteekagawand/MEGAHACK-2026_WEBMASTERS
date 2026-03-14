@@ -76,16 +76,16 @@ const navigationItems = [
     description: "Your medical history"
   },
   {
-    title: "History",
-    href: "/patient/history",
-    icon: TrendingUp,
-    description: "Appointments & payments"
-  },
-  {
     title: "Epi‑Watch Radar",
     href: "/patient/outbreak-radar",
     icon: Activity,
     description: "Live outbreak heatmap"
+  },
+   {
+    title: "History",
+    href: "/patient/history",
+    icon: TrendingUp,
+    description: "Appointments & payments"
   }
 ]
 

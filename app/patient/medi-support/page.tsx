@@ -12,7 +12,7 @@ import {
     Shield,
     AlertCircle
 } from "lucide-react";
-import HealthMentorUI from "@/components/health-mentor/HealthMentorUI";
+import MediSupportAyushUI from "@/components/health-mentor/MediSupportAyushUI";
 
 export default function MediSupportPage() {
 
@@ -57,7 +57,7 @@ export default function MediSupportPage() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
                 >
-                    <HealthMentorUI />
+                    <MediSupportAyushUI />
                 </motion.div>
 
                 {/* Medical Disclaimer */}

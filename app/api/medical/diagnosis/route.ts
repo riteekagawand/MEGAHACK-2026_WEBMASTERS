@@ -9,6 +9,7 @@ export async function GET() {
   return NextResponse.json({
     service: "Diagnosis pipeline (Translator + Symptom Analyzer)",
     status: "healthy",
+    endpoint: "/api/medical/diagnosis",
     modelProvider: "Google Gemini 2.5 Flash",
     env: {
       geminiConfigured: !!process.env.GEMINI_API_KEY,
@@ -29,14 +30,15 @@ export async function GET() {
       },
     },
     usage: {
-      endpoint: "POST /api/diagnosis",
+      endpoint: "POST /api/medical/diagnosis",
       body: {
-        symptoms: "string (required)",
+        name: "string (required - patient name)",
+        age: "string or number (optional - patient age)",
+        gender: "string (optional - 'male' | 'female' | 'other')",
+        medicalHistory: "string (optional - free text medical history)",
+        symptoms: "string (required - current symptoms)",
         language: "string (optional, default 'english')",
-        age: "number (optional)",
-        gender: "string (optional)",
-        location: "string (optional)",
-        medicalHistory: "string[] (optional)",
+        location: "string (optional - patient location)"
       },
     },
     timestamp: new Date().toISOString(),
@@ -49,13 +51,29 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    // Support both frontend-style fields (name/age string) and direct API calls
+    const patientName: string | undefined = body.name || body.patientName;
+    const rawAge: string | number | undefined = body.age ?? body.patientAge;
+    const ageNumber =
+      typeof rawAge === "string"
+        ? (parseInt(rawAge, 10) || undefined)
+        : typeof rawAge === "number"
+        ? rawAge
+        : undefined;
+
+    const gender: string | undefined = body.gender || body.patientGender;
+    const medicalHistoryText: string = body.medicalHistory || "";
+
     const patientInput: PatientInput = {
       symptoms: body.symptoms,
       language: body.language || "english",
-      age: body.age,
-      gender: body.gender,
+      age: ageNumber,
+      gender,
       location: body.location,
-      medicalHistory: body.medicalHistory || [],
+      // Convert free-text history into an array for the agents
+      medicalHistory: medicalHistoryText
+        ? medicalHistoryText.split(",").map((item: string) => item.trim()).filter(Boolean)
+        : [],
       uploadedFiles: [],
     };
 
@@ -80,35 +98,43 @@ export async function POST(request: NextRequest) {
 
     const responsePayload = {
       success: true,
-      pipeline: {
-        steps: [
-          "Received raw symptoms from user",
-          "Translated symptoms with Bhasha (TranslatorAgent)",
-          "Analyzed symptoms with Lakshan (SymptomAnalyzerAgent)",
-        ],
-        timing: {
-          duration: durationMs,
-          unit: "ms",
+      diagnosis: {
+        patient: {
+          name: patientName || null,
+          age: rawAge ?? null,
+          gender: gender || null,
+          medicalHistoryText: medicalHistoryText || "",
         },
-      },
-      input: {
-        originalSymptoms: patientInput.symptoms,
-        language: patientInput.language,
-        age: patientInput.age,
-        gender: patientInput.gender,
-        location: patientInput.location,
-        medicalHistory: patientInput.medicalHistory,
-      },
-      translator: {
-        translatedSymptoms: translationResult.translatedSymptoms,
-        emergencyKeywords: translationResult.emergencyKeywords,
-        culturalContext: translationResult.culturalContext,
-      },
-      symptomAnalysis: analysisResult,
-      timestamp: new Date().toISOString(),
-      meta: {
-        provider: "Google Gemini 2.5 Flash",
-        geminiConfigured: !!process.env.GEMINI_API_KEY,
+        pipeline: {
+          steps: [
+            "Received raw symptoms from user",
+            "Translated symptoms with Bhasha (TranslatorAgent)",
+            "Analyzed symptoms with Lakshan (SymptomAnalyzerAgent)",
+          ],
+          timing: {
+            duration: durationMs,
+            unit: "ms",
+          },
+        },
+        input: {
+          originalSymptoms: patientInput.symptoms,
+          language: patientInput.language,
+          age: patientInput.age,
+          gender: patientInput.gender,
+          location: patientInput.location,
+          medicalHistory: patientInput.medicalHistory,
+        },
+        translator: {
+          translatedSymptoms: translationResult.translatedSymptoms,
+          emergencyKeywords: translationResult.emergencyKeywords,
+          culturalContext: translationResult.culturalContext,
+        },
+        symptomAnalysis: analysisResult,
+        timestamp: new Date().toISOString(),
+        meta: {
+          provider: "Google Gemini 2.5 Flash",
+          geminiConfigured: !!process.env.GEMINI_API_KEY,
+        },
       },
     };
 

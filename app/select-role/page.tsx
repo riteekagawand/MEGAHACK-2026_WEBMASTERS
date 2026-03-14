@@ -168,7 +168,7 @@ export default function SelectRolePage() {
                         >
                           <Icon
                             className="w-8 h-8"
-                            style={{ color: role.color === "#D6F32F" ? "#151616" : "#151616" }}
+                            style={{ color: role.color === "#f9c80e" ? "#151616" : "#151616" }}
                           />
                         </div>
                         {isLoading && (

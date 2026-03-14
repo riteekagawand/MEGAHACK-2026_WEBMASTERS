@@ -1,0 +1,2422 @@
+[
+  {
+    "id": 1,
+    "disease": {
+      "en": "common cold",
+      "hi": "सर्दी",
+      "mr": "सर्दी"
+    },
+    "remedy": {
+      "en": "Sitopaladi Churna",
+      "hi": "सितोपलादि चूर्ण",
+      "mr": "सितोपलादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 2,
+    "disease": {
+      "en": "cough",
+      "hi": "खांसी",
+      "mr": "खोकला"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 3,
+    "disease": {
+      "en": "fever",
+      "hi": "बुखार",
+      "mr": "ताप"
+    },
+    "remedy": {
+      "en": "Giloy Kwath",
+      "hi": "गिलोय क्वाथ",
+      "mr": "गुळवेल काढा"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 4,
+    "disease": {
+      "en": "constipation",
+      "hi": "कब्ज",
+      "mr": "बद्धकोष्ठता"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3–5g at night with warm water",
+      "hi": "3–5g at night with warm water",
+      "mr": "3–5g at night with warm water"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 5,
+    "disease": {
+      "en": "acidity",
+      "hi": "अम्लता",
+      "mr": "अॅसिडिटी"
+    },
+    "remedy": {
+      "en": "Avipattikar Churna",
+      "hi": "अविपत्तिकर चूर्ण",
+      "mr": "अविपत्तिकर चूर्ण"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2g twice daily after meals",
+      "hi": "1–2g twice daily after meals",
+      "mr": "1–2g twice daily after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 6,
+    "disease": {
+      "en": "indigestion",
+      "hi": "अपच",
+      "mr": "अपचन"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 7,
+    "disease": {
+      "en": "loss of appetite",
+      "hi": "भूख कम लगना",
+      "mr": "भूक न लागणे"
+    },
+    "remedy": {
+      "en": "Chitrakadi Vati",
+      "hi": "चित्रकादी वटी",
+      "mr": "चित्रकादी वटी"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1 tablet twice daily before meals",
+      "hi": "1 tablet twice daily before meals",
+      "mr": "1 tablet twice daily before meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 8,
+    "disease": {
+      "en": "diarrhea",
+      "hi": "दस्त",
+      "mr": "जुलाब"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 9,
+    "disease": {
+      "en": "irritable bowel syndrome",
+      "hi": "इर्रिटेबल बाउल सिंड्रोम",
+      "mr": "इरिटेबल बाउल सिंड्रोम"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 10,
+    "disease": {
+      "en": "gas",
+      "hi": "गैस",
+      "mr": "गॅस"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 11,
+    "disease": {
+      "en": "diabetes",
+      "hi": "मधुमेह",
+      "mr": "मधुमेह"
+    },
+    "remedy": {
+      "en": "Gudmar Powder",
+      "hi": "गुड़मार चूर्ण",
+      "mr": "गुर्मार चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "2–3g twice daily",
+      "hi": "2–3g twice daily",
+      "mr": "2–3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 12,
+    "disease": {
+      "en": "obesity",
+      "hi": "मोटापा",
+      "mr": "लठ्ठपणा"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g at night",
+      "hi": "3g at night",
+      "mr": "3g at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 13,
+    "disease": {
+      "en": "anxiety",
+      "hi": "चिंता",
+      "mr": "चिंता"
+    },
+    "remedy": {
+      "en": "Brahmi Tablets",
+      "hi": "ब्राह्मी टैबलेट",
+      "mr": "ब्राह्मी गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet twice daily",
+      "hi": "1 tablet twice daily",
+      "mr": "1 tablet twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 14,
+    "disease": {
+      "en": "stress",
+      "hi": "तनाव",
+      "mr": "ताण"
+    },
+    "remedy": {
+      "en": "Ashwagandha Powder",
+      "hi": "अश्वगंधा चूर्ण",
+      "mr": "अश्वगंधा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3g with milk at night",
+      "hi": "3g with milk at night",
+      "mr": "3g with milk at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 15,
+    "disease": {
+      "en": "insomnia",
+      "hi": "अनिद्रा",
+      "mr": "अनिद्रा"
+    },
+    "remedy": {
+      "en": "Tagar Tablets",
+      "hi": "टगर टैबलेट",
+      "mr": "टगर गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet at night",
+      "hi": "1 tablet at night",
+      "mr": "1 tablet at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 16,
+    "disease": {
+      "en": "memory weakness",
+      "hi": "स्मरण शक्ति कम",
+      "mr": "स्मरणशक्ती कमी"
+    },
+    "remedy": {
+      "en": "Brahmi Ghrita",
+      "hi": "ब्राह्मी घृत",
+      "mr": "ब्राह्मी घृत"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 teaspoon with milk",
+      "hi": "1 teaspoon with milk",
+      "mr": "1 teaspoon with milk"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 17,
+    "disease": {
+      "en": "headache",
+      "hi": "सिरदर्द",
+      "mr": "डोकेदुखी"
+    },
+    "remedy": {
+      "en": "Godanti Bhasma",
+      "hi": "गोदंती भस्म",
+      "mr": "गोदंती भस्म"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "250mg twice daily",
+      "hi": "250mg twice daily",
+      "mr": "250mg twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 18,
+    "disease": {
+      "en": "migraine",
+      "hi": "माइग्रेन",
+      "mr": "मायग्रेन"
+    },
+    "remedy": {
+      "en": "Pathyadi Kwath",
+      "hi": "पथ्यादि क्वाथ",
+      "mr": "पथ्यादी काढा"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 19,
+    "disease": {
+      "en": "asthma",
+      "hi": "दमा",
+      "mr": "दमा"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha-Vata",
+    "dosage": {
+      "en": "1–3g with honey",
+      "hi": "1–3g with honey",
+      "mr": "1–3g with honey"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 20,
+    "disease": {
+      "en": "allergy",
+      "hi": "एलर्जी",
+      "mr": "अॅलर्जी"
+    },
+    "remedy": {
+      "en": "Haridra Khanda",
+      "hi": "हरिद्रा खंड",
+      "mr": "हरिद्रा खंड"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g twice daily",
+      "hi": "3g twice daily",
+      "mr": "3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 21,
+    "disease": {
+      "en": "common cold",
+      "hi": "सर्दी",
+      "mr": "सर्दी"
+    },
+    "remedy": {
+      "en": "Sitopaladi Churna",
+      "hi": "सितोपलादि चूर्ण",
+      "mr": "सितोपलादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 22,
+    "disease": {
+      "en": "cough",
+      "hi": "खांसी",
+      "mr": "खोकला"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 23,
+    "disease": {
+      "en": "fever",
+      "hi": "बुखार",
+      "mr": "ताप"
+    },
+    "remedy": {
+      "en": "Giloy Kwath",
+      "hi": "गिलोय क्वाथ",
+      "mr": "गुळवेल काढा"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 24,
+    "disease": {
+      "en": "constipation",
+      "hi": "कब्ज",
+      "mr": "बद्धकोष्ठता"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3–5g at night with warm water",
+      "hi": "3–5g at night with warm water",
+      "mr": "3–5g at night with warm water"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 25,
+    "disease": {
+      "en": "acidity",
+      "hi": "अम्लता",
+      "mr": "अॅसिडिटी"
+    },
+    "remedy": {
+      "en": "Avipattikar Churna",
+      "hi": "अविपत्तिकर चूर्ण",
+      "mr": "अविपत्तिकर चूर्ण"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2g twice daily after meals",
+      "hi": "1–2g twice daily after meals",
+      "mr": "1–2g twice daily after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 26,
+    "disease": {
+      "en": "indigestion",
+      "hi": "अपच",
+      "mr": "अपचन"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 27,
+    "disease": {
+      "en": "loss of appetite",
+      "hi": "भूख कम लगना",
+      "mr": "भूक न लागणे"
+    },
+    "remedy": {
+      "en": "Chitrakadi Vati",
+      "hi": "चित्रकादी वटी",
+      "mr": "चित्रकादी वटी"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1 tablet twice daily before meals",
+      "hi": "1 tablet twice daily before meals",
+      "mr": "1 tablet twice daily before meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 28,
+    "disease": {
+      "en": "diarrhea",
+      "hi": "दस्त",
+      "mr": "जुलाब"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 29,
+    "disease": {
+      "en": "irritable bowel syndrome",
+      "hi": "इर्रिटेबल बाउल सिंड्रोम",
+      "mr": "इरिटेबल बाउल सिंड्रोम"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 30,
+    "disease": {
+      "en": "gas",
+      "hi": "गैस",
+      "mr": "गॅस"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 31,
+    "disease": {
+      "en": "diabetes",
+      "hi": "मधुमेह",
+      "mr": "मधुमेह"
+    },
+    "remedy": {
+      "en": "Gudmar Powder",
+      "hi": "गुड़मार चूर्ण",
+      "mr": "गुर्मार चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "2–3g twice daily",
+      "hi": "2–3g twice daily",
+      "mr": "2–3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 32,
+    "disease": {
+      "en": "obesity",
+      "hi": "मोटापा",
+      "mr": "लठ्ठपणा"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g at night",
+      "hi": "3g at night",
+      "mr": "3g at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 33,
+    "disease": {
+      "en": "anxiety",
+      "hi": "चिंता",
+      "mr": "चिंता"
+    },
+    "remedy": {
+      "en": "Brahmi Tablets",
+      "hi": "ब्राह्मी टैबलेट",
+      "mr": "ब्राह्मी गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet twice daily",
+      "hi": "1 tablet twice daily",
+      "mr": "1 tablet twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 34,
+    "disease": {
+      "en": "stress",
+      "hi": "तनाव",
+      "mr": "ताण"
+    },
+    "remedy": {
+      "en": "Ashwagandha Powder",
+      "hi": "अश्वगंधा चूर्ण",
+      "mr": "अश्वगंधा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3g with milk at night",
+      "hi": "3g with milk at night",
+      "mr": "3g with milk at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 35,
+    "disease": {
+      "en": "insomnia",
+      "hi": "अनिद्रा",
+      "mr": "अनिद्रा"
+    },
+    "remedy": {
+      "en": "Tagar Tablets",
+      "hi": "टगर टैबलेट",
+      "mr": "टगर गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet at night",
+      "hi": "1 tablet at night",
+      "mr": "1 tablet at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 36,
+    "disease": {
+      "en": "memory weakness",
+      "hi": "स्मरण शक्ति कम",
+      "mr": "स्मरणशक्ती कमी"
+    },
+    "remedy": {
+      "en": "Brahmi Ghrita",
+      "hi": "ब्राह्मी घृत",
+      "mr": "ब्राह्मी घृत"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 teaspoon with milk",
+      "hi": "1 teaspoon with milk",
+      "mr": "1 teaspoon with milk"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 37,
+    "disease": {
+      "en": "headache",
+      "hi": "सिरदर्द",
+      "mr": "डोकेदुखी"
+    },
+    "remedy": {
+      "en": "Godanti Bhasma",
+      "hi": "गोदंती भस्म",
+      "mr": "गोदंती भस्म"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "250mg twice daily",
+      "hi": "250mg twice daily",
+      "mr": "250mg twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 38,
+    "disease": {
+      "en": "migraine",
+      "hi": "माइग्रेन",
+      "mr": "मायग्रेन"
+    },
+    "remedy": {
+      "en": "Pathyadi Kwath",
+      "hi": "पथ्यादि क्वाथ",
+      "mr": "पथ्यादी काढा"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 39,
+    "disease": {
+      "en": "asthma",
+      "hi": "दमा",
+      "mr": "दमा"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha-Vata",
+    "dosage": {
+      "en": "1–3g with honey",
+      "hi": "1–3g with honey",
+      "mr": "1–3g with honey"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 40,
+    "disease": {
+      "en": "allergy",
+      "hi": "एलर्जी",
+      "mr": "अॅलर्जी"
+    },
+    "remedy": {
+      "en": "Haridra Khanda",
+      "hi": "हरिद्रा खंड",
+      "mr": "हरिद्रा खंड"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g twice daily",
+      "hi": "3g twice daily",
+      "mr": "3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 41,
+    "disease": {
+      "en": "common cold",
+      "hi": "सर्दी",
+      "mr": "सर्दी"
+    },
+    "remedy": {
+      "en": "Sitopaladi Churna",
+      "hi": "सितोपलादि चूर्ण",
+      "mr": "सितोपलादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 42,
+    "disease": {
+      "en": "cough",
+      "hi": "खांसी",
+      "mr": "खोकला"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 43,
+    "disease": {
+      "en": "fever",
+      "hi": "बुखार",
+      "mr": "ताप"
+    },
+    "remedy": {
+      "en": "Giloy Kwath",
+      "hi": "गिलोय क्वाथ",
+      "mr": "गुळवेल काढा"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 44,
+    "disease": {
+      "en": "constipation",
+      "hi": "कब्ज",
+      "mr": "बद्धकोष्ठता"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3–5g at night with warm water",
+      "hi": "3–5g at night with warm water",
+      "mr": "3–5g at night with warm water"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 45,
+    "disease": {
+      "en": "acidity",
+      "hi": "अम्लता",
+      "mr": "अॅसिडिटी"
+    },
+    "remedy": {
+      "en": "Avipattikar Churna",
+      "hi": "अविपत्तिकर चूर्ण",
+      "mr": "अविपत्तिकर चूर्ण"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2g twice daily after meals",
+      "hi": "1–2g twice daily after meals",
+      "mr": "1–2g twice daily after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 46,
+    "disease": {
+      "en": "indigestion",
+      "hi": "अपच",
+      "mr": "अपचन"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 47,
+    "disease": {
+      "en": "loss of appetite",
+      "hi": "भूख कम लगना",
+      "mr": "भूक न लागणे"
+    },
+    "remedy": {
+      "en": "Chitrakadi Vati",
+      "hi": "चित्रकादी वटी",
+      "mr": "चित्रकादी वटी"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1 tablet twice daily before meals",
+      "hi": "1 tablet twice daily before meals",
+      "mr": "1 tablet twice daily before meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 48,
+    "disease": {
+      "en": "diarrhea",
+      "hi": "दस्त",
+      "mr": "जुलाब"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 49,
+    "disease": {
+      "en": "irritable bowel syndrome",
+      "hi": "इर्रिटेबल बाउल सिंड्रोम",
+      "mr": "इरिटेबल बाउल सिंड्रोम"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 50,
+    "disease": {
+      "en": "gas",
+      "hi": "गैस",
+      "mr": "गॅस"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 51,
+    "disease": {
+      "en": "diabetes",
+      "hi": "मधुमेह",
+      "mr": "मधुमेह"
+    },
+    "remedy": {
+      "en": "Gudmar Powder",
+      "hi": "गुड़मार चूर्ण",
+      "mr": "गुर्मार चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "2–3g twice daily",
+      "hi": "2–3g twice daily",
+      "mr": "2–3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 52,
+    "disease": {
+      "en": "obesity",
+      "hi": "मोटापा",
+      "mr": "लठ्ठपणा"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g at night",
+      "hi": "3g at night",
+      "mr": "3g at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 53,
+    "disease": {
+      "en": "anxiety",
+      "hi": "चिंता",
+      "mr": "चिंता"
+    },
+    "remedy": {
+      "en": "Brahmi Tablets",
+      "hi": "ब्राह्मी टैबलेट",
+      "mr": "ब्राह्मी गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet twice daily",
+      "hi": "1 tablet twice daily",
+      "mr": "1 tablet twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 54,
+    "disease": {
+      "en": "stress",
+      "hi": "तनाव",
+      "mr": "ताण"
+    },
+    "remedy": {
+      "en": "Ashwagandha Powder",
+      "hi": "अश्वगंधा चूर्ण",
+      "mr": "अश्वगंधा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3g with milk at night",
+      "hi": "3g with milk at night",
+      "mr": "3g with milk at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 55,
+    "disease": {
+      "en": "insomnia",
+      "hi": "अनिद्रा",
+      "mr": "अनिद्रा"
+    },
+    "remedy": {
+      "en": "Tagar Tablets",
+      "hi": "टगर टैबलेट",
+      "mr": "टगर गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet at night",
+      "hi": "1 tablet at night",
+      "mr": "1 tablet at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 56,
+    "disease": {
+      "en": "memory weakness",
+      "hi": "स्मरण शक्ति कम",
+      "mr": "स्मरणशक्ती कमी"
+    },
+    "remedy": {
+      "en": "Brahmi Ghrita",
+      "hi": "ब्राह्मी घृत",
+      "mr": "ब्राह्मी घृत"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 teaspoon with milk",
+      "hi": "1 teaspoon with milk",
+      "mr": "1 teaspoon with milk"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 57,
+    "disease": {
+      "en": "headache",
+      "hi": "सिरदर्द",
+      "mr": "डोकेदुखी"
+    },
+    "remedy": {
+      "en": "Godanti Bhasma",
+      "hi": "गोदंती भस्म",
+      "mr": "गोदंती भस्म"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "250mg twice daily",
+      "hi": "250mg twice daily",
+      "mr": "250mg twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 58,
+    "disease": {
+      "en": "migraine",
+      "hi": "माइग्रेन",
+      "mr": "मायग्रेन"
+    },
+    "remedy": {
+      "en": "Pathyadi Kwath",
+      "hi": "पथ्यादि क्वाथ",
+      "mr": "पथ्यादी काढा"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 59,
+    "disease": {
+      "en": "asthma",
+      "hi": "दमा",
+      "mr": "दमा"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha-Vata",
+    "dosage": {
+      "en": "1–3g with honey",
+      "hi": "1–3g with honey",
+      "mr": "1–3g with honey"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 60,
+    "disease": {
+      "en": "allergy",
+      "hi": "एलर्जी",
+      "mr": "अॅलर्जी"
+    },
+    "remedy": {
+      "en": "Haridra Khanda",
+      "hi": "हरिद्रा खंड",
+      "mr": "हरिद्रा खंड"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g twice daily",
+      "hi": "3g twice daily",
+      "mr": "3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 61,
+    "disease": {
+      "en": "common cold",
+      "hi": "सर्दी",
+      "mr": "सर्दी"
+    },
+    "remedy": {
+      "en": "Sitopaladi Churna",
+      "hi": "सितोपलादि चूर्ण",
+      "mr": "सितोपलादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 62,
+    "disease": {
+      "en": "cough",
+      "hi": "खांसी",
+      "mr": "खोकला"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 63,
+    "disease": {
+      "en": "fever",
+      "hi": "बुखार",
+      "mr": "ताप"
+    },
+    "remedy": {
+      "en": "Giloy Kwath",
+      "hi": "गिलोय क्वाथ",
+      "mr": "गुळवेल काढा"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 64,
+    "disease": {
+      "en": "constipation",
+      "hi": "कब्ज",
+      "mr": "बद्धकोष्ठता"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3–5g at night with warm water",
+      "hi": "3–5g at night with warm water",
+      "mr": "3–5g at night with warm water"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 65,
+    "disease": {
+      "en": "acidity",
+      "hi": "अम्लता",
+      "mr": "अॅसिडिटी"
+    },
+    "remedy": {
+      "en": "Avipattikar Churna",
+      "hi": "अविपत्तिकर चूर्ण",
+      "mr": "अविपत्तिकर चूर्ण"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2g twice daily after meals",
+      "hi": "1–2g twice daily after meals",
+      "mr": "1–2g twice daily after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 66,
+    "disease": {
+      "en": "indigestion",
+      "hi": "अपच",
+      "mr": "अपचन"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 67,
+    "disease": {
+      "en": "loss of appetite",
+      "hi": "भूख कम लगना",
+      "mr": "भूक न लागणे"
+    },
+    "remedy": {
+      "en": "Chitrakadi Vati",
+      "hi": "चित्रकादी वटी",
+      "mr": "चित्रकादी वटी"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1 tablet twice daily before meals",
+      "hi": "1 tablet twice daily before meals",
+      "mr": "1 tablet twice daily before meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 68,
+    "disease": {
+      "en": "diarrhea",
+      "hi": "दस्त",
+      "mr": "जुलाब"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 69,
+    "disease": {
+      "en": "irritable bowel syndrome",
+      "hi": "इर्रिटेबल बाउल सिंड्रोम",
+      "mr": "इरिटेबल बाउल सिंड्रोम"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 70,
+    "disease": {
+      "en": "gas",
+      "hi": "गैस",
+      "mr": "गॅस"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 71,
+    "disease": {
+      "en": "diabetes",
+      "hi": "मधुमेह",
+      "mr": "मधुमेह"
+    },
+    "remedy": {
+      "en": "Gudmar Powder",
+      "hi": "गुड़मार चूर्ण",
+      "mr": "गुर्मार चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "2–3g twice daily",
+      "hi": "2–3g twice daily",
+      "mr": "2–3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 72,
+    "disease": {
+      "en": "obesity",
+      "hi": "मोटापा",
+      "mr": "लठ्ठपणा"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g at night",
+      "hi": "3g at night",
+      "mr": "3g at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 73,
+    "disease": {
+      "en": "anxiety",
+      "hi": "चिंता",
+      "mr": "चिंता"
+    },
+    "remedy": {
+      "en": "Brahmi Tablets",
+      "hi": "ब्राह्मी टैबलेट",
+      "mr": "ब्राह्मी गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet twice daily",
+      "hi": "1 tablet twice daily",
+      "mr": "1 tablet twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 74,
+    "disease": {
+      "en": "stress",
+      "hi": "तनाव",
+      "mr": "ताण"
+    },
+    "remedy": {
+      "en": "Ashwagandha Powder",
+      "hi": "अश्वगंधा चूर्ण",
+      "mr": "अश्वगंधा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3g with milk at night",
+      "hi": "3g with milk at night",
+      "mr": "3g with milk at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 75,
+    "disease": {
+      "en": "insomnia",
+      "hi": "अनिद्रा",
+      "mr": "अनिद्रा"
+    },
+    "remedy": {
+      "en": "Tagar Tablets",
+      "hi": "टगर टैबलेट",
+      "mr": "टगर गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet at night",
+      "hi": "1 tablet at night",
+      "mr": "1 tablet at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 76,
+    "disease": {
+      "en": "memory weakness",
+      "hi": "स्मरण शक्ति कम",
+      "mr": "स्मरणशक्ती कमी"
+    },
+    "remedy": {
+      "en": "Brahmi Ghrita",
+      "hi": "ब्राह्मी घृत",
+      "mr": "ब्राह्मी घृत"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 teaspoon with milk",
+      "hi": "1 teaspoon with milk",
+      "mr": "1 teaspoon with milk"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 77,
+    "disease": {
+      "en": "headache",
+      "hi": "सिरदर्द",
+      "mr": "डोकेदुखी"
+    },
+    "remedy": {
+      "en": "Godanti Bhasma",
+      "hi": "गोदंती भस्म",
+      "mr": "गोदंती भस्म"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "250mg twice daily",
+      "hi": "250mg twice daily",
+      "mr": "250mg twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 78,
+    "disease": {
+      "en": "migraine",
+      "hi": "माइग्रेन",
+      "mr": "मायग्रेन"
+    },
+    "remedy": {
+      "en": "Pathyadi Kwath",
+      "hi": "पथ्यादि क्वाथ",
+      "mr": "पथ्यादी काढा"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 79,
+    "disease": {
+      "en": "asthma",
+      "hi": "दमा",
+      "mr": "दमा"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha-Vata",
+    "dosage": {
+      "en": "1–3g with honey",
+      "hi": "1–3g with honey",
+      "mr": "1–3g with honey"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 80,
+    "disease": {
+      "en": "allergy",
+      "hi": "एलर्जी",
+      "mr": "अॅलर्जी"
+    },
+    "remedy": {
+      "en": "Haridra Khanda",
+      "hi": "हरिद्रा खंड",
+      "mr": "हरिद्रा खंड"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g twice daily",
+      "hi": "3g twice daily",
+      "mr": "3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 81,
+    "disease": {
+      "en": "common cold",
+      "hi": "सर्दी",
+      "mr": "सर्दी"
+    },
+    "remedy": {
+      "en": "Sitopaladi Churna",
+      "hi": "सितोपलादि चूर्ण",
+      "mr": "सितोपलादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 82,
+    "disease": {
+      "en": "cough",
+      "hi": "खांसी",
+      "mr": "खोकला"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 83,
+    "disease": {
+      "en": "fever",
+      "hi": "बुखार",
+      "mr": "ताप"
+    },
+    "remedy": {
+      "en": "Giloy Kwath",
+      "hi": "गिलोय क्वाथ",
+      "mr": "गुळवेल काढा"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 84,
+    "disease": {
+      "en": "constipation",
+      "hi": "कब्ज",
+      "mr": "बद्धकोष्ठता"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3–5g at night with warm water",
+      "hi": "3–5g at night with warm water",
+      "mr": "3–5g at night with warm water"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 85,
+    "disease": {
+      "en": "acidity",
+      "hi": "अम्लता",
+      "mr": "अॅसिडिटी"
+    },
+    "remedy": {
+      "en": "Avipattikar Churna",
+      "hi": "अविपत्तिकर चूर्ण",
+      "mr": "अविपत्तिकर चूर्ण"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2g twice daily after meals",
+      "hi": "1–2g twice daily after meals",
+      "mr": "1–2g twice daily after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 86,
+    "disease": {
+      "en": "indigestion",
+      "hi": "अपच",
+      "mr": "अपचन"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 87,
+    "disease": {
+      "en": "loss of appetite",
+      "hi": "भूख कम लगना",
+      "mr": "भूक न लागणे"
+    },
+    "remedy": {
+      "en": "Chitrakadi Vati",
+      "hi": "चित्रकादी वटी",
+      "mr": "चित्रकादी वटी"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1 tablet twice daily before meals",
+      "hi": "1 tablet twice daily before meals",
+      "mr": "1 tablet twice daily before meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 88,
+    "disease": {
+      "en": "diarrhea",
+      "hi": "दस्त",
+      "mr": "जुलाब"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 89,
+    "disease": {
+      "en": "irritable bowel syndrome",
+      "hi": "इर्रिटेबल बाउल सिंड्रोम",
+      "mr": "इरिटेबल बाउल सिंड्रोम"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 90,
+    "disease": {
+      "en": "gas",
+      "hi": "गैस",
+      "mr": "गॅस"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 91,
+    "disease": {
+      "en": "diabetes",
+      "hi": "मधुमेह",
+      "mr": "मधुमेह"
+    },
+    "remedy": {
+      "en": "Gudmar Powder",
+      "hi": "गुड़मार चूर्ण",
+      "mr": "गुर्मार चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "2–3g twice daily",
+      "hi": "2–3g twice daily",
+      "mr": "2–3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 92,
+    "disease": {
+      "en": "obesity",
+      "hi": "मोटापा",
+      "mr": "लठ्ठपणा"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g at night",
+      "hi": "3g at night",
+      "mr": "3g at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 93,
+    "disease": {
+      "en": "anxiety",
+      "hi": "चिंता",
+      "mr": "चिंता"
+    },
+    "remedy": {
+      "en": "Brahmi Tablets",
+      "hi": "ब्राह्मी टैबलेट",
+      "mr": "ब्राह्मी गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet twice daily",
+      "hi": "1 tablet twice daily",
+      "mr": "1 tablet twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 94,
+    "disease": {
+      "en": "stress",
+      "hi": "तनाव",
+      "mr": "ताण"
+    },
+    "remedy": {
+      "en": "Ashwagandha Powder",
+      "hi": "अश्वगंधा चूर्ण",
+      "mr": "अश्वगंधा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3g with milk at night",
+      "hi": "3g with milk at night",
+      "mr": "3g with milk at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 95,
+    "disease": {
+      "en": "insomnia",
+      "hi": "अनिद्रा",
+      "mr": "अनिद्रा"
+    },
+    "remedy": {
+      "en": "Tagar Tablets",
+      "hi": "टगर टैबलेट",
+      "mr": "टगर गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet at night",
+      "hi": "1 tablet at night",
+      "mr": "1 tablet at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 96,
+    "disease": {
+      "en": "memory weakness",
+      "hi": "स्मरण शक्ति कम",
+      "mr": "स्मरणशक्ती कमी"
+    },
+    "remedy": {
+      "en": "Brahmi Ghrita",
+      "hi": "ब्राह्मी घृत",
+      "mr": "ब्राह्मी घृत"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 teaspoon with milk",
+      "hi": "1 teaspoon with milk",
+      "mr": "1 teaspoon with milk"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 97,
+    "disease": {
+      "en": "headache",
+      "hi": "सिरदर्द",
+      "mr": "डोकेदुखी"
+    },
+    "remedy": {
+      "en": "Godanti Bhasma",
+      "hi": "गोदंती भस्म",
+      "mr": "गोदंती भस्म"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "250mg twice daily",
+      "hi": "250mg twice daily",
+      "mr": "250mg twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 98,
+    "disease": {
+      "en": "migraine",
+      "hi": "माइग्रेन",
+      "mr": "मायग्रेन"
+    },
+    "remedy": {
+      "en": "Pathyadi Kwath",
+      "hi": "पथ्यादि क्वाथ",
+      "mr": "पथ्यादी काढा"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 99,
+    "disease": {
+      "en": "asthma",
+      "hi": "दमा",
+      "mr": "दमा"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha-Vata",
+    "dosage": {
+      "en": "1–3g with honey",
+      "hi": "1–3g with honey",
+      "mr": "1–3g with honey"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 100,
+    "disease": {
+      "en": "allergy",
+      "hi": "एलर्जी",
+      "mr": "अॅलर्जी"
+    },
+    "remedy": {
+      "en": "Haridra Khanda",
+      "hi": "हरिद्रा खंड",
+      "mr": "हरिद्रा खंड"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g twice daily",
+      "hi": "3g twice daily",
+      "mr": "3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 101,
+    "disease": {
+      "en": "common cold",
+      "hi": "सर्दी",
+      "mr": "सर्दी"
+    },
+    "remedy": {
+      "en": "Sitopaladi Churna",
+      "hi": "सितोपलादि चूर्ण",
+      "mr": "सितोपलादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 102,
+    "disease": {
+      "en": "cough",
+      "hi": "खांसी",
+      "mr": "खोकला"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1–3g with honey twice daily",
+      "hi": "1–3g with honey twice daily",
+      "mr": "1–3g with honey twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 103,
+    "disease": {
+      "en": "fever",
+      "hi": "बुखार",
+      "mr": "ताप"
+    },
+    "remedy": {
+      "en": "Giloy Kwath",
+      "hi": "गिलोय क्वाथ",
+      "mr": "गुळवेल काढा"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 104,
+    "disease": {
+      "en": "constipation",
+      "hi": "कब्ज",
+      "mr": "बद्धकोष्ठता"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3–5g at night with warm water",
+      "hi": "3–5g at night with warm water",
+      "mr": "3–5g at night with warm water"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 105,
+    "disease": {
+      "en": "acidity",
+      "hi": "अम्लता",
+      "mr": "अॅसिडिटी"
+    },
+    "remedy": {
+      "en": "Avipattikar Churna",
+      "hi": "अविपत्तिकर चूर्ण",
+      "mr": "अविपत्तिकर चूर्ण"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2g twice daily after meals",
+      "hi": "1–2g twice daily after meals",
+      "mr": "1–2g twice daily after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 106,
+    "disease": {
+      "en": "indigestion",
+      "hi": "अपच",
+      "mr": "अपचन"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 107,
+    "disease": {
+      "en": "loss of appetite",
+      "hi": "भूख कम लगना",
+      "mr": "भूक न लागणे"
+    },
+    "remedy": {
+      "en": "Chitrakadi Vati",
+      "hi": "चित्रकादी वटी",
+      "mr": "चित्रकादी वटी"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "1 tablet twice daily before meals",
+      "hi": "1 tablet twice daily before meals",
+      "mr": "1 tablet twice daily before meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 108,
+    "disease": {
+      "en": "diarrhea",
+      "hi": "दस्त",
+      "mr": "जुलाब"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 109,
+    "disease": {
+      "en": "irritable bowel syndrome",
+      "hi": "इर्रिटेबल बाउल सिंड्रोम",
+      "mr": "इरिटेबल बाउल सिंड्रोम"
+    },
+    "remedy": {
+      "en": "Kutajghan Vati",
+      "hi": "कुटजघन वटी",
+      "mr": "कुटजघन वटी"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "1–2 tablets twice daily",
+      "hi": "1–2 tablets twice daily",
+      "mr": "1–2 tablets twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 110,
+    "disease": {
+      "en": "gas",
+      "hi": "गैस",
+      "mr": "गॅस"
+    },
+    "remedy": {
+      "en": "Hingvastak Churna",
+      "hi": "हिंग्वाष्टक चूर्ण",
+      "mr": "हिंग्वाष्टक चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1–2g after meals",
+      "hi": "1–2g after meals",
+      "mr": "1–2g after meals"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 111,
+    "disease": {
+      "en": "diabetes",
+      "hi": "मधुमेह",
+      "mr": "मधुमेह"
+    },
+    "remedy": {
+      "en": "Gudmar Powder",
+      "hi": "गुड़मार चूर्ण",
+      "mr": "गुर्मार चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "2–3g twice daily",
+      "hi": "2–3g twice daily",
+      "mr": "2–3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 112,
+    "disease": {
+      "en": "obesity",
+      "hi": "मोटापा",
+      "mr": "लठ्ठपणा"
+    },
+    "remedy": {
+      "en": "Triphala Churna",
+      "hi": "त्रिफला चूर्ण",
+      "mr": "त्रिफळा चूर्ण"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g at night",
+      "hi": "3g at night",
+      "mr": "3g at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 113,
+    "disease": {
+      "en": "anxiety",
+      "hi": "चिंता",
+      "mr": "चिंता"
+    },
+    "remedy": {
+      "en": "Brahmi Tablets",
+      "hi": "ब्राह्मी टैबलेट",
+      "mr": "ब्राह्मी गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet twice daily",
+      "hi": "1 tablet twice daily",
+      "mr": "1 tablet twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 114,
+    "disease": {
+      "en": "stress",
+      "hi": "तनाव",
+      "mr": "ताण"
+    },
+    "remedy": {
+      "en": "Ashwagandha Powder",
+      "hi": "अश्वगंधा चूर्ण",
+      "mr": "अश्वगंधा चूर्ण"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "3g with milk at night",
+      "hi": "3g with milk at night",
+      "mr": "3g with milk at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 115,
+    "disease": {
+      "en": "insomnia",
+      "hi": "अनिद्रा",
+      "mr": "अनिद्रा"
+    },
+    "remedy": {
+      "en": "Tagar Tablets",
+      "hi": "टगर टैबलेट",
+      "mr": "टगर गोळ्या"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 tablet at night",
+      "hi": "1 tablet at night",
+      "mr": "1 tablet at night"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 116,
+    "disease": {
+      "en": "memory weakness",
+      "hi": "स्मरण शक्ति कम",
+      "mr": "स्मरणशक्ती कमी"
+    },
+    "remedy": {
+      "en": "Brahmi Ghrita",
+      "hi": "ब्राह्मी घृत",
+      "mr": "ब्राह्मी घृत"
+    },
+    "dosha": "Vata",
+    "dosage": {
+      "en": "1 teaspoon with milk",
+      "hi": "1 teaspoon with milk",
+      "mr": "1 teaspoon with milk"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 117,
+    "disease": {
+      "en": "headache",
+      "hi": "सिरदर्द",
+      "mr": "डोकेदुखी"
+    },
+    "remedy": {
+      "en": "Godanti Bhasma",
+      "hi": "गोदंती भस्म",
+      "mr": "गोदंती भस्म"
+    },
+    "dosha": "Pitta",
+    "dosage": {
+      "en": "250mg twice daily",
+      "hi": "250mg twice daily",
+      "mr": "250mg twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 118,
+    "disease": {
+      "en": "migraine",
+      "hi": "माइग्रेन",
+      "mr": "मायग्रेन"
+    },
+    "remedy": {
+      "en": "Pathyadi Kwath",
+      "hi": "पथ्यादि क्वाथ",
+      "mr": "पथ्यादी काढा"
+    },
+    "dosha": "Vata-Pitta",
+    "dosage": {
+      "en": "20ml twice daily",
+      "hi": "20ml twice daily",
+      "mr": "20ml twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 119,
+    "disease": {
+      "en": "asthma",
+      "hi": "दमा",
+      "mr": "दमा"
+    },
+    "remedy": {
+      "en": "Talisadi Churna",
+      "hi": "तालीसादी चूर्ण",
+      "mr": "तालीसादी चूर्ण"
+    },
+    "dosha": "Kapha-Vata",
+    "dosage": {
+      "en": "1–3g with honey",
+      "hi": "1–3g with honey",
+      "mr": "1–3g with honey"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 120,
+    "disease": {
+      "en": "allergy",
+      "hi": "एलर्जी",
+      "mr": "अॅलर्जी"
+    },
+    "remedy": {
+      "en": "Haridra Khanda",
+      "hi": "हरिद्रा खंड",
+      "mr": "हरिद्रा खंड"
+    },
+    "dosha": "Kapha",
+    "dosage": {
+      "en": "3g twice daily",
+      "hi": "3g twice daily",
+      "mr": "3g twice daily"
+    },
+    "consult_doctor_if": "symptoms persist more than 3 days"
+  },
+  {
+    "id": 121,
+    "disease": {
+      "en": "hair fall",
+      "hi": "बाल झड़ना",
+      "mr": "केस गळणे"
+    },
+    "remedy": {
+      "en": "Bhringraj Oil / Amla",
+      "hi": "भृंगराज तेल / आंवला",
+      "mr": "भृंगराज तेल / आवळा"
+    },
+    "dosha": "Pitta-Vata",
+    "dosage": {
+      "en": "Apply oil on scalp 2–3 times weekly; take 1–2g Amla powder with water daily",
+      "hi": "सप्ताह में 2–3 बार सिर पर तेल लगाएं; रोज़ 1–2g आंवला चूर्ण पानी के साथ लें",
+      "mr": "आठवड्यात 2–3 वेळा डोक्यावर तेल लावा; दररोज 1–2g आवळा पावडर पाण्यात घ्या"
+    },
+    "consult_doctor_if": "excessive hair loss or patches"
+  }
+]

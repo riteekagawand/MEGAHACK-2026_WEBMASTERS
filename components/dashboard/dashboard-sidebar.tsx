@@ -11,7 +11,8 @@ import {
     Stethoscope,
     Activity,
     Database,
-    MessageSquare
+    MessageSquare,
+    AlertTriangle
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -42,6 +43,11 @@ const sidebarItems = [
         title: "Medical Research",
         href: "/medical/research",
         icon: Database,
+    },
+    {
+        title: "Epi Alert",
+        href: "/medical/epi-alert",
+        icon: AlertTriangle,
     }
 ]
 

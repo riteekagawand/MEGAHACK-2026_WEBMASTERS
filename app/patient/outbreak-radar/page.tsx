@@ -19,6 +19,10 @@ const Circle = dynamic(
   () => import("react-leaflet").then((m) => m.Circle),
   { ssr: false }
 );
+const Popup = dynamic(
+  () => import("react-leaflet").then((m) => m.Popup),
+  { ssr: false }
+);
 
 type RiskLevel = "low" | "medium" | "high";
 
@@ -220,19 +224,58 @@ export default function OutbreakRadarPage() {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution="&copy; OpenStreetMap contributors"
                       />
-                      {/* Heatmap-style circles with gradient colors */}
+                      {/* Heatmap-style circles with gradient colors - consistent size for all views */}
                       {(userLatLng ? nearbyOutbreaks : outbreaks).map((o, idx) => (
                         <Circle
                           key={idx}
                           center={[o.lat, o.lng]}
-                          radius={userLatLng ? 2000 + o.riskScore * 50 : 15000 + o.riskScore * 200}
+                          radius={15000 + o.riskScore * 200}
                           pathOptions={{
                             color: getHeatmapColor(o.riskScore),
                             fillColor: getHeatmapColor(o.riskScore),
                             fillOpacity: 0.6,
                             weight: 2,
                           }}
-                        />
+                        >
+                          <Popup>
+                            <div className="min-w-[180px] p-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <div 
+                                  className="w-3 h-3 rounded-full"
+                                  style={{ backgroundColor: getHeatmapColor(o.riskScore) }}
+                                />
+                                <span className="font-bold text-sm text-gray-900">{o.disease}</span>
+                              </div>
+                              <div className="space-y-1 text-xs text-gray-600">
+                                <div className="flex justify-between">
+                                  <span>📍 Location:</span>
+                                  <span className="font-medium text-gray-900">{o.state}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>🏥 Cases:</span>
+                                  <span className="font-medium text-gray-900">{o.cases ?? "N/A"}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>⚠️ Deaths:</span>
+                                  <span className="font-medium text-gray-900">{o.deaths ?? "N/A"}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>📊 Risk Score:</span>
+                                  <span className="font-medium text-gray-900">{Math.round(o.riskScore)}/100</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>🔴 Risk Level:</span>
+                                  <span 
+                                    className="font-bold px-2 py-0.5 rounded text-white text-[10px]"
+                                    style={{ backgroundColor: getHeatmapColor(o.riskScore) }}
+                                  >
+                                    {o.riskLevel.toUpperCase()}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </Popup>
+                        </Circle>
                       ))}
                       {/* User location marker - yellow circle with black border */}
                       {userLatLng && (
@@ -318,7 +361,7 @@ export default function OutbreakRadarPage() {
                             {o.state}
                           </div>
                           <div className="text-[10px] text-[#151616]/60 font-poppins">
-                            {o.disease}
+                            {o.disease} • {o.cases ?? "?"} cases
                           </div>
                         </div>
                       </div>
@@ -338,31 +381,39 @@ export default function OutbreakRadarPage() {
                   nearbyOutbreaks.map((o, idx) => (
                     <div
                       key={idx}
-                      className="group flex items-center justify-between p-2 rounded-lg bg-gray-50 border border-[#151616]/10 hover:border-[#151616]/30 hover:bg-white hover:shadow-sm transition-all cursor-pointer"
+                      className="group flex flex-col p-2 rounded-lg bg-gray-50 border border-[#151616]/10 hover:border-[#151616]/30 hover:bg-white hover:shadow-sm transition-all cursor-pointer"
                     >
-                      <div className="flex items-center gap-2">
-                        <div 
-                          className="w-2.5 h-2.5 rounded-full"
-                          style={{ backgroundColor: getHeatmapColor(o.riskScore) }}
-                        />
-                        <div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-2.5 h-2.5 rounded-full"
+                            style={{ backgroundColor: getHeatmapColor(o.riskScore) }}
+                          />
                           <div className="font-medium text-[#151616] text-xs font-poppins leading-tight">
                             {o.state}
                           </div>
-                          <div className="text-[10px] text-[#151616]/60 font-poppins">
-                            {o.disease}
-                          </div>
                         </div>
+                        <Badge
+                          className="text-[9px] font-bold border-0 px-1.5 py-0.5"
+                          style={{
+                            backgroundColor: getHeatmapColor(o.riskScore),
+                            color: o.riskScore > 50 ? "white" : "#151616",
+                          }}
+                        >
+                          {o.riskLevel.toUpperCase()}
+                        </Badge>
                       </div>
-                      <Badge
-                        className="text-[9px] font-bold border-0 px-1.5 py-0.5"
-                        style={{
-                          backgroundColor: getHeatmapColor(o.riskScore),
-                          color: o.riskScore > 50 ? "white" : "#151616",
-                        }}
-                      >
-                        {o.riskLevel.toUpperCase()}
-                      </Badge>
+                      <div className="mt-1 text-[10px] text-[#151616]/70 font-poppins">
+                        <span className="font-medium">{o.disease}</span>
+                        <span className="mx-1">•</span>
+                        <span>{o.cases ?? "?"} cases</span>
+                        {(o.deaths ?? 0) > 0 && (
+                          <>
+                            <span className="mx-1">•</span>
+                            <span className="text-red-600">{o.deaths} deaths</span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   ))
                 ) : (

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Poppins } from "next/font/google";
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 import { SessionProvider } from "./providers";
+
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
@@ -16,9 +18,9 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Okra - Complete Medical AI Diagnosis System",
+  title: "Orka - Complete Medical AI Diagnosis System",
   description:
-    "Okra is a comprehensive AI-powered Medical Diagnosis System built with LangChain and Perplexity Sonar models, designed for the Indian healthcare ecosystem with multi-agent AI collaboration, multilingual support, and advanced medical image processing.",
+    "Orka is a comprehensive AI-powered Medical Diagnosis System built with LangChain and Perplexity Sonar models, designed for the Indian healthcare ecosystem with multi-agent AI collaboration, multilingual support, and advanced medical image processing.",
 };
 
 

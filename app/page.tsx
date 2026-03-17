@@ -575,7 +575,7 @@ const FinancialAdvisorLanding = () => {
       <ExampleFlow />
 
       {/* Benefits */}
-      <section className="py-20 bg-white" id="benefits">
+      {/* <section className="py-20 bg-white" id="benefits">
         <div className="container mx-auto px-6 max-w-5xl">
           <h2 className="text-4xl font-instrument-serif font-bold text-center mb-12 text-[#151616]">
             Benefits for Medical Teams
@@ -638,10 +638,10 @@ const FinancialAdvisorLanding = () => {
             </a>
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* Agents */}
-      <section className="py-20 bg-[#FFFFF4]">
+      {/* <section className="py-20 bg-[#FFFFF4]">
         <div className="container mx-auto px-6 max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-8 text-[#151616]">Agents At-a-Glance</h2>
           <div className="flex flex-wrap gap-3 justify-center">
@@ -664,10 +664,10 @@ const FinancialAdvisorLanding = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Safety & Compliance */}
-      <section className="py-20 bg-white">
+      {/* <section className="py-20 bg-white">
         <div className="container mx-auto px-6 max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-8 text-[#151616]">Safety & Compliance</h2>
           <div className="grid md:grid-cols-3 gap-8 text-[#151616]">
@@ -685,10 +685,10 @@ const FinancialAdvisorLanding = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Results */}
-      <section className="py-20 bg-[#FFFFF4]">
+      {/* <section className="py-20 bg-[#FFFFF4]">
         <div className="container mx-auto px-6 max-w-5xl text-[#151616]">
           <h2 className="text-3xl font-bold text-center mb-12">Results</h2>
           <div className="grid md:grid-cols-3 gap-6">
@@ -711,7 +711,7 @@ const FinancialAdvisorLanding = () => {
         </div>
       </section>
 
-      <FAQ />
+      <FAQ /> */}
       <Footer />
 
     </div>

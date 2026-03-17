@@ -11,7 +11,8 @@ import {
     Stethoscope,
     Activity,
     Database,
-    MessageSquare
+    MessageSquare,
+    AlertTriangle
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -42,6 +43,11 @@ const sidebarItems = [
         title: "Medical Research",
         href: "/medical/research",
         icon: Database,
+    },
+    {
+        title: "Epi Alert",
+        href: "/medical/epi-alert",
+        icon: AlertTriangle,
     }
 ]
 
@@ -59,7 +65,7 @@ export function DashboardSidebar() {
                     </div>
                     <div>
                         <h1 className="text-xl font-instrument-serif font-bold text-[#151616]">
-                            Okra
+                            orka
                         </h1>
                         <p className="text-sm font-poppins text-[#151616]/60">
                             AI Medical Platform

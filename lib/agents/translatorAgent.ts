@@ -61,7 +61,8 @@ Analyze and translate with medical precision. Detect any emergency indicators.`;
 
     try {
       const result = await this.model.generateContent([systemPrompt, userPrompt]);
-      const text = result.response.text();
+      const response = await result.response;
+      const text = response.text();
 
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {

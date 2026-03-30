@@ -12,18 +12,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const response = await fetch("https://api.perplexity.ai/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "sonar",
-        messages: [
-          {
-            role: "system",
-            content: `You are Analytica, an advanced AI Symptom Analysis Agent specialized in medical symptom processing. Your role is to:
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+    const systemPrompt = `You are Analytica, an advanced AI Symptom Analysis Agent specialized in medical symptom processing. Your role is to:
 
 1. Analyze raw patient symptom descriptions
 2. Extract and structure individual symptoms into a standardized format
@@ -44,33 +36,17 @@ Return a JSON object with:
 - analysis: Brief analysis of symptom patterns and relationships
 - severity: Assessment if severity indicators are present
 - duration: Timeline information if available
-- categories: Symptom categories (e.g., "constitutional", "neurological", "respiratory")`,
-          },
-          {
-            role: "user",
-            content: `Please analyze these patient symptoms and structure them:
+- categories: Symptom categories (e.g., "constitutional", "neurological", "respiratory")`;
+
+    const userPrompt = `Please analyze these patient symptoms and structure them:
 
 Symptoms: "${symptoms}"
 
-Provide a structured analysis following the specified format.`,
-          },
-        ],
-        temperature: 0.1,
-        max_tokens: 1000,
-      }),
-    });
+Provide a structured analysis following the specified format. Return ONLY valid JSON.`;
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("Perplexity API error:", errorData);
-      return NextResponse.json(
-        { error: "Failed to analyze symptoms" },
-        { status: 500 }
-      );
-    }
-
-    const data = await response.json();
-    const analysisContent = data.choices[0]?.message?.content;
+    const result = await model.generateContent([systemPrompt, userPrompt]);
+    const response = await result.response;
+    const analysisContent = response.text();
 
     try {
       // Clean the response content by removing markdown code blocks

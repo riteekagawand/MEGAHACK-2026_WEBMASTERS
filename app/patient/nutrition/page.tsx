@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
+import { jsPDF } from "jspdf"
 import { 
     FileText, Upload, Send, AlertTriangle, CheckCircle, Apple, 
     Utensils, Heart, Target, Droplets, Moon, Activity, Pill,
     Calendar, ChevronRight, Leaf, Salad, IndianRupee, Clock,
-    TrendingUp, Shield, Zap, X, Plus, Minus
+    TrendingUp, Shield, Zap, X, Plus, Minus, Download
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -266,6 +267,317 @@ export default function NutritionAIPage() {
             case "needs attention": return "bg-red-100 border-red-500 text-red-700"
             default: return "bg-gray-100 border-gray-500 text-gray-700"
         }
+    }
+
+    const downloadNutritionReport = () => {
+        if (!analysis) return
+
+        const formatList = (items: string[]) => (items.length > 0 ? items.join(", ") : "N/A")
+
+        const today = new Date().toLocaleString()
+        const filename = `nutrition-report-${new Date().toISOString().split("T")[0]}.pdf`
+
+        const COLOR_HEADER_BG = [249, 200, 14] as const
+        const COLOR_TEXT = [21, 22, 22] as const
+        const COLOR_MUTED = [99, 101, 103] as const
+        const COLOR_SECTION_BG = [255, 248, 220] as const
+        const COLOR_SECTION = [180, 83, 9] as const
+        const COLOR_OK = [22, 163, 74] as const
+        const COLOR_WARN = [202, 138, 4] as const
+        const COLOR_BAD = [220, 38, 38] as const
+
+        const formatDeficiencyLine = (d: NutritionalDeficiency) =>
+            `${d.nutrient}: ${d.status} (${d.severity}) | Current: ${d.currentLevel} | Normal: ${d.normalRange}`
+
+        const doc = new jsPDF({
+            orientation: "p",
+            unit: "mm",
+            format: "a4"
+        })
+
+        const marginLeft = 14
+        const marginTop = 14
+        const marginBottom = 14
+        const pageWidth = doc.internal.pageSize.getWidth()
+        const pageHeight = doc.internal.pageSize.getHeight()
+        const maxLineWidth = pageWidth - marginLeft * 2
+
+        const lineHeight = 6
+        const smallLineHeight = 5.2
+        let y = marginTop
+
+        const addPageIfNeeded = (requiredHeight: number) => {
+            if (y + requiredHeight > pageHeight - marginBottom) {
+                doc.addPage()
+                y = marginTop
+                drawPageDecor(false)
+            }
+        }
+
+        const drawPageDecor = (firstPage: boolean) => {
+            doc.setDrawColor(...COLOR_HEADER_BG)
+            doc.setLineWidth(0.5)
+            doc.line(marginLeft, pageHeight - 10, pageWidth - marginLeft, pageHeight - 10)
+            doc.setFont("helvetica", "normal")
+            doc.setFontSize(8.5)
+            doc.setTextColor(...COLOR_MUTED)
+            doc.text("Nutrition AI - Personalized Health Report", marginLeft, pageHeight - 6)
+
+            if (!firstPage) {
+                doc.setFont("helvetica", "bold")
+                doc.setFontSize(12)
+                doc.setTextColor(...COLOR_SECTION)
+                doc.text("Nutrition Report (cont.)", marginLeft, marginTop + 2)
+                y = marginTop + 8
+            }
+        }
+
+        const addHeader = () => {
+            doc.setFillColor(...COLOR_HEADER_BG)
+            doc.roundedRect(marginLeft - 1, y, maxLineWidth + 2, 24, 2, 2, "F")
+            doc.setTextColor(...COLOR_TEXT)
+            doc.setFont("helvetica", "bold")
+            doc.setFontSize(20)
+            doc.text("Nutrition AI Report", marginLeft + 2, y + 9)
+            doc.setFontSize(10)
+            doc.setFont("helvetica", "normal")
+            doc.text(`Generated on: ${today}`, marginLeft + 2, y + 15)
+            doc.text(`Prepared for: ${analysis.reportSummary.reportType}`, marginLeft + 2, y + 20)
+            y += 30
+        }
+
+        const addSectionTitle = (title: string) => {
+            addPageIfNeeded(15)
+            doc.setFillColor(...COLOR_SECTION_BG)
+            doc.roundedRect(marginLeft - 1, y - 4.5, maxLineWidth + 2, 9, 1.5, 1.5, "F")
+            doc.setFont("helvetica", "bold")
+            doc.setTextColor(...COLOR_SECTION)
+            doc.setFontSize(13)
+            doc.text(title, marginLeft + 1, y + 1.5)
+            doc.setTextColor(...COLOR_TEXT)
+            y += 9
+            doc.setFontSize(11)
+            doc.setFont("helvetica", "normal")
+        }
+
+        const addWrappedText = (text: string, fontSize = 11, heightMultiplier = 1) => {
+            const lines = doc.splitTextToSize(text, maxLineWidth)
+            lines.forEach((line: string) => {
+                addPageIfNeeded(lineHeight * heightMultiplier)
+                doc.setFontSize(fontSize)
+                doc.text(line, marginLeft, y)
+                y += lineHeight * heightMultiplier
+            })
+        }
+
+        const addList = (items: string[], bullet = "•", opts?: { color?: [number, number, number]; fontSize?: number }) => {
+            const chosenColor = opts?.color ?? (COLOR_TEXT as unknown as [number, number, number])
+            const fontSize = opts?.fontSize ?? 11
+            doc.setTextColor(...chosenColor)
+            items.forEach((item) => {
+                const wrapped = doc.splitTextToSize(`${bullet} ${item}`, maxLineWidth)
+                wrapped.forEach((line: string, idx: number) => {
+                    addPageIfNeeded(smallLineHeight)
+                    doc.setFontSize(fontSize)
+                    doc.text(line, marginLeft, y)
+                    y += smallLineHeight
+                })
+            })
+            doc.setTextColor(...COLOR_TEXT)
+            y += 1
+        }
+
+        const addKVRow = (label: string, value: string) => {
+            addPageIfNeeded(6)
+            doc.setFont("helvetica", "bold")
+            doc.setFontSize(10.5)
+            doc.text(`${label}:`, marginLeft, y)
+            doc.setFont("helvetica", "normal")
+            const valueLines = doc.splitTextToSize(value || "N/A", maxLineWidth - 35)
+            doc.text(valueLines, marginLeft + 35, y)
+            y += Math.max(6, valueLines.length * 5)
+        }
+
+        drawPageDecor(true)
+        addHeader()
+
+        addSectionTitle("Report Summary")
+        addKVRow("Report Type", analysis.reportSummary.reportType)
+        addKVRow("Test Date", analysis.reportSummary.testDate)
+        addKVRow("Overall Health Status", analysis.reportSummary.overallHealthStatus)
+        addKVRow("Confidence", `${analysis.confidence}%`)
+
+        addSectionTitle("Personalized Diet Plan")
+        addKVRow("Daily Calories", `${analysis.personalizedDietPlan.dailyCalories} kcal`)
+        addKVRow("Protein", analysis.personalizedDietPlan.macros.protein)
+        addKVRow("Carbs", analysis.personalizedDietPlan.macros.carbs)
+        addKVRow("Fats", analysis.personalizedDietPlan.macros.fats)
+        addKVRow("Fiber", analysis.personalizedDietPlan.macros.fiber)
+
+        addSectionTitle("Meal Timing")
+        addKVRow("Breakfast", analysis.personalizedDietPlan.mealTiming.breakfast)
+        addKVRow("Lunch", analysis.personalizedDietPlan.mealTiming.lunch)
+        addKVRow("Dinner", analysis.personalizedDietPlan.mealTiming.dinner)
+        addKVRow("Snacks", analysis.personalizedDietPlan.mealTiming.snacks)
+
+        addSectionTitle("Nutritional Deficiencies")
+        if (analysis.nutritionalDeficiencies.length > 0) {
+            analysis.nutritionalDeficiencies.forEach((d) => {
+                const sev = d.severity.toLowerCase()
+                const chosen =
+                    sev.includes("severe") || sev.includes("critical") ? COLOR_BAD : sev.includes("moderate") ? COLOR_WARN : COLOR_OK
+                addList([formatDeficiencyLine(d)], "•", { color: chosen as [number, number, number], fontSize: 10.2 })
+                if (d.symptoms.length > 0) {
+                    addList([`Symptoms: ${d.symptoms.join(", ")}`], "-", { color: COLOR_MUTED as [number, number, number], fontSize: 9.8 })
+                }
+            })
+        } else {
+            addWrappedText("No deficiencies detected.")
+        }
+
+        addSectionTitle("Health Markers Analysis")
+        if (analysis.healthMarkers.length > 0) {
+            analysis.healthMarkers.forEach((marker) => {
+                addList(
+                    [
+                        `${marker.marker}: ${marker.value} (Normal: ${marker.normalRange}, Status: ${marker.status})`,
+                        `Dietary Impact: ${marker.dietaryImpact}`,
+                        `Foods to Include: ${formatList(marker.foodsToInclude)}`,
+                        `Foods to Avoid: ${formatList(marker.foodsToAvoid)}`
+                    ],
+                    "•",
+                    { color: COLOR_TEXT as [number, number, number], fontSize: 10.2 }
+                )
+            })
+        } else {
+            addWrappedText("No health markers available.")
+        }
+
+        addSectionTitle("Indian Diet Options - Vegetarian")
+        addList(
+            [
+                `Breakfast: ${formatList(analysis.indianDietOptions.vegetarian.breakfast)}`,
+                `Lunch: ${formatList(analysis.indianDietOptions.vegetarian.lunch)}`,
+                `Dinner: ${formatList(analysis.indianDietOptions.vegetarian.dinner)}`
+            ],
+            "•",
+            { color: COLOR_OK as [number, number, number] }
+        )
+
+        addSectionTitle("Indian Diet Options - Non-Vegetarian")
+        addList(
+            [
+                `Breakfast: ${formatList(analysis.indianDietOptions.nonVegetarian.breakfast)}`,
+                `Lunch: ${formatList(analysis.indianDietOptions.nonVegetarian.lunch)}`,
+                `Dinner: ${formatList(analysis.indianDietOptions.nonVegetarian.dinner)}`
+            ],
+            "•",
+            { color: COLOR_TEXT as [number, number, number] }
+        )
+
+        addSectionTitle("Recommended Foods")
+        addList(
+            [
+                `Superfoods: ${formatList(analysis.recommendedFoods.superfoods)}`,
+                `Beneficial Herbs & Spices: ${formatList(analysis.recommendedFoods.herbs)}`
+            ],
+            "•",
+            { color: COLOR_OK as [number, number, number] }
+        )
+        if (analysis.recommendedFoods.byDeficiency.length > 0) {
+            analysis.recommendedFoods.byDeficiency.forEach((item) => {
+                addList(
+                    [
+                        `${item.deficiency}`,
+                        `Vegetarian Sources: ${formatList(item.vegetarian)}`,
+                        `Non-Veg Sources: ${formatList(item.nonVegetarian)}`,
+                        `Supplements: ${item.supplements || "N/A"}`
+                    ],
+                    "-",
+                    { color: COLOR_TEXT as [number, number, number], fontSize: 10.2 }
+                )
+            })
+        }
+
+        addSectionTitle("Foods To Avoid")
+        addList(
+            [
+                `Strict: ${formatList(analysis.foodsToAvoid.strict)}`,
+                `Moderate: ${formatList(analysis.foodsToAvoid.moderate)}`,
+                `Occasional: ${formatList(analysis.foodsToAvoid.occasional)}`
+            ],
+            "•",
+            { color: COLOR_BAD as [number, number, number] }
+        )
+
+        addSectionTitle("Recommended Supplements")
+        if (analysis.supplements.length > 0) {
+            analysis.supplements.forEach((supplement) => {
+                addList(
+                    [
+                        `${supplement.name}`,
+                        `Dosage: ${supplement.dosage}`,
+                        `Timing: ${supplement.timing}`,
+                        `Duration: ${supplement.duration}`,
+                        `Reason: ${supplement.reason}`
+                    ],
+                    "-",
+                    { color: COLOR_TEXT as [number, number, number], fontSize: 10.2 }
+                )
+            })
+        } else {
+            addWrappedText("No supplements recommended.")
+        }
+
+        addSectionTitle("Lifestyle Recommendations")
+        addList(
+            [
+                `Exercise: ${analysis.lifestyleRecommendations.exercise}`,
+                `Hydration: ${analysis.lifestyleRecommendations.hydration}`,
+                `Sleep: ${analysis.lifestyleRecommendations.sleep}`,
+                `Stress Management: ${analysis.lifestyleRecommendations.stress}`
+            ],
+            "•",
+            { color: COLOR_TEXT as [number, number, number] }
+        )
+
+        addSectionTitle("Progress Tracking")
+        addList(
+            [
+                `Markers: ${formatList(analysis.progressTracking.markers)}`,
+                `Frequency: ${analysis.progressTracking.frequency || "As recommended by your doctor"}`,
+                `Targets: ${formatList(analysis.progressTracking.targetValues)}`
+            ],
+            "•",
+            { color: COLOR_TEXT as [number, number, number] }
+        )
+
+        addSectionTitle("Warnings")
+        if (analysis.warnings.length > 0) {
+            addList(analysis.warnings, "•", { color: COLOR_WARN as [number, number, number] })
+        } else {
+            addWrappedText("No warnings provided.")
+        }
+
+        addSectionTitle("Medical Disclaimer")
+        doc.setTextColor(...COLOR_MUTED)
+        addWrappedText(
+            "This AI nutrition analysis is for informational purposes only and should not replace professional medical or nutritional advice. Always consult with a qualified healthcare provider or registered dietitian before making significant dietary changes or starting any supplement regimen.",
+            10.5,
+            1
+        )
+        doc.setTextColor(...COLOR_TEXT)
+
+        const pageCount = doc.getNumberOfPages()
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i)
+            doc.setFont("helvetica", "normal")
+            doc.setFontSize(8.5)
+            doc.setTextColor(...COLOR_MUTED)
+            doc.text(`Page ${i} of ${pageCount}`, pageWidth - marginLeft, pageHeight - 6, { align: "right" })
+        }
+
+        doc.save(filename)
     }
 
     return (
@@ -675,18 +987,22 @@ export default function NutritionAIPage() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <Tabs value={selectedDiet} onValueChange={(v) => setSelectedDiet(v as "vegetarian" | "nonVegetarian")}>
-                                    <TabsList className="grid w-full grid-cols-2 h-auto bg-gray-100 rounded-xl p-1">
+                                <Tabs
+                                    value={selectedDiet}
+                                    onValueChange={(v) => setSelectedDiet(v as "vegetarian" | "nonVegetarian")}
+                                    className="flex-col"
+                                >
+                                    <TabsList className="grid w-full grid-cols-2 h-12 bg-gray-100 rounded-xl p-1">
                                         <TabsTrigger 
                                             value="vegetarian" 
-                                            className="font-poppins data-[state=active]:bg-[#f9c80e] data-[state=active]:text-[#151616] data-[state=active]:shadow-md rounded-lg py-2 px-4 transition-all"
+                                            className="font-poppins data-[state=active]:bg-[#f9c80e] data-[state=active]:text-[#151616] data-[state=active]:shadow-md rounded-lg h-10 px-4 transition-all"
                                         >
                                             <Leaf className="w-4 h-4 mr-2" />
                                             Vegetarian
                                         </TabsTrigger>
                                         <TabsTrigger 
                                             value="nonVegetarian" 
-                                            className="font-poppins data-[state=active]:bg-[#f9c80e] data-[state=active]:text-[#151616] data-[state=active]:shadow-md rounded-lg py-2 px-4 transition-all"
+                                            className="font-poppins data-[state=active]:bg-[#f9c80e] data-[state=active]:text-[#151616] data-[state=active]:shadow-md rounded-lg h-10 px-4 transition-all"
                                         >
                                             <Utensils className="w-4 h-4 mr-2" />
                                             Non-Vegetarian
@@ -1042,6 +1358,16 @@ export default function NutritionAIPage() {
                                 <strong>Medical Disclaimer:</strong> This AI nutrition analysis is for informational purposes only and should not replace professional medical or nutritional advice. Always consult with a qualified healthcare provider or registered dietitian before making significant dietary changes or starting any supplement regimen.
                             </AlertDescription>
                         </Alert>
+
+                        <div className="flex justify-center">
+                            <Button
+                                onClick={downloadNutritionReport}
+                                className="bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] font-poppins font-bold"
+                            >
+                                <Download className="w-4 h-4 mr-2" />
+                                Download Nutrition Report
+                            </Button>
+                        </div>
                     </motion.div>
                 )}
             </div>

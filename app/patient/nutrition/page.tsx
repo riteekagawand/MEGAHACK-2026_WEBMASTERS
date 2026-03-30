@@ -854,31 +854,43 @@ export default function NutritionAIPage() {
                                         <h6 className="font-poppins font-semibold text-red-700 mb-2 flex items-center gap-1">
                                             <X className="w-3 h-3" /> Strict Avoid
                                         </h6>
-                                        <ul className="space-y-1">
-                                            {analysis.foodsToAvoid.strict.map((food, idx) => (
-                                                <li key={idx} className="text-sm text-red-800">• {food}</li>
-                                            ))}
-                                        </ul>
+                                        {analysis.foodsToAvoid.strict.length > 0 ? (
+                                            <ul className="space-y-1">
+                                                {analysis.foodsToAvoid.strict.map((food, idx) => (
+                                                    <li key={idx} className="text-sm text-red-800">• {food}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-sm text-red-600 mt-2">No foods to strictly avoid</p>
+                                        )}
                                     </div>
                                     <div className="p-3 bg-orange-100 rounded-xl border border-orange-300">
                                         <h6 className="font-poppins font-semibold text-orange-700 mb-2 flex items-center gap-1">
                                             <Minus className="w-3 h-3" /> Limit Consumption
                                         </h6>
-                                        <ul className="space-y-1">
-                                            {analysis.foodsToAvoid.moderate.map((food, idx) => (
-                                                <li key={idx} className="text-sm text-orange-800">• {food}</li>
-                                            ))}
-                                        </ul>
+                                        {analysis.foodsToAvoid.moderate.length > 0 ? (
+                                            <ul className="space-y-1">
+                                                {analysis.foodsToAvoid.moderate.map((food, idx) => (
+                                                    <li key={idx} className="text-sm text-orange-800">• {food}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-sm text-orange-600 mt-2">No foods to limit</p>
+                                        )}
                                     </div>
                                     <div className="p-3 bg-yellow-100 rounded-xl border border-yellow-300">
                                         <h6 className="font-poppins font-semibold text-yellow-700 mb-2 flex items-center gap-1">
                                             <Clock className="w-3 h-3" /> Occasional
                                         </h6>
-                                        <ul className="space-y-1">
-                                            {analysis.foodsToAvoid.occasional.map((food, idx) => (
-                                                <li key={idx} className="text-sm text-yellow-800">• {food}</li>
-                                            ))}
-                                        </ul>
+                                        {analysis.foodsToAvoid.occasional.length > 0 ? (
+                                            <ul className="space-y-1">
+                                                {analysis.foodsToAvoid.occasional.map((food, idx) => (
+                                                    <li key={idx} className="text-sm text-yellow-800">• {food}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-sm text-yellow-600 mt-2">No occasional restrictions</p>
+                                        )}
                                     </div>
                                 </div>
                             </CardContent>
@@ -976,25 +988,33 @@ export default function NutritionAIPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div className="p-3 bg-green-50 rounded-xl border border-green-200">
                                         <h6 className="font-poppins font-semibold text-green-700 mb-2">Markers to Monitor</h6>
-                                        <div className="flex flex-wrap gap-1">
-                                            {analysis.progressTracking.markers.map((marker, idx) => (
-                                                <Badge key={idx} className="bg-green-100 text-green-700 text-xs">
-                                                    {marker}
-                                                </Badge>
-                                            ))}
-                                        </div>
+                                        {analysis.progressTracking.markers.length > 0 ? (
+                                            <div className="flex flex-wrap gap-1">
+                                                {analysis.progressTracking.markers.map((marker, idx) => (
+                                                    <Badge key={idx} className="bg-green-100 text-green-700 text-xs">
+                                                        {marker}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p className="text-sm text-green-600">No specific markers to monitor</p>
+                                        )}
                                     </div>
                                     <div className="p-3 bg-blue-50 rounded-xl border border-blue-200">
                                         <h6 className="font-poppins font-semibold text-blue-700 mb-2">Retest Frequency</h6>
-                                        <p className="text-sm text-[#151616]">{analysis.progressTracking.frequency}</p>
+                                        <p className="text-sm text-[#151616]">{analysis.progressTracking.frequency || "As recommended by your doctor"}</p>
                                     </div>
                                     <div className="p-3 bg-yellow-50 rounded-xl border border-yellow-200">
                                         <h6 className="font-poppins font-semibold text-yellow-700 mb-2">Target Values</h6>
-                                        <ul className="space-y-1">
-                                            {analysis.progressTracking.targetValues.map((target, idx) => (
-                                                <li key={idx} className="text-sm text-[#151616]">• {target}</li>
-                                            ))}
-                                        </ul>
+                                        {analysis.progressTracking.targetValues.length > 0 ? (
+                                            <ul className="space-y-1">
+                                                {analysis.progressTracking.targetValues.map((target, idx) => (
+                                                    <li key={idx} className="text-sm text-[#151616]">• {target}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-sm text-yellow-600">Consult your doctor for target values</p>
+                                        )}
                                     </div>
                                 </div>
                             </CardContent>

@@ -28,7 +28,8 @@ import {
   LogOut,
   Stethoscope,
   ClipboardList,
-  HeartHandshake
+  HeartHandshake,
+  Apple
 } from "lucide-react"
 import { signOut } from "next-auth/react"
 
@@ -50,6 +51,12 @@ const navigationItems = [
     href: "/patient/medicine",
     icon: Pill,
     description: "AI-powered medicine analysis"
+  },
+  {
+    title: "Nutrition AI",
+    href: "/patient/nutrition",
+    icon: Apple,
+    description: "Lab-based nutrition recommendations"
   },
   {
     title: "Prescription",

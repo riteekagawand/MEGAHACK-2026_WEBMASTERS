@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { FileText, Upload, Send, TrendingUp, AlertTriangle, CheckCircle, Clock, Activity, BarChart3, Zap, Leaf, Apple, Calendar, ArrowRight, Shield, Heart, Target } from "lucide-react"
+import { FileText, Upload, Send, TrendingUp, AlertTriangle, CheckCircle, Clock, Activity, BarChart3, Zap, Leaf, Apple, Calendar, ArrowRight, Shield, Heart, Target, Utensils } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
@@ -49,6 +49,8 @@ export default function LabAnalyzerPage() {
     const [error, setError] = useState<string | null>(null)
     const [isSettingReminder, setIsSettingReminder] = useState(false)
     const [reminderMessage, setReminderMessage] = useState<string | null>(null)
+    const [isSavingReport, setIsSavingReport] = useState(false)
+    const [reportSaved, setReportSaved] = useState(false)
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
@@ -108,11 +110,44 @@ export default function LabAnalyzerPage() {
 
             const result = await response.json()
             setAnalysis(result)
+            
+            // Save to database
+            saveLabReport(result)
         } catch (error) {
             console.error('Error analyzing lab report:', error)
             setError('Failed to analyze lab report. Please try again.')
         } finally {
             setIsAnalyzing(false)
+        }
+    }
+
+    const saveLabReport = async (analysisData: LabAnalysis) => {
+        setIsSavingReport(true)
+        try {
+            const response = await fetch('/api/lab-reports', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    reportType: analysisData.reportType,
+                    testDate: analysisData.testDate,
+                    keyFindings: analysisData.keyFindings,
+                    overallAssessment: analysisData.overallAssessment,
+                    recommendations: analysisData.recommendations,
+                    redFlags: analysisData.redFlags,
+                    confidence: analysisData.confidence,
+                    additionalInfo: additionalInfo.trim(),
+                }),
+            })
+
+            if (response.ok) {
+                setReportSaved(true)
+            }
+        } catch (error) {
+            console.error('Error saving lab report:', error)
+        } finally {
+            setIsSavingReport(false)
         }
     }
 
@@ -616,6 +651,43 @@ export default function LabAnalyzerPage() {
                                         </>
                                     )}
                                 </Button>
+                            </CardContent>
+                        </Card>
+
+                        {/* Get Nutrition Recommendations */}
+                        <Card className="border-2 border-green-500 shadow-[4px_4px_0px_0px_green-500] bg-green-50">
+                            <CardHeader>
+                                <CardTitle className="font-poppins font-bold text-green-700 flex items-center gap-2">
+                                    <Utensils className="w-5 h-5" />
+                                    Get Nutrition Recommendations
+                                </CardTitle>
+                                <CardDescription className="font-poppins">
+                                    Get personalized diet plan based on your lab report analysis
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    <p className="text-sm font-poppins text-green-800">
+                                        Based on your lab report findings, our AI can create a personalized nutrition plan to address deficiencies and improve your health markers.
+                                    </p>
+                                    <div className="flex flex-col sm:flex-row gap-3">
+                                        <Button
+                                            onClick={() => window.location.href = '/patient/nutrition?fromReport=true'}
+                                            className="flex-1 bg-green-600 text-white border-2 border-green-700 shadow-[4px_4px_0px_0px_green-700] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_green-700] font-poppins font-bold"
+                                        >
+                                            <Utensils className="w-4 h-4 mr-2" />
+                                            Get Nutrition Plan
+                                        </Button>
+                                        <Button
+                                            onClick={() => window.location.href = '/patient/nutrition'}
+                                            variant="outline"
+                                            className="flex-1 border-2 border-green-600 text-green-700 hover:bg-green-100 font-poppins font-medium"
+                                        >
+                                            <Apple className="w-4 h-4 mr-2" />
+                                            Upload Different Report
+                                        </Button>
+                                    </div>
+                                </div>
                             </CardContent>
                         </Card>
 

@@ -88,6 +88,7 @@ export default function LabAnalyzerPage() {
         }
 
         setIsAnalyzing(true)
+        setReportSaved(false)
         setError(null)
 
         try {
@@ -112,7 +113,7 @@ export default function LabAnalyzerPage() {
             setAnalysis(result)
             
             // Save to database
-            saveLabReport(result)
+            await saveLabReport(result)
         } catch (error) {
             console.error('Error analyzing lab report:', error)
             setError('Failed to analyze lab report. Please try again.')
@@ -121,7 +122,7 @@ export default function LabAnalyzerPage() {
         }
     }
 
-    const saveLabReport = async (analysisData: LabAnalysis) => {
+    const saveLabReport = async (analysisData: LabAnalysis): Promise<void> => {
         setIsSavingReport(true)
         try {
             const response = await fetch('/api/lab-reports', {
@@ -141,11 +142,27 @@ export default function LabAnalyzerPage() {
                 }),
             })
 
-            if (response.ok) {
-                setReportSaved(true)
+            if (!response.ok) {
+                let message = "Failed to save lab report"
+                try {
+                    const body = await response.json()
+                    if (typeof body?.error === "string" && body.error.trim()) {
+                        message = body.error
+                    }
+                } catch {
+                    // Ignore response parse errors and keep generic message
+                }
+
+                setReportSaved(false)
+                setError(`Analysis completed, but report was not saved: ${message}`)
+                return
             }
+
+            setReportSaved(true)
         } catch (error) {
             console.error('Error saving lab report:', error)
+            setReportSaved(false)
+            setError('Analysis completed, but report could not be saved. Please try again.')
         } finally {
             setIsSavingReport(false)
         }

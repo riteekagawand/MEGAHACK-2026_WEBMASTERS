@@ -118,6 +118,8 @@ interface NutritionAnalysis {
     }
     warnings: string[]
     confidence: number
+    engine?: "v1" | "v2"
+    engineReason?: string
 }
 
 export default function NutritionAIPage() {
@@ -133,11 +135,12 @@ export default function NutritionAIPage() {
     const [selectedDiet, setSelectedDiet] = useState<"vegetarian" | "nonVegetarian">("vegetarian")
     const [expandedDay, setExpandedDay] = useState<string | null>(null)
     const [isFetchingFromReport, setIsFetchingFromReport] = useState(false)
+    const [showLabAnalyzerCta, setShowLabAnalyzerCta] = useState(false)
 
-    // Auto-fetch from saved report if coming from lab-analyzer
+    // Do not auto-run analysis on redirect; user chooses existing UI actions.
     useEffect(() => {
         if (fromReport === 'true') {
-            fetchNutritionFromSavedReport()
+            setError(null)
         }
     }, [fromReport])
 
@@ -210,6 +213,7 @@ export default function NutritionAIPage() {
     const fetchNutritionFromSavedReport = async () => {
         setIsFetchingFromReport(true)
         setError(null)
+        setShowLabAnalyzerCta(false)
 
         try {
             const response = await fetch('/api/nutrition/fromreport', {
@@ -224,7 +228,17 @@ export default function NutritionAIPage() {
 
             if (!response.ok) {
                 const errorData = await response.json()
-                throw new Error(errorData.error || 'Failed to fetch nutrition from saved report')
+                const status = response.status
+                const message =
+                    errorData.error || "Failed to fetch nutrition from saved report"
+                if (status === 404 || message.includes("No saved lab report found")) {
+                    setShowLabAnalyzerCta(true)
+                    setError(
+                        "No saved lab report found. Please analyze a report first in Lab Analyzer, then come back and click 'Use Saved Report'."
+                    )
+                    return
+                }
+                throw new Error(message)
             }
 
             const result = await response.json()
@@ -392,9 +406,14 @@ export default function NutritionAIPage() {
             doc.setFont("helvetica", "bold")
             doc.setFontSize(10.5)
             doc.text(`${label}:`, marginLeft, y)
+            const labelWidth = doc.getTextWidth(`${label}:`)
+            const minGap = 4
+            const valueStartX = marginLeft + labelWidth + minGap
+            const valueWidth = Math.max(40, pageWidth - marginLeft - valueStartX)
+
             doc.setFont("helvetica", "normal")
-            const valueLines = doc.splitTextToSize(value || "N/A", maxLineWidth - 35)
-            doc.text(valueLines, marginLeft + 35, y)
+            const valueLines = doc.splitTextToSize(value || "N/A", valueWidth)
+            doc.text(valueLines, valueStartX, y)
             y += Math.max(6, valueLines.length * 5)
         }
 
@@ -743,6 +762,15 @@ export default function NutritionAIPage() {
                                     </AlertDescription>
                                 </Alert>
                             )}
+                            {showLabAnalyzerCta && (
+                                <Button
+                                    onClick={() => (window.location.href = "/patient/lab-analyzer")}
+                                    variant="outline"
+                                    className="w-full border-2 border-[#151616] hover:bg-[#f9c80e] font-poppins font-medium"
+                                >
+                                    Go to Lab Analyzer First
+                                </Button>
+                            )}
 
                             {/* Analyze Button */}
                             <Button
@@ -796,10 +824,31 @@ export default function NutritionAIPage() {
                                     <Badge className={`${getHealthStatusColor(analysis.reportSummary.overallHealthStatus)} font-poppins`}>
                                         {analysis.reportSummary.overallHealthStatus}
                                     </Badge>
+                                    <Badge
+                                        className={`font-poppins ${
+                                            analysis.engine === "v2"
+                                                ? "bg-purple-600 text-white"
+                                                : analysis.engine === "v1"
+                                                ? "bg-gray-700 text-white"
+                                                : "bg-gray-400 text-white"
+                                        }`}
+                                    >
+                                        AI Engine:{" "}
+                                        {analysis.engine === "v2"
+                                            ? "V2 LangChain"
+                                            : analysis.engine === "v1"
+                                            ? "V1"
+                                            : "Unknown"}
+                                    </Badge>
                                     <Badge className="bg-green-500 text-white font-poppins">
                                         {analysis.confidence}% Confidence
                                     </Badge>
                                 </div>
+                                {analysis.engineReason && (
+                                    <p className="text-xs font-poppins text-[#151616]/70 mt-2">
+                                        {analysis.engineReason}
+                                    </p>
+                                )}
                             </CardHeader>
                         </Card>
 
@@ -871,11 +920,11 @@ export default function NutritionAIPage() {
                                     <div className="space-y-4">
                                         {analysis.healthMarkers.map((marker, idx) => (
                                             <div key={idx} className="p-4 bg-[#FFFFF4] rounded-xl border border-[#151616]/20">
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <h5 className="font-poppins font-semibold text-[#151616]">
+                                                <div className="flex justify-between items-start gap-2 mb-2">
+                                                    <h5 className="font-poppins font-semibold text-[#151616] break-words min-w-0">
                                                         {marker.marker}
                                                     </h5>
-                                                    <Badge className={`font-poppins ${getStatusColor(marker.status)}`}>
+                                                    <Badge className={`font-poppins shrink-0 ${getStatusColor(marker.status)}`}>
                                                         {marker.status}
                                                     </Badge>
                                                 </div>
@@ -897,7 +946,7 @@ export default function NutritionAIPage() {
                                                         <p className="text-xs text-green-700 font-medium mb-1">Foods to Include:</p>
                                                         <div className="flex flex-wrap gap-1">
                                                             {marker.foodsToInclude.map((food, fIdx) => (
-                                                                <Badge key={fIdx} className="bg-green-100 text-green-700 text-xs">
+                                                                <Badge key={fIdx} className="bg-green-100 text-green-700 text-xs whitespace-normal break-words leading-snug h-auto py-1">
                                                                     {food}
                                                                 </Badge>
                                                             ))}
@@ -907,7 +956,7 @@ export default function NutritionAIPage() {
                                                         <p className="text-xs text-red-700 font-medium mb-1">Foods to Avoid:</p>
                                                         <div className="flex flex-wrap gap-1">
                                                             {marker.foodsToAvoid.map((food, fIdx) => (
-                                                                <Badge key={fIdx} className="bg-red-100 text-red-700 text-xs">
+                                                                <Badge key={fIdx} className="bg-red-100 text-red-700 text-xs whitespace-normal break-words leading-snug h-auto py-1">
                                                                     {food}
                                                                 </Badge>
                                                             ))}
@@ -938,25 +987,27 @@ export default function NutritionAIPage() {
                                             Daily Targets
                                         </h5>
                                         <div className="space-y-2">
-                                            <div className="flex justify-between items-center">
+                                            <div className="flex justify-between items-start gap-2">
                                                 <span className="font-poppins text-[#151616]">Calories</span>
-                                                <Badge className="bg-[#f9c80e] text-[#151616]">{analysis.personalizedDietPlan.dailyCalories} kcal</Badge>
+                                                <Badge className="bg-[#f9c80e] text-[#151616] whitespace-normal break-words leading-snug h-auto py-1 text-right max-w-[70%]">
+                                                    {analysis.personalizedDietPlan.dailyCalories} kcal
+                                                </Badge>
                                             </div>
-                                            <div className="flex justify-between items-center">
+                                            <div className="flex justify-between items-start gap-2">
                                                 <span className="font-poppins text-[#151616]">Protein</span>
-                                                <Badge variant="outline" className="border-[#151616]">{analysis.personalizedDietPlan.macros.protein}</Badge>
+                                                <Badge variant="outline" className="border-[#151616] whitespace-normal break-words leading-snug h-auto py-1 text-right max-w-[70%]">{analysis.personalizedDietPlan.macros.protein}</Badge>
                                             </div>
-                                            <div className="flex justify-between items-center">
+                                            <div className="flex justify-between items-start gap-2">
                                                 <span className="font-poppins text-[#151616]">Carbs</span>
-                                                <Badge variant="outline" className="border-[#151616]">{analysis.personalizedDietPlan.macros.carbs}</Badge>
+                                                <Badge variant="outline" className="border-[#151616] whitespace-normal break-words leading-snug h-auto py-1 text-right max-w-[70%]">{analysis.personalizedDietPlan.macros.carbs}</Badge>
                                             </div>
-                                            <div className="flex justify-between items-center">
+                                            <div className="flex justify-between items-start gap-2">
                                                 <span className="font-poppins text-[#151616]">Fats</span>
-                                                <Badge variant="outline" className="border-[#151616]">{analysis.personalizedDietPlan.macros.fats}</Badge>
+                                                <Badge variant="outline" className="border-[#151616] whitespace-normal break-words leading-snug h-auto py-1 text-right max-w-[70%]">{analysis.personalizedDietPlan.macros.fats}</Badge>
                                             </div>
-                                            <div className="flex justify-between items-center">
+                                            <div className="flex justify-between items-start gap-2">
                                                 <span className="font-poppins text-[#151616]">Fiber</span>
-                                                <Badge variant="outline" className="border-[#151616]">{analysis.personalizedDietPlan.macros.fiber}</Badge>
+                                                <Badge variant="outline" className="border-[#151616] whitespace-normal break-words leading-snug h-auto py-1 text-right max-w-[70%]">{analysis.personalizedDietPlan.macros.fiber}</Badge>
                                             </div>
                                         </div>
                                     </div>
@@ -1173,7 +1224,7 @@ export default function NutritionAIPage() {
                                         {analysis.foodsToAvoid.strict.length > 0 ? (
                                             <ul className="space-y-1">
                                                 {analysis.foodsToAvoid.strict.map((food, idx) => (
-                                                    <li key={idx} className="text-sm text-red-800">• {food}</li>
+                                                    <li key={idx} className="text-sm text-red-800 break-words">• {food}</li>
                                                 ))}
                                             </ul>
                                         ) : (
@@ -1187,7 +1238,7 @@ export default function NutritionAIPage() {
                                         {analysis.foodsToAvoid.moderate.length > 0 ? (
                                             <ul className="space-y-1">
                                                 {analysis.foodsToAvoid.moderate.map((food, idx) => (
-                                                    <li key={idx} className="text-sm text-orange-800">• {food}</li>
+                                                    <li key={idx} className="text-sm text-orange-800 break-words">• {food}</li>
                                                 ))}
                                             </ul>
                                         ) : (
@@ -1201,7 +1252,7 @@ export default function NutritionAIPage() {
                                         {analysis.foodsToAvoid.occasional.length > 0 ? (
                                             <ul className="space-y-1">
                                                 {analysis.foodsToAvoid.occasional.map((food, idx) => (
-                                                    <li key={idx} className="text-sm text-yellow-800">• {food}</li>
+                                                    <li key={idx} className="text-sm text-yellow-800 break-words">• {food}</li>
                                                 ))}
                                             </ul>
                                         ) : (

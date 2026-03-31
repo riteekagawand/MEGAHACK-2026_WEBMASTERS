@@ -1,6 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+const RETRYABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
+const MAX_GENERATE_RETRIES = 3;
+const BASE_RETRY_DELAY_MS = 800;
+
+function getErrorStatusCode(error: unknown): number | null {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    typeof (error as { status?: unknown }).status === "number"
+  ) {
+    return (error as { status: number }).status;
+  }
+  return null;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function generateWithRetry(
+  model: ReturnType<GoogleGenerativeAI["getGenerativeModel"]>,
+  parts: unknown[]
+) {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= MAX_GENERATE_RETRIES; attempt++) {
+    try {
+      return await model.generateContent(parts);
+    } catch (error) {
+      lastError = error;
+      const statusCode = getErrorStatusCode(error);
+      const isRetryable =
+        statusCode !== null && RETRYABLE_STATUS_CODES.has(statusCode);
+
+      if (!isRetryable || attempt === MAX_GENERATE_RETRIES) {
+        throw error;
+      }
+
+      const jitterMs = Math.floor(Math.random() * 200);
+      const delayMs = BASE_RETRY_DELAY_MS * 2 ** (attempt - 1) + jitterMs;
+      await sleep(delayMs);
+    }
+  }
+
+  throw lastError;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { image, additionalInfo } = await request.json();
@@ -12,8 +59,6 @@ export async function POST(request: NextRequest) {
     // Initialize Gemini AI
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-// or
-// const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // Prepare the comprehensive prompt
     const prompt = `You are an expert medical AI assistant specializing in laboratory report analysis. Analyze the medical lab report image provided and give comprehensive insights.
@@ -88,7 +133,7 @@ Return ONLY the JSON object, no additional text.`;
     };
 
     // Generate content
-    const result = await model.generateContent([prompt, imagePart]);
+    const result = await generateWithRetry(model, [prompt, imagePart]);
     const response = await result.response;
     const text = response.text();
 
@@ -160,11 +205,22 @@ Return ONLY the JSON object, no additional text.`;
     }
   } catch (error) {
     console.error("Error analyzing lab report:", error);
+    const statusCode = getErrorStatusCode(error);
 
     if (error instanceof Error && error.message.includes("API key")) {
       return NextResponse.json(
         { error: "API configuration error. Please check GEMINI_API_KEY." },
         { status: 500 }
+      );
+    }
+
+    if (statusCode !== null && RETRYABLE_STATUS_CODES.has(statusCode)) {
+      return NextResponse.json(
+        {
+          error:
+            "AI service is temporarily busy. Please retry in a few moments.",
+        },
+        { status: 503 }
       );
     }
 

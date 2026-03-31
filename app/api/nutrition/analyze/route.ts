@@ -1,5 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { generateNutritionAnalysisV2 } from "@/lib/services/nutrition-v2";
+
+async function extractLabContextFromImage(
+  model: ReturnType<GoogleGenerativeAI["getGenerativeModel"]>,
+  image: string
+) {
+  const extractionPrompt = `Analyze this lab report image and extract key measurable values.
+Return concise plain text with:
+- test type/date (if visible)
+- each marker with value and reference range
+- notable abnormalities
+Do not provide recommendations, only extracted observations.`;
+
+  const imagePart = {
+    inlineData: {
+      data: image,
+      mimeType: "image/jpeg",
+    },
+  };
+
+  const extraction = await model.generateContent([extractionPrompt, imagePart]);
+  const extractionResponse = await extraction.response;
+  return extractionResponse.text();
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +36,26 @@ export async function POST(request: NextRequest) {
     // Initialize Gemini AI
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+    const v2Enabled = process.env.NUTRITION_V2_ENABLED === "true";
+    let v2FallbackReason: string | null = null;
+    if (v2Enabled) {
+      try {
+        const extractedLabContext = await extractLabContextFromImage(model, image);
+        const v2Result = await generateNutritionAnalysisV2(
+          extractedLabContext,
+          additionalInfo
+        );
+        return NextResponse.json({
+          ...v2Result,
+          engine: "v2",
+        });
+      } catch (v2Error) {
+        console.error("Nutrition V2 failed, falling back to V1:", v2Error);
+        v2FallbackReason =
+          v2Error instanceof Error ? v2Error.message : "Unknown V2 error";
+      }
+    }
 
     // Prepare the nutrition-focused prompt
     const prompt = `You are an expert clinical nutritionist AI specializing in analyzing lab reports to provide personalized nutrition recommendations. Analyze the medical lab report image and provide comprehensive nutrition guidance.
@@ -187,7 +231,11 @@ Return ONLY the JSON object, no additional text.`;
       // Parse the JSON response
       const analysis = JSON.parse(cleanedResponse);
 
-      return NextResponse.json(analysis);
+      return NextResponse.json({
+        ...analysis,
+        engine: "v1",
+        engineReason: v2FallbackReason ? `V2 failed: ${v2FallbackReason}` : "V1 path used",
+      });
     } catch (parseError) {
       console.error("Error parsing Gemini response:", parseError);
       console.log("Raw response:", text);
@@ -216,6 +264,10 @@ Return ONLY the JSON object, no additional text.`;
         warnings: ["Please consult a qualified nutritionist for personalized advice"],
         confidence: 50,
         rawAnalysis: text,
+        engine: "v1",
+        engineReason: v2FallbackReason
+          ? `V2 failed, V1 parse fallback: ${v2FallbackReason}`
+          : "V1 parse fallback",
       });
     }
   } catch (error) {

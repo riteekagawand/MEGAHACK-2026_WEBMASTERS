@@ -102,20 +102,20 @@ export function PatientSidebar() {
 
   return (
     <Sidebar className="border-r-2 border-[#151616] bg-white">
-      <SidebarHeader className="border-b-2 border-[#151616] p-4">
-        <Link href="/patient/dashboard" className="flex items-center gap-3">
+      <SidebarHeader className="h-16 border-b-2 border-[#151616] px-3 py-0">
+        <Link href="/patient/dashboard" className="flex h-full items-center gap-2">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="w-10 h-10 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center"
+            className="w-9 h-9 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center"
           >
-            <Heart className="w-6 h-6 text-[#151616]" />
+            <Heart className="w-5 h-5 text-[#151616]" />
           </motion.div>
           {!isCollapsed && (
             <div>
-              <h1 className="text-xl font-instrument-serif font-bold text-[#151616]">
+              <h1 className="text-lg font-instrument-serif font-bold text-[#151616]">
                 Orka
               </h1>
-              <p className="text-sm font-poppins text-[#151616]/70">
+              <p className="text-xs font-poppins text-[#151616]/70">
                 Patient Portal
               </p>
             </div>

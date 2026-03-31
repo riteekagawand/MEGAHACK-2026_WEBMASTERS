@@ -62,6 +62,16 @@ const getHeatmapColor = (score: number): string => {
   }
 };
 
+const getRiskBadgeStyles = (riskLevel: RiskLevel) => {
+  if (riskLevel === "high") {
+    return { backgroundColor: "#f97316", color: "white" };
+  }
+  if (riskLevel === "medium") {
+    return { backgroundColor: "#facc15", color: "#151616" };
+  }
+  return { backgroundColor: "#22c55e", color: "white" };
+};
+
 // Generate predictive alert based on risk level and cases
 const getPredictiveAlert = (o: OutbreakPoint): string => {
   const riskScore = o.riskScore;
@@ -111,6 +121,12 @@ export default function EpiAlertPage() {
     }
   };
 
+  const goToPanIndia = () => {
+    setUserLatLng(null);
+    setUserCity("");
+    setLocationPermission("prompt");
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -157,7 +173,7 @@ export default function EpiAlertPage() {
         {/* Compact Header */}
         <div className="flex items-center justify-between bg-white border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] rounded-xl px-4 py-2 flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#D6F32F] rounded-lg border-2 border-[#151616] flex items-center justify-center shadow-[2px_2px_0px_0px_#151616]">
+            <div className="w-10 h-10 bg-[#f9c80e] rounded-lg border-2 border-[#151616] flex items-center justify-center shadow-[2px_2px_0px_0px_#151616]">
               <AlertTriangle className="w-5 h-5 text-[#151616]" />
             </div>
             <div>
@@ -191,10 +207,19 @@ export default function EpiAlertPage() {
                 My Location
               </Button>
             ) : locationPermission === "granted" ? (
-              <Badge className="bg-[#D6F32F] text-[#151616] border-[#151616] font-poppins text-xs">
-                <MapPin className="w-3 h-3 mr-1" />
-                {userCity}
-              </Badge>
+              <div className="flex items-center gap-2">
+                <Badge className="bg-[#f9c80e] text-[#151616] border-[#151616] font-poppins text-xs">
+                  <MapPin className="w-3 h-3 mr-1" />
+                  {userCity}
+                </Badge>
+                <Button
+                  onClick={goToPanIndia}
+                  size="sm"
+                  className="bg-[#151616] text-white hover:bg-[#151616]/90 font-poppins text-xs font-medium px-3 py-1.5 h-auto"
+                >
+                  Pan India View
+                </Button>
+              </div>
             ) : null}
           </div>
         </div>
@@ -268,7 +293,7 @@ export default function EpiAlertPage() {
                 {loading ? (
                   <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
                     <div className="text-center">
-                      <Loader2 className="w-8 h-8 animate-spin text-[#D6F32F] mx-auto mb-2" />
+                      <Loader2 className="w-8 h-8 animate-spin text-[#f9c80e] mx-auto mb-2" />
                       <p className="text-xs font-poppins text-[#151616]/60">Loading...</p>
                     </div>
                   </div>
@@ -335,7 +360,7 @@ export default function EpiAlertPage() {
                           radius={300}
                           pathOptions={{
                             color: "#151616",
-                            fillColor: "#D6F32F",
+                            fillColor: "#f9c80e",
                             fillOpacity: 1,
                             weight: 3,
                           }}
@@ -344,8 +369,8 @@ export default function EpiAlertPage() {
                           center={userLatLng}
                           radius={800}
                           pathOptions={{
-                            color: "#D6F32F",
-                            fillColor: "#D6F32F",
+                            color: "#f9c80e",
+                            fillColor: "#f9c80e",
                             fillOpacity: 0.2,
                             weight: 2,
                             dashArray: "5, 5",
@@ -426,10 +451,7 @@ export default function EpiAlertPage() {
                       </div>
                       <Badge
                         className="text-[8px] font-bold border-0 px-1 py-0"
-                        style={{
-                          backgroundColor: getHeatmapColor(o.riskScore),
-                          color: o.riskScore > 50 ? "white" : "#151616",
-                        }}
+                        style={getRiskBadgeStyles(o.riskLevel)}
                       >
                         {o.riskLevel.toUpperCase()}
                       </Badge>
@@ -453,10 +475,7 @@ export default function EpiAlertPage() {
                         </div>
                         <Badge
                           className="text-[8px] font-bold border-0 px-1 py-0"
-                          style={{
-                            backgroundColor: getHeatmapColor(o.riskScore),
-                            color: "white"
-                          }}
+                          style={getRiskBadgeStyles(o.riskLevel)}
                         >
                           {o.riskLevel.toUpperCase()}
                         </Badge>

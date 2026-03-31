@@ -58,16 +58,16 @@ export function DashboardSidebar() {
         <div className="w-72 bg-white h-screen overflow-y-auto relative border-r-4 border-black">
             <div className="absolute top-0 right-0 w-1 h-full bg-black z-10"></div>
             {/* Logo */}
-            <div className="p-6 border-b-2 border-[#151616]">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center">
-                        <Brain className="w-6 h-6 text-[#151616]" />
+            <div className="h-16 border-b-2 border-[#151616] px-4">
+                <div className="flex h-full items-center gap-2">
+                    <div className="w-9 h-9 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center">
+                        <Brain className="w-5 h-5 text-[#151616]" />
                     </div>
                     <div>
-                        <h1 className="text-xl font-instrument-serif font-bold text-[#151616]">
+                        <h1 className="text-lg font-instrument-serif font-bold text-[#151616]">
                             Okra
                         </h1>
-                        <p className="text-sm font-poppins text-[#151616]/60">
+                        <p className="text-xs font-poppins text-[#151616]/60">
                             AI Medical Platform
                         </p>
                     </div>

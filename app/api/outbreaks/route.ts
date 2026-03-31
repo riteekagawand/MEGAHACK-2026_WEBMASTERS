@@ -157,8 +157,9 @@ async function fetchGeminiOutbreakData(): Promise<OutbreakPoint[]> {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      console.error("GEMINI_API_KEY not configured, using fallback data");
-      return getFallbackData();
+      // Hardcoded fallback disabled: Gemini-only mode.
+      // return getFallbackData();
+      throw new Error("GEMINI_API_KEY not configured");
     }
 
     console.log("Calling Gemini API...");
@@ -170,7 +171,7 @@ async function fetchGeminiOutbreakData(): Promise<OutbreakPoint[]> {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `Search for current disease outbreaks in India. Return a JSON array with outbreak objects.
+              text: `Return ONLY a valid JSON array of at most 10 outbreak objects for India.
 
 Each object must have:
 - disease: name of the disease (e.g., Dengue, Malaria, Chikungunya, H1N1, Japanese Encephalitis, COVID-19)
@@ -180,7 +181,7 @@ Each object must have:
 - deaths: approximate number of deaths (if any)
 
 Focus on CURRENT outbreaks from the last 3 months. Include data from NVBDCP, WHO, and Indian health ministry reports.
-Only return the JSON array, no other text.
+Return JSON only. No markdown. No code fences. No explanation text.
 
 Example format:
 [
@@ -190,8 +191,12 @@ Example format:
             }],
           }],
           generationConfig: {
-            temperature: 0.1,
-            maxOutputTokens: 2000,
+            temperature: 0,
+            maxOutputTokens: 4096,
+            responseMimeType: "application/json",
+            thinkingConfig: {
+              thinkingBudget: 0,
+            },
           },
         }),
       }
@@ -200,18 +205,26 @@ Example format:
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`Gemini API error: ${response.status}`, errorText);
-      console.log("Using fallback data...");
-      return getFallbackData();
+      // Hardcoded fallback disabled: Gemini-only mode.
+      // return getFallbackData();
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log("Gemini response:", JSON.stringify(data, null, 2));
-    
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const candidate = data.candidates?.[0];
+    const finishReason = candidate?.finishReason;
+    const text = (candidate?.content?.parts || [])
+      .map((part: { text?: string }) => part.text || "")
+      .join("");
     
     if (!text) {
-      console.error("Empty response from Gemini, using fallback data");
-      return getFallbackData();
+      // Hardcoded fallback disabled: Gemini-only mode.
+      // return getFallbackData();
+      throw new Error("Empty response from Gemini");
+    }
+
+    if (finishReason === "MAX_TOKENS") {
+      throw new Error("Gemini response truncated (MAX_TOKENS)");
     }
 
     // Extract JSON from response
@@ -228,13 +241,13 @@ Example format:
     } catch (parseError) {
       console.error("Failed to parse Gemini response:", parseError);
       console.log("Raw response:", text);
-      console.log("Using fallback data...");
-      return getFallbackData();
+      // Hardcoded fallback disabled: Gemini-only mode.
+      // return getFallbackData();
+      throw new Error("Failed to parse Gemini response");
     }
     
     if (!Array.isArray(outbreaks) || outbreaks.length === 0) {
-      console.error("Invalid or empty outbreaks array from Gemini");
-      return getFallbackData();
+      throw new Error("Invalid or empty outbreaks array from Gemini");
     }
     
     const result: OutbreakPoint[] = [];
@@ -265,76 +278,41 @@ Example format:
       });
     }
 
-    // Always include Palghar area outbreaks with different risk zones
-    const palgharOutbreaks: OutbreakPoint[] = palgharOutbreakData.map(item => {
-      let riskScore: number;
-      let riskLevel: RiskLevel;
-      
-      switch (item.severity) {
-        case "severe":
-          riskScore = 88 + Math.random() * 7;
-          riskLevel = "high";
-          break;
-        case "high":
-          riskScore = 72 + Math.random() * 8;
-          riskLevel = "high";
-          break;
-        case "medium":
-          riskScore = 45 + Math.random() * 20;
-          riskLevel = "medium";
-          break;
-        case "low":
-        default:
-          riskScore = 15 + Math.random() * 20;
-          riskLevel = "low";
-          break;
-      }
-      
-      return {
-        disease: item.disease,
-        state: item.place + ", Palghar",
-        district: item.district,
-        lat: item.lat + (Math.random() - 0.5) * 0.02,
-        lng: item.lng + (Math.random() - 0.5) * 0.02,
-        riskScore,
-        riskLevel,
-        cases: item.cases,
-        deaths: item.deaths,
-        lastUpdated: new Date().toISOString(),
-        source: "NVBDCP (Palghar District)",
-      };
-    });
-
-    return [...result, ...palgharOutbreaks];
+    // Hardcoded Palghar seed data disabled: Gemini-only mode.
+    // const palgharOutbreaks: OutbreakPoint[] = ...
+    // return [...result, ...palgharOutbreaks];
+    return result;
   } catch (error) {
     console.error("Gemini fetch error:", error);
-    console.log("Using fallback data...");
-    return getFallbackData();
+    // Hardcoded fallback disabled: Gemini-only mode.
+    // return getFallbackData();
+    throw error;
   }
 }
 
 export async function GET() {
   try {
     const outbreaks = await fetchGeminiOutbreakData();
-    const isFallback = outbreaks.length > 0 && outbreaks[0].source === "NVBDCP (Fallback)";
     
     return NextResponse.json({
       outbreaks,
       lastUpdated: new Date().toISOString(),
-      sources: isFallback ? ["NVBDCP (Fallback)"] : ["Gemini AI (NVBDCP/WHO data)"],
+      sources: ["Gemini AI (NVBDCP/WHO data)"],
       total: outbreaks.length,
-      isFallback,
+      isFallback: false,
     });
   } catch (error) {
     console.error("Error fetching outbreak data:", error);
-    // Even if everything fails, return fallback data
-    const fallbackData = getFallbackData();
-    return NextResponse.json({
-      outbreaks: fallbackData,
-      lastUpdated: new Date().toISOString(),
-      sources: ["NVBDCP (Emergency Fallback)"],
-      total: fallbackData.length,
-      isFallback: true,
-    });
+    return NextResponse.json(
+      {
+        outbreaks: [],
+        lastUpdated: new Date().toISOString(),
+        sources: ["Gemini AI (NVBDCP/WHO data)"],
+        total: 0,
+        isFallback: false,
+        error: "Unable to fetch outbreak data from Gemini",
+      },
+      { status: 502 }
+    );
   }
 }

@@ -1,0 +1,9 @@
+{
+  "report_context": "CBC and biochemistry panel. Hemoglobin 10.4 g/dL, Vitamin D 15.8 ng/mL, Vitamin B12 168 pg/mL, Calcium 8.1 mg/dL, HbA1c 6.7%, LDL 146 mg/dL, Triglycerides 214 mg/dL, Uric Acid 7.8 mg/dL. Patient reports fatigue and low energy.",
+  "additional_info": "Female, age 34, vegetarian, mild hypothyroidism, sedentary work profile, no known food allergies.",
+  "source": "image",
+  "metadata": {
+    "patient_id": "demo-001",
+    "created_at": "2026-03-31T10:00:00Z"
+  }
+}

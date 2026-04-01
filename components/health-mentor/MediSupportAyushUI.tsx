@@ -477,52 +477,83 @@ export default function MediSupportAyushUI() {
     });
   }
 
+  const introSteps = [
+    {
+      n: 1,
+      icon: Phone,
+      title: "Start consultation",
+      body: 'Click "Start Health Consultation" in the right card',
+    },
+    {
+      n: 2,
+      icon: HeartHandshake,
+      title: "Hold mic to speak",
+      body: "Hold the mic for 2–3 seconds and describe how you feel or your symptoms",
+    },
+    {
+      n: 3,
+      icon: MessageSquare,
+      title: "Get remedy & advice",
+      body: "AI will ask symptoms, duration, age, then suggest an Ayurvedic remedy",
+    },
+  ] as const;
+
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
         {/* LEFT: AI Health Consultant + AI messages */}
-        <Card className="bg-white shadow-lg border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 rounded-2xl flex flex-col min-h-[420px]">
-          <CardHeader className="text-black rounded-t-xl border-b-2 border-[#151616]">
-            <CardTitle className="flex items-center gap-2 font-poppins font-bold">
-              <MessageSquare className="h-5 w-5" />
-              AI Health Consultant
-            </CardTitle>
-            <CardDescription className="text-black/80 font-poppins">
-              {inCall
-                ? "AI responses with voice playback — follow the questions"
-                : "Experience step-by-step AYUSH health consultation"}
-            </CardDescription>
+        <Card className="group overflow-hidden bg-white border-2 border-[#151616] shadow-[6px_6px_0px_0px_#151616] hover:shadow-[2px_2px_0px_0px_#151616] hover:translate-y-1 transition-[transform,box-shadow] duration-300 ease-out rounded-2xl flex flex-col min-h-[420px] ring-1 ring-[#151616]/5">
+          <CardHeader className="text-black rounded-t-xl border-b-2 border-[#151616] bg-gradient-to-b from-[#FFFFF4] to-white px-6 pb-5 pt-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[#151616] bg-[#f9c80e] shadow-[3px_3px_0px_0px_#151616]">
+                <MessageSquare className="h-6 w-6 text-[#151616]" strokeWidth={2.25} />
+              </div>
+              <div className="min-w-0 space-y-1 pt-0.5">
+                <p className="text-[#151616]/80 font-poppins text-xs font-semibold uppercase tracking-[0.12em]">
+                  How it works
+                </p>
+                <CardTitle className="font-poppins text-xl font-bold leading-tight tracking-tight text-[#151616]">
+                  AI Health Consultant
+                </CardTitle>
+                <CardDescription className="text-[#151616]/75 font-poppins text-sm leading-relaxed">
+                  {inCall
+                    ? "AI responses with voice playback — follow the questions"
+                    : "Experience step-by-step AYUSH health consultation"}
+                </CardDescription>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="pt-6 flex-1 flex flex-col min-h-0">
+          <CardContent className="px-6 pb-2 pt-6 flex-1 flex flex-col min-h-0">
             {!inCall ? (
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="bg-[#f9c80e]/20 rounded-full p-2 text-[#151616] border border-[#151616]/20">
-                    <Phone className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 className="font-poppins font-bold text-[#151616]">Start consultation</h3>
-                    <p className="text-sm text-[#151616]/70 font-poppins">Click &quot;Start Health Consultation&quot; in the right card</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="bg-[#f9c80e]/20 rounded-full p-2 text-[#151616] border border-[#151616]/20">
-                    <HeartHandshake className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 className="font-poppins font-bold text-[#151616]">Hold mic to speak</h3>
-                    <p className="text-sm text-[#151616]/70 font-poppins">Hold the mic for 2–3 seconds and describe how you feel or your symptoms</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="bg-[#f9c80e]/20 rounded-full p-2 text-[#151616] border border-[#151616]/20">
-                    <MessageSquare className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 className="font-poppins font-bold text-[#151616]">Get remedy & advice</h3>
-                    <p className="text-sm text-[#151616]/70 font-poppins">AI will ask symptoms, duration, age, then suggest an Ayurvedic remedy</p>
-                  </div>
-                </div>
+              <div className="relative">
+                <div
+                  className="pointer-events-none absolute left-[21px] top-11 bottom-11 w-0.5 rounded-full bg-[#f9c80e]/35"
+                  aria-hidden
+                />
+                <ul className="relative space-y-5">
+                  {introSteps.map((step, i) => (
+                    <motion.li
+                      key={step.n}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.06, duration: 0.35 }}
+                      className="flex gap-4"
+                    >
+                      <div className="relative z-10 shrink-0">
+                        <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full border border-[#151616] bg-white px-1 font-poppins text-[10px] font-bold leading-none text-[#151616] shadow-sm">
+                          {step.n}
+                        </span>
+                        <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#151616] bg-[#f9c80e] text-[#151616] shadow-[3px_3px_0px_0px_#151616]">
+                          <step.icon className="h-5 w-5" strokeWidth={2.25} />
+                        </span>
+                      </div>
+                      <div className="min-w-0 pb-0.5 pt-1">
+                        <h3 className="font-poppins text-base font-bold leading-snug text-[#151616]">{step.title}</h3>
+                        <p className="mt-1.5 text-sm leading-relaxed text-[#151616]/70 font-poppins">{step.body}</p>
+                      </div>
+                    </motion.li>
+                  ))}
+                </ul>
               </div>
             ) : (
               <div className="flex-1 overflow-y-auto space-y-2 min-h-[280px] max-h-[340px] pr-1">
@@ -544,9 +575,9 @@ export default function MediSupportAyushUI() {
               </div>
             )}
           </CardContent>
-          <CardFooter className="border-t-2 border-[#151616] bg-[#FFFFF4] rounded-b-xl">
+          <CardFooter className="border-t-2 border-[#151616] bg-[#FFFFF4] px-6 py-4 rounded-b-xl">
             {inCall && (
-              <p className="text-sm text-[#151616]/60 font-poppins w-full">
+              <p className="text-sm text-[#151616]/60 font-poppins w-full leading-relaxed">
                 AI responses are read aloud unless muted.
               </p>
             )}
@@ -554,27 +585,51 @@ export default function MediSupportAyushUI() {
         </Card>
 
         {/* RIGHT: You + your messages + controls */}
-        <Card className="bg-white shadow-lg border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] transition-all duration-200 rounded-2xl flex flex-col min-h-[420px]">
-          <CardHeader className="text-[#151616] rounded-t-xl border-b-2 border-[#151616]">
-            <CardTitle className="flex items-center gap-2 font-poppins font-bold">
-              <Stethoscope className="h-5 w-5" />
-              Start Health Consultation
-            </CardTitle>
-            <CardDescription className="text-[#151616]/80 font-poppins">
-              {inCall
-                ? "Your messages — hold mic 2–3 sec to speak"
-                : "Start a voice consultation with the AYUSH AI"}
-            </CardDescription>
+        <Card className="group overflow-hidden bg-white border-2 border-[#151616] shadow-[6px_6px_0px_0px_#151616] hover:shadow-[2px_2px_0px_0px_#151616] hover:translate-y-1 transition-[transform,box-shadow] duration-300 ease-out rounded-2xl flex flex-col min-h-[420px] ring-1 ring-[#151616]/5">
+          <CardHeader className="text-[#151616] rounded-t-xl border-b-2 border-[#151616] bg-gradient-to-b from-[#FFFFF4] to-white px-6 pb-5 pt-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[#151616] bg-[#f9c80e] shadow-[3px_3px_0px_0px_#151616]">
+                <Stethoscope className="h-6 w-6 text-[#151616]" strokeWidth={2.25} />
+              </div>
+              <div className="min-w-0 space-y-1 pt-0.5">
+                <p className="text-[#151616]/80 font-poppins text-xs font-semibold uppercase tracking-[0.12em]">
+                  Voice session
+                </p>
+                <CardTitle className="font-poppins text-xl font-bold leading-tight tracking-tight text-[#151616]">
+                  Start Health Consultation
+                </CardTitle>
+                <CardDescription className="text-[#151616]/75 font-poppins text-sm leading-relaxed">
+                  {inCall
+                    ? "Your messages — hold mic 2–3 sec to speak"
+                    : "Start a voice consultation with the AYUSH AI"}
+                </CardDescription>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="pt-6 flex-1 flex flex-col min-h-0">
+          <CardContent className="px-6 pb-2 pt-2 flex-1 flex flex-col min-h-0">
             {!inCall ? (
-              <div className="flex flex-col items-center justify-center flex-1 py-8">
+              <div className="relative flex flex-1 flex-col items-center justify-center py-8">
+                <div
+                  className="pointer-events-none absolute inset-4 rounded-2xl bg-[radial-gradient(ellipse_at_50%_30%,rgba(249,200,14,0.12),transparent_55%)]"
+                  aria-hidden
+                />
+                <div className="pointer-events-none absolute -right-6 -top-4 h-24 w-24 rounded-full border border-[#f9c80e]/20" aria-hidden />
+                <div className="pointer-events-none absolute -bottom-2 -left-4 h-16 w-16 rounded-full border border-[#151616]/10" aria-hidden />
                 <Button
                   onClick={handleStartConsultation}
-                  className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:bg-[#f9c80e]/90 hover:translate-y-0.5 font-poppins font-bold rounded-xl py-6"
+                  className="relative z-10 h-auto w-full max-w-md bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[5px_5px_0px_0px_#151616] hover:bg-[#f9c80e]/95 hover:shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 active:translate-y-1 active:shadow-none font-poppins font-bold rounded-2xl px-6 py-7 text-base transition-[transform,box-shadow,background-color] duration-200 focus-visible:ring-2 focus-visible:ring-[#151616] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
-                  <Stethoscope className="h-5 w-5 mr-2" />
-                  Start Health Consultation
+                  <span className="flex items-center justify-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#151616]/20 bg-white/40">
+                      <Stethoscope className="h-5 w-5" strokeWidth={2.25} />
+                    </span>
+                    <span className="text-left leading-tight">
+                      Start Health Consultation
+                      <span className="mt-0.5 block text-xs font-semibold text-[#151616]/70">
+                        Tap to begin · English, Hindi & Marathi
+                      </span>
+                    </span>
+                  </span>
                 </Button>
               </div>
             ) : (
@@ -641,7 +696,7 @@ export default function MediSupportAyushUI() {
               </>
             )}
           </CardContent>
-          <CardFooter className="border-t-2 border-[#151616] bg-[#FFFFF4] text-sm text-[#151616]/60 font-poppins rounded-b-xl">
+          <CardFooter className="border-t-2 border-[#151616] bg-[#FFFFF4] px-6 py-4 text-sm text-[#151616]/65 font-poppins rounded-b-xl leading-relaxed">
             {inCall
               ? "Hold mic 2–3 sec to speak. Supports English, Hindi & Marathi."
               : "Your voice is sent to the AI for AYUSH-based guidance."}

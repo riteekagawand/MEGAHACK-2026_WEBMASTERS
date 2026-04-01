@@ -52,7 +52,10 @@ export default function MediSupportAyushUI() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [stage, setStage] = useState<ConsultationStage>("intro");
   const [preferredLanguage, setPreferredLanguage] = useState<PreferredLang | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [shouldAutoEnd, setShouldAutoEnd] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [conversationContext, setConversationContext] = useState<{
     symptoms?: string;
     duration?: string;
@@ -71,6 +74,8 @@ export default function MediSupportAyushUI() {
   const messagesRef = useRef<ChatMessage[]>([]);
   messagesRef.current = messages;
   const introDone = useRef(false);
+  const voicesReadyRef = useRef(false);
+  const ttsTimeoutRef = useRef<number | null>(null);
 
   const addMessage = useCallback((role: "ai" | "user", text: string) => {
     const msg: ChatMessage = {
@@ -83,28 +88,94 @@ export default function MediSupportAyushUI() {
     return msg;
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    // Warm up voices early; some browsers only populate after this.
+    synth.getVoices();
+    const onChanged = () => {
+      voicesReadyRef.current = synth.getVoices().length > 0;
+    };
+    synth.onvoiceschanged = onChanged;
+    onChanged();
+    return () => {
+      // don't clear if other parts rely on it
+      synth.onvoiceschanged = null;
+    };
+  }, []);
+
   const speak = useCallback((text: string, lang?: PreferredLang | null) => {
     if (typeof window === "undefined") return;
     const synth = window.speechSynthesis;
     if (!synth) return;
+    try {
+      // Some browsers start paused until a user gesture; safe to call.
+      synth.resume();
+    } catch {
+      // ignore
+    }
+    if (ttsTimeoutRef.current) {
+      window.clearTimeout(ttsTimeoutRef.current);
+      ttsTimeoutRef.current = null;
+    }
     synth.cancel();
+    setIsSpeaking(false);
     const utterance = new SpeechSynthesisUtterance(text);
+    const finish = () => {
+      if (ttsTimeoutRef.current) {
+        window.clearTimeout(ttsTimeoutRef.current);
+        ttsTimeoutRef.current = null;
+      }
+      setIsSpeaking(false);
+    };
+
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = finish;
+    utterance.onerror = finish;
     utterance.rate = 0.9;
     utterance.pitch = 1;
-    const voices = synth.getVoices();
+    const useEn = lang === "en" || (!lang && !/[\u0900-\u097F]/.test(text));
+    utterance.lang = useEn ? "en-IN" : lang === "mr" ? "mr-IN" : "hi-IN";
+
     const setVoiceAndSpeak = () => {
       const v = synth.getVoices();
-      const useEn = lang === "en" || (!lang && !/[\u0900-\u097F]/.test(text));
-      const mrVoice = v.find((x) => x.lang.includes("mr"));
-      const hiVoice = v.find((x) => x.lang.includes("hi"));
-      const enVoice = v.find((x) => x.lang.startsWith("en"));
+      const mrVoice = v.find((x) => x.lang.toLowerCase().startsWith("mr"));
+      const hiVoice = v.find((x) => x.lang.toLowerCase().startsWith("hi"));
+      const enVoice =
+        v.find((x) => x.lang.toLowerCase().startsWith("en-in")) ??
+        v.find((x) => x.lang.toLowerCase().startsWith("en"));
       if (useEn) utterance.voice = enVoice ?? v[0];
       else if (lang === "mr" && mrVoice) utterance.voice = mrVoice;
       else utterance.voice = hiVoice ?? mrVoice ?? v[0];
       synth.speak(utterance);
     };
-    if (voices.length > 0) setVoiceAndSpeak();
-    else synth.onvoiceschanged = setVoiceAndSpeak;
+
+    // Retry a few times if voices are not ready (Chrome sometimes never fires onvoiceschanged).
+    let attempts = 0;
+    const trySpeak = () => {
+      const voices = synth.getVoices();
+      if (voices.length > 0 || voicesReadyRef.current) {
+        setVoiceAndSpeak();
+        // Failsafe: if browser doesn't fire `onend`, still unlock the mic.
+        const maxMs = Math.min(20000, Math.max(4000, text.trim().length * 60));
+        ttsTimeoutRef.current = window.setTimeout(() => {
+          finish();
+        }, maxMs);
+        return;
+      }
+      attempts += 1;
+      if (attempts <= 8) setTimeout(trySpeak, 200);
+      else {
+        setVoiceAndSpeak(); // fallback to default voice
+        // Failsafe: if browser doesn't fire `onend`, still unlock the mic.
+        const maxMs = Math.min(20000, Math.max(4000, text.trim().length * 60));
+        ttsTimeoutRef.current = window.setTimeout(() => {
+          finish();
+        }, maxMs);
+      }
+    };
+    trySpeak();
   }, []);
 
   const processUserInput = useCallback(
@@ -112,14 +183,18 @@ export default function MediSupportAyushUI() {
       if (!userText.trim()) return;
       addMessage("user", userText);
       setIsProcessing(true);
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 15000);
       try {
         const res = await fetch("/api/consultation", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
           body: JSON.stringify({
             stage,
             userInput: userText,
             language: preferredLanguage ?? undefined,
+            sessionId: sessionId ?? undefined,
             conversationContext,
           }),
         });
@@ -129,6 +204,7 @@ export default function MediSupportAyushUI() {
           remedy?: unknown;
           remedies?: unknown[];
           preferredLanguage?: PreferredLang;
+          endChat?: boolean;
         };
         const aiText =
           data.response ?? "I did not understand. Could you repeat?";
@@ -148,16 +224,18 @@ export default function MediSupportAyushUI() {
           setConversationContext((prev) => ({ ...prev, age: userText }));
         }
         if (!isMuted) speak(aiText, data.preferredLanguage ?? preferredLanguage);
+        if (data.endChat) setShouldAutoEnd(true);
       } catch {
         addMessage(
           "ai",
-          "Sorry, something went wrong. Please try again or consult a doctor."
+          "Sorry, I couldn't get a response in time. Please try again."
         );
       } finally {
+        window.clearTimeout(timeout);
         setIsProcessing(false);
       }
     },
-    [stage, conversationContext, preferredLanguage, isMuted, addMessage, speak]
+    [stage, conversationContext, preferredLanguage, sessionId, isMuted, addMessage, speak]
   );
 
   const transcribeAndProcess = useCallback(
@@ -169,6 +247,15 @@ export default function MediSupportAyushUI() {
         );
         return;
       }
+      // Guard against oversized recordings that can crash Node during `arrayBuffer()`
+      const MAX_BLOB_BYTES = 10 * 1024 * 1024; // 10MB
+      if (blob.size > MAX_BLOB_BYTES) {
+        addMessage(
+          "ai",
+          "That recording was too long/large. Please speak for 2–3 seconds, then release the mic."
+        );
+        return;
+      }
       const formData = new FormData();
       const isMp4 = blob.type.includes("mp4");
       const ext = isMp4 ? "m4a" : "webm";
@@ -176,8 +263,11 @@ export default function MediSupportAyushUI() {
         type: blob.type || (isMp4 ? "audio/mp4" : "audio/webm"),
       });
       formData.append("audio", file);
+      if (preferredLanguage) formData.append("language", preferredLanguage);
       try {
-        const res = await fetch("/api/whisper", { method: "POST", body: formData });
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 20000);
+        const res = await fetch("/api/whisper", { method: "POST", body: formData, signal: controller.signal });
         const data = (await res.json()) as { text?: string; error?: string };
         if (data.error) {
           addMessage("ai", `Transcription failed: ${data.error}. Please try again.`);
@@ -197,13 +287,31 @@ export default function MediSupportAyushUI() {
           "ai",
           "Could not connect to transcription service. Please try again."
         );
+      } finally {
+        // no-op: timeout is scoped; if aborted, fetch throws and we land here anyway
       }
     },
-    [processUserInput, addMessage]
+    [processUserInput, addMessage, preferredLanguage]
   );
 
   const startRecording = useCallback(() => {
     if (mediaRecorderRef.current?.state === "recording") return;
+    if (typeof window !== "undefined") {
+      if (!window.isSecureContext) {
+        addMessage(
+          "ai",
+          "Microphone requires a secure context (HTTPS). For local testing, use http://localhost or enable HTTPS, then refresh."
+        );
+        return;
+      }
+      if (!navigator.mediaDevices?.getUserMedia) {
+        addMessage(
+          "ai",
+          "Microphone is not supported in this browser. Please try Chrome/Edge and allow microphone access."
+        );
+        return;
+      }
+    }
     navigator.mediaDevices
       .getUserMedia({
         audio: { echoCancellation: true, noiseSuppression: true },
@@ -242,11 +350,13 @@ export default function MediSupportAyushUI() {
       })
       .catch((err) => {
         const msg =
-          err.name === "NotAllowedError" || err.name === "PermissionDeniedError"
-            ? "Microphone access was denied. Please allow mic and refresh."
-            : err.name === "NotFoundError"
-              ? "No microphone found. Please connect a mic and try again."
-              : "Could not access microphone. Please check permissions.";
+          err?.name === "NotAllowedError" || err?.name === "PermissionDeniedError"
+            ? "Microphone permission is blocked. Click the lock icon in the address bar → Site settings → Microphone → Allow, then refresh."
+            : err?.name === "NotFoundError"
+              ? "No microphone device found. Please connect a mic/headset and try again."
+              : err?.name === "NotReadableError"
+                ? "Microphone is being used by another app. Close Teams/Zoom/Browser tabs using the mic and try again."
+                : `Could not access microphone (${err?.name ?? "unknown error"}). Please check browser permissions and try again.`;
         addMessage("ai", msg);
       });
   }, [transcribeAndProcess, addMessage]);
@@ -263,13 +373,24 @@ export default function MediSupportAyushUI() {
     setMessages([]);
     setStage("intro");
     setPreferredLanguage(null);
+    setSessionId(crypto.randomUUID());
     setConversationContext({});
     setTimerSeconds(0);
     introDone.current = false;
+    // Speak immediately on user click so browsers allow audio playback.
+    addMessage("ai", INTRO_AI);
+    if (!isMuted) speak(INTRO_AI, "en");
+    setStage("language");
   }, []);
 
   const handleEndCall = useCallback(() => {
     window.speechSynthesis?.cancel();
+    if (ttsTimeoutRef.current) {
+      window.clearTimeout(ttsTimeoutRef.current);
+      ttsTimeoutRef.current = null;
+    }
+    setIsSpeaking(false);
+    setIsProcessing(false);
     stopRecording();
     if (messagesRef.current.length > 0) {
       const id = crypto.randomUUID();
@@ -283,6 +404,7 @@ export default function MediSupportAyushUI() {
       });
     }
     setInCall(false);
+    setSessionId(null);
   }, [stopRecording]);
 
   useEffect(() => {
@@ -303,18 +425,22 @@ export default function MediSupportAyushUI() {
   }, []);
 
   useEffect(() => {
+    // Kept for backwards safety; start message is handled on button click.
     if (!inCall || introDone.current) return;
     introDone.current = true;
-    addMessage("ai", INTRO_AI);
-    speak(INTRO_AI, "en");
-    setStage("language");
-  }, [inCall, addMessage, speak]);
+  }, [inCall]);
 
   useEffect(() => {
     if (!inCall) return;
     const t = setInterval(() => setTimerSeconds((s) => s + 1), 1000);
     return () => clearInterval(t);
   }, [inCall]);
+
+  useEffect(() => {
+    if (!shouldAutoEnd) return;
+    handleEndCall();
+    setShouldAutoEnd(false);
+  }, [shouldAutoEnd, handleEndCall]);
 
   const userMessages = messages.filter((m) => m.role === "user");
   const aiMessages = messages.filter((m) => m.role === "ai");
@@ -330,6 +456,25 @@ export default function MediSupportAyushUI() {
     const firstUser = msgs.find((m) => m.role === "user")?.text;
     if (firstUser) return firstUser.length > 50 ? firstUser.slice(0, 50) + "…" : firstUser;
     return `${msgs.length} message${msgs.length !== 1 ? "s" : ""}`;
+  }
+
+  function renderTextWithLinks(text: string) {
+    const parts = text.split(/(https?:\/\/\S+|\/patient\/appointments)/g);
+    return parts.map((part, idx) => {
+      const isLink = /^https?:\/\/\S+$/.test(part) || part === "/patient/appointments";
+      if (!isLink) return <span key={`${idx}-${part.slice(0, 8)}`}>{part}</span>;
+      const href = part;
+      return (
+        <a
+          key={`${idx}-${href}`}
+          href={href}
+          className="underline text-blue-700"
+          onClick={() => setShouldAutoEnd(true)}
+        >
+          {part}
+        </a>
+      );
+    });
   }
 
   return (
@@ -386,7 +531,7 @@ export default function MediSupportAyushUI() {
                     key={m.id}
                     className="rounded-xl px-3 py-2 bg-[#151616]/5 border border-[#151616]/20 text-[#151616] text-sm font-poppins max-w-[95%]"
                   >
-                    {m.text}
+                    {renderTextWithLinks(m.text)}
                   </div>
                 ))}
                 {isProcessing && (
@@ -465,7 +610,7 @@ export default function MediSupportAyushUI() {
                     onMouseLeave={stopRecording}
                     onTouchStart={(e) => { e.preventDefault(); startRecording(); }}
                     onTouchEnd={(e) => { e.preventDefault(); stopRecording(); }}
-                    disabled={isProcessing}
+                    disabled={isProcessing || isSpeaking}
                     className={`h-14 w-14 rounded-full border-2 border-[#151616] shadow-[3px_3px_0px_0px_#151616] ${
                       isRecording ? "bg-red-500 text-white animate-pulse" :
                       isProcessing ? "bg-[#151616]/20 text-[#151616]/50" :
@@ -485,7 +630,13 @@ export default function MediSupportAyushUI() {
                   </Button>
                 </div>
                 <p className="text-xs text-[#151616]/60 font-poppins text-center mt-2">
-                  {isRecording ? "Recording… release to send" : isProcessing ? "AI is responding…" : `Call time: ${formatTime(timerSeconds)}`}
+                  {isRecording
+                    ? "Recording… release to send"
+                    : isProcessing
+                      ? "AI is responding…"
+                      : isSpeaking
+                        ? "AI is speaking…"
+                        : `Call time: ${formatTime(timerSeconds)}`}
                 </p>
               </>
             )}

@@ -4,11 +4,24 @@ export async function POST(req: Request) {
   try {
     const formData = await req.formData();
     const audio = formData.get("audio") as File | null;
+    const preferredLanguage = (formData.get("language") as string | null)?.toLowerCase() ?? null;
 
     if (!audio) {
       return NextResponse.json(
         { error: "No audio file provided" },
         { status: 400 }
+      );
+    }
+
+    // Prevent huge uploads from crashing the server (RangeError: Array buffer allocation failed)
+    const MAX_AUDIO_BYTES = 10 * 1024 * 1024; // 10MB
+    if (audio.size && audio.size > MAX_AUDIO_BYTES) {
+      return NextResponse.json(
+        {
+          error: "Audio too large",
+          details: `Max allowed size is ${Math.round(MAX_AUDIO_BYTES / (1024 * 1024))}MB`,
+        },
+        { status: 413 }
       );
     }
 
@@ -31,7 +44,11 @@ export async function POST(req: Request) {
     const url = new URL("https://api.deepgram.com/v1/listen");
     url.searchParams.set("model", "nova-3");
     url.searchParams.set("smart_format", "true");
-    url.searchParams.set("language", "multi");
+    // Prefer user-selected language to improve accuracy (fallback to multi).
+    if (preferredLanguage === "en") url.searchParams.set("language", "en");
+    else if (preferredLanguage === "hi") url.searchParams.set("language", "hi");
+    else if (preferredLanguage === "mr") url.searchParams.set("language", "mr");
+    else url.searchParams.set("language", "multi");
     url.searchParams.set("punctuate", "true");
 
     const response = await fetch(url.toString(), {

@@ -9,10 +9,13 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@langchain/core": "^1.1.36",
+    "@langchain/google-genai": "^2.1.26",
     "@tailwindcss/postcss": "^4.1.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.36.0",
+    "langchain": "^1.2.37",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.577.0",
     "mongoose": "^9.3.0",

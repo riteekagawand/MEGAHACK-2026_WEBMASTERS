@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { FileText, Upload, Send, TrendingUp, AlertTriangle, CheckCircle, Clock, Activity, BarChart3, Zap, Leaf, Apple, Calendar, ArrowRight, Shield, Heart, Target, Utensils } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -47,6 +47,7 @@ export default function LabAnalyzerPage() {
     const [isAnalyzing, setIsAnalyzing] = useState(false)
     const [analysis, setAnalysis] = useState<LabAnalysis | null>(null)
     const [error, setError] = useState<string | null>(null)
+    const [isSettingReminder, setIsSettingReminder] = useState(false)
     const [reminderMessage, setReminderMessage] = useState<string | null>(null)
     const [isSavingReport, setIsSavingReport] = useState(false)
     const [reportSaved, setReportSaved] = useState(false)
@@ -197,105 +198,12 @@ export default function LabAnalyzerPage() {
                 throw new Error('Failed to set reminder')
             }
         } catch (error) {
-            console.error('Error sending WhatsApp:', error)
-            return { success: false, error: error }
+            console.error('Error setting reminder:', error)
+            setReminderMessage("Failed to set reminder. Please try again.")
+        } finally {
+            setIsSettingReminder(false)
         }
     }
-
-    // Alternative: Open WhatsApp Web with pre-filled message
-    const openWhatsAppWeb = (phoneNumber: string, message: string) => {
-        const cleanNumber = phoneNumber.replace(/\D/g, '')
-        const url = `https://web.whatsapp.com/send?phone=${cleanNumber}&text=${encodeURIComponent(message)}`
-        window.open(url, '_blank')
-    }
-
-    // Check reminders every minute
-    useEffect(() => {
-        const checkReminders = () => {
-            const now = new Date()
-            const currentTime = now.toLocaleTimeString('en-US', { 
-                hour12: false, 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            })
-
-            console.log('Checking reminders at:', currentTime, 'Reminders:', reminders)
-
-            reminders.forEach(reminder => {
-                console.log('Checking reminder:', reminder.time, 'vs current:', currentTime, 'enabled:', reminder.enabled)
-                if (reminder.enabled && reminder.time === currentTime) {
-                    console.log('Sending notification for:', reminder.title)
-                    
-                    // Browser notification
-                    sendNotification(
-                        `Health Reminder: ${reminder.type.toUpperCase()}`,
-                        `It's time for: ${reminder.title}`
-                    )
-                    
-                    // WhatsApp notification
-                    if (whatsappEnabled && receiverNumber) {
-                        const message = `🏥 *Orka Health Reminder*\n\n📋 ${reminder.type.toUpperCase()}\n⏰ Time: ${reminder.time}\n📝 ${reminder.title}\n\nStay healthy! 💪`
-                        
-                        // Add to log as pending
-                        const logEntry = {
-                            time: new Date().toLocaleTimeString(),
-                            message: reminder.title,
-                            status: 'pending' as const,
-                            method: 'WhatsApp'
-                        }
-                        setMessageLog(prev => [logEntry, ...prev])
-                        
-                        // Send and update log
-                        sendWhatsAppNotification(receiverNumber, message).then(result => {
-                            setMessageLog(prev => prev.map((log, idx) => 
-                                idx === 0 ? { ...log, status: result.success ? 'sent' : 'failed', method: result.method || 'WhatsApp' } : log
-                            ))
-                        })
-                    }
-                }
-            })
-        }
-
-        // Check immediately and then every 30 seconds (more responsive)
-        checkReminders()
-        const interval = setInterval(checkReminders, 30000)
-
-        return () => clearInterval(interval)
-    }, [reminders])
-
-    // Also check when page becomes visible (for when user returns to tab)
-    useEffect(() => {
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === 'visible') {
-                // Check immediately when page becomes visible
-                const now = new Date()
-                const currentTime = now.toLocaleTimeString('en-US', { 
-                    hour12: false, 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                })
-                
-                reminders.forEach(reminder => {
-                    if (reminder.enabled && reminder.time === currentTime) {
-                        sendNotification(
-                            `Health Reminder: ${reminder.type.toUpperCase()}`,
-                            `It's time for: ${reminder.title}`
-                        )
-                    }
-                })
-            }
-        }
-
-        document.addEventListener('visibilitychange', handleVisibilityChange)
-        return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }, [reminders])
-
-    // Request permission on component mount
-    useEffect(() => {
-        if ("Notification" in window) {
-            setNotificationPermission(Notification.permission)
-        }
-    }, [])
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -470,85 +378,39 @@ export default function LabAnalyzerPage() {
                         transition={{ duration: 0.6 }}
                         className="space-y-6"
                     >
-                        {/* Overall Assessment and Critical Alerts - Side by Side */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            {/* Overall Assessment */}
-                            <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]">
-                                <CardHeader>
-                                    <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
-                                        <BarChart3 className="w-5 h-5" />
-                                        Overall Assessment
-                                    </CardTitle>
-                                    <div className="flex gap-2 flex-wrap">
-                                        <Badge className={`font-poppins ${getRiskColor(analysis.overallAssessment.riskLevel)}`}>
-                                            {analysis.overallAssessment.riskLevel} Risk
-                                        </Badge>
-                                        <Badge className="bg-[#f9c80e] text-[#151616] font-poppins">
-                                            {analysis.confidence}% Confidence
-                                        </Badge>
-                                    </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className={`p-4 rounded-xl border-2 ${analysis.overallAssessment.status === "Normal" ? "bg-green-50 border-green-500" :
-                                        analysis.overallAssessment.status === "Attention Needed" ? "bg-yellow-50 border-yellow-500" :
-                                            "bg-red-50 border-red-500"
-                                        }`}>
-                                        <h4 className="font-poppins font-bold text-[#151616] mb-2">
-                                            {analysis.reportType}
-                                        </h4>
-                                        <p className="text-sm font-poppins text-[#151616]/70 mb-2">
-                                            {analysis.testDate}
-                                        </p>
-                                        <p className="font-poppins text-[#151616]">
-                                            {analysis.overallAssessment.summary}
-                                        </p>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            {/* Critical Alerts */}
-                            {analysis.redFlags.length > 0 ? (
-                                <Card className="border-2 border-red-500 shadow-[4px_4px_0px_0px_#dc2626] bg-red-50">
-                                    <CardHeader>
-                                        <CardTitle className="font-poppins font-bold text-red-700 flex items-center gap-2">
-                                            <AlertTriangle className="w-5 h-5" />
-                                            Critical Alerts
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="space-y-2">
-                                            {analysis.redFlags.map((flag, idx) => (
-                                                <div key={idx} className="p-3 bg-red-100 rounded border border-red-300">
-                                                    <div className="flex items-center gap-2">
-                                                        <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
-                                                        <p className="font-poppins text-red-800 text-sm">{flag}</p>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ) : (
-                                <Card className="border-2 border-green-500 shadow-[4px_4px_0px_0px_#16a34a] bg-green-50">
-                                    <CardHeader>
-                                        <CardTitle className="font-poppins font-bold text-green-700 flex items-center gap-2">
-                                            <CheckCircle className="w-5 h-5" />
-                                            No Critical Alerts
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="p-3 bg-green-100 rounded border border-green-300">
-                                            <div className="flex items-center gap-2">
-                                                <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
-                                                <p className="font-poppins text-green-800 text-sm">
-                                                    All values are within acceptable ranges. No immediate action required.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            )}
-                        </div>
+                        {/* Overall Assessment */}
+                        <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]">
+                            <CardHeader>
+                                <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
+                                    <BarChart3 className="w-5 h-5" />
+                                    Overall Assessment - {analysis.reportType}
+                                </CardTitle>
+                                <div className="flex gap-2">
+                                    <Badge className={`font-poppins ${getRiskColor(analysis.overallAssessment.riskLevel)}`}>
+                                        {analysis.overallAssessment.riskLevel} Risk
+                                    </Badge>
+                                    <Badge className="bg-[#f9c80e] text-[#151616] font-poppins">
+                                        {analysis.confidence}% Confidence
+                                    </Badge>
+                                    <Badge variant="outline" className="border-[#151616] font-poppins">
+                                        {analysis.testDate}
+                                    </Badge>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className={`p-4 rounded-xl border-2 ${analysis.overallAssessment.status === "Normal" ? "bg-green-50 border-green-500" :
+                                    analysis.overallAssessment.status === "Attention Needed" ? "bg-yellow-50 border-yellow-500" :
+                                        "bg-red-50 border-red-500"
+                                    }`}>
+                                    <h4 className="font-poppins font-bold text-[#151616] mb-2">
+                                        Status: {analysis.overallAssessment.status}
+                                    </h4>
+                                    <p className="font-poppins text-[#151616]">
+                                        {analysis.overallAssessment.summary}
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
 
                         {/* Key Findings */}
                         <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]">
@@ -592,6 +454,30 @@ export default function LabAnalyzerPage() {
                                 </div>
                             </CardContent>
                         </Card>
+
+                        {/* Red Flags */}
+                        {analysis.redFlags.length > 0 && (
+                            <Card className="border-2 border-red-500 shadow-[4px_4px_0px_0px_red-500] bg-red-50">
+                                <CardHeader>
+                                    <CardTitle className="font-poppins font-bold text-red-700 flex items-center gap-2">
+                                        <AlertTriangle className="w-5 h-5" />
+                                        Critical Alerts
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-2">
+                                        {analysis.redFlags.map((flag, idx) => (
+                                            <div key={idx} className="p-3 bg-red-100 rounded border border-red-300">
+                                                <div className="flex items-center gap-2">
+                                                    <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                                                    <p className="font-poppins text-red-800">{flag}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
 
                         {/* Trends */}
                         {analysis.trends.length > 0 && (
@@ -649,21 +535,21 @@ export default function LabAnalyzerPage() {
                                 </CardContent>
                             </Card>
 
-                            {/* Follow-up */}
+                            {/* Lifestyle Changes */}
                             <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]">
                                 <CardHeader>
                                     <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
-                                        <Clock className="w-5 h-5" />
-                                        Follow-up Actions
+                                        <CheckCircle className="w-5 h-5" />
+                                        Lifestyle Recommendations
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
-                                        {analysis.recommendations.followUp.map((follow, idx) => (
-                                            <div key={idx} className="p-3 bg-purple-50 rounded border border-purple-200">
+                                        {analysis.recommendations.lifestyle.map((rec, idx) => (
+                                            <div key={idx} className="p-3 bg-green-50 rounded border border-green-200">
                                                 <div className="flex items-center gap-2">
-                                                    <Calendar className="w-4 h-4 text-purple-600 flex-shrink-0" />
-                                                    <p className="font-poppins text-[#151616]">{follow}</p>
+                                                    <Leaf className="w-4 h-4 text-green-600 flex-shrink-0" />
+                                                    <p className="font-poppins text-[#151616]">{rec}</p>
                                                 </div>
                                             </div>
                                         ))}
@@ -693,21 +579,21 @@ export default function LabAnalyzerPage() {
                                 </CardContent>
                             </Card>
 
-                            {/* Lifestyle Changes */}
+                            {/* Follow-up */}
                             <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616]">
                                 <CardHeader>
                                     <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
-                                        <CheckCircle className="w-5 h-5" />
-                                        Lifestyle Recommendations
+                                        <Clock className="w-5 h-5" />
+                                        Follow-up Actions
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-3">
-                                        {analysis.recommendations.lifestyle.map((rec, idx) => (
-                                            <div key={idx} className="p-3 bg-green-50 rounded border border-green-200">
+                                        {analysis.recommendations.followUp.map((follow, idx) => (
+                                            <div key={idx} className="p-3 bg-purple-50 rounded border border-purple-200">
                                                 <div className="flex items-center gap-2">
-                                                    <Leaf className="w-4 h-4 text-green-600 flex-shrink-0" />
-                                                    <p className="font-poppins text-[#151616]">{rec}</p>
+                                                    <Calendar className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                                                    <p className="font-poppins text-[#151616]">{follow}</p>
                                                 </div>
                                             </div>
                                         ))}
@@ -738,22 +624,21 @@ export default function LabAnalyzerPage() {
                             </CardContent>
                         </Card>
 
-                        {/* Health Reminders Section */}
+                        {/* Set Reminder Section */}
                         <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] bg-[#f9c80e]/10">
                             <CardHeader>
                                 <CardTitle className="font-poppins font-bold text-[#151616] flex items-center gap-2">
                                     <Calendar className="w-5 h-5" />
-                                    Health Reminders
+                                    Set Medicine Reminder
                                 </CardTitle>
                                 <CardDescription className="font-poppins">
-                                    Set personalized reminders for medications, exercise, diet, and appointments based on your lab results
+                                    Set a reminder to take your medicines based on the analysis recommendations
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                {/* Success/Error Message */}
                                 {reminderMessage && (
-                                    <Alert className={`border-2 ${reminderMessage.includes('added') ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
-                                        {reminderMessage.includes('added') ? 
+                                    <Alert className={`border-2 ${reminderMessage.includes('successfully') ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
+                                        {reminderMessage.includes('successfully') ? 
                                             <CheckCircle className="h-4 w-4" /> : 
                                             <AlertTriangle className="h-4 w-4" />
                                         }

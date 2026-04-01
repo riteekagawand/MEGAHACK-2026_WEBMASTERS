@@ -3,6 +3,7 @@
 import { signIn, signOut } from "next-auth/react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { clearLocalStoragePreservingConsultationHistory } from "@/lib/consultation-history-storage"
 
 interface GoogleSignInButtonProps {
   className?: string
@@ -18,8 +19,8 @@ export function GoogleSignInButton({ className, children }: GoogleSignInButtonPr
       // First, completely sign out to clear any cached sessions
       await signOut({ redirect: false })
       
-      // Clear browser storage
-      localStorage.clear()
+      // Clear cached client data but keep Medi-Support consultation history
+      clearLocalStoragePreservingConsultationHistory()
       sessionStorage.clear()
       
       // Small delay to ensure cleanup

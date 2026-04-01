@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   Stethoscope,
   MessageSquare,
@@ -12,6 +13,8 @@ import {
   PhoneOff,
   History,
   X,
+  Calendar,
+  ExternalLink,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,8 +24,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-const HISTORY_KEY = "ayush-consultation-history";
+import {
+  readConsultationHistoryFromStorage,
+  writeConsultationHistoryToStorage,
+} from "@/lib/consultation-history-storage";
 
 type ConsultationStage =
   | "intro"
@@ -36,11 +41,21 @@ type ConsultationStage =
 
 type PreferredLang = "en" | "hi" | "mr";
 
+type RecommendedDoctorBrief = {
+  id: string;
+  name: string;
+  specialization: string;
+  rating: number;
+  yearsOfExperience: number;
+};
+
 interface ChatMessage {
   id: string;
   role: "ai" | "user";
   text: string;
   timestamp: number;
+  recommendedDoctors?: RecommendedDoctorBrief[];
+  consultAction?: "consult_now" | "consult_later";
 }
 
 const INTRO_AI = "Hello, I am your AYUSH AI health assistant. Which language do you prefer: English, Hindi, or Marathi?";
@@ -77,16 +92,24 @@ export default function MediSupportAyushUI() {
   const voicesReadyRef = useRef(false);
   const ttsTimeoutRef = useRef<number | null>(null);
 
-  const addMessage = useCallback((role: "ai" | "user", text: string) => {
-    const msg: ChatMessage = {
-      id: crypto.randomUUID(),
-      role,
-      text,
-      timestamp: Date.now(),
-    };
-    setMessages((prev) => [...prev, msg]);
-    return msg;
-  }, []);
+  const addMessage = useCallback(
+    (
+      role: "ai" | "user",
+      text: string,
+      meta?: Pick<ChatMessage, "recommendedDoctors" | "consultAction">
+    ) => {
+      const msg: ChatMessage = {
+        id: crypto.randomUUID(),
+        role,
+        text,
+        timestamp: Date.now(),
+        ...meta,
+      };
+      setMessages((prev) => [...prev, msg]);
+      return msg;
+    },
+    []
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -205,10 +228,21 @@ export default function MediSupportAyushUI() {
           remedies?: unknown[];
           preferredLanguage?: PreferredLang;
           endChat?: boolean;
+          action?: "consult_now" | "consult_later";
+          recommendedDoctors?: RecommendedDoctorBrief[];
         };
         const aiText =
           data.response ?? "I did not understand. Could you repeat?";
-        addMessage("ai", aiText);
+        const doctorMeta =
+          data.action === "consult_now"
+            ? {
+                recommendedDoctors: data.recommendedDoctors ?? [],
+                consultAction: "consult_now" as const,
+              }
+            : data.action === "consult_later"
+              ? { consultAction: "consult_later" as const }
+              : undefined;
+        addMessage("ai", aiText, doctorMeta);
         setStage((data.nextStage as ConsultationStage) ?? stage);
         if (data.preferredLanguage) setPreferredLanguage(data.preferredLanguage);
         if (data.remedy || data.remedies) {
@@ -397,9 +431,7 @@ export default function MediSupportAyushUI() {
       const date = Date.now();
       setHistory((prev) => {
         const updated = [{ id, messages: messagesRef.current, date }, ...prev].slice(0, 50);
-        if (typeof window !== "undefined") {
-          localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
-        }
+        writeConsultationHistoryToStorage(updated);
         return updated;
       });
     }
@@ -408,20 +440,12 @@ export default function MediSupportAyushUI() {
   }, [stopRecording]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      const raw = localStorage.getItem(HISTORY_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as {
-          id: string;
-          messages: ChatMessage[];
-          date: number;
-        }[];
-        setHistory(parsed);
-      }
-    } catch {
-      setHistory([]);
-    }
+    const parsed = readConsultationHistoryFromStorage() as {
+      id: string;
+      messages: ChatMessage[];
+      date: number;
+    }[];
+    setHistory(parsed);
   }, []);
 
   useEffect(() => {
@@ -459,20 +483,25 @@ export default function MediSupportAyushUI() {
   }
 
   function renderTextWithLinks(text: string) {
-    const parts = text.split(/(https?:\/\/\S+|\/patient\/appointments)/g);
+    const parts = text.split(/(https?:\/\/\S+|\/patient\/appointments(?:\?[^\s]*)?)/g);
     return parts.map((part, idx) => {
-      const isLink = /^https?:\/\/\S+$/.test(part) || part === "/patient/appointments";
+      const isLink =
+        /^https?:\/\/\S+$/.test(part) ||
+        /^\/patient\/appointments(\?[^\s]*)?$/.test(part);
       if (!isLink) return <span key={`${idx}-${part.slice(0, 8)}`}>{part}</span>;
       const href = part;
       return (
-        <a
+        <Link
           key={`${idx}-${href}`}
           href={href}
-          className="underline text-blue-700"
-          onClick={() => setShouldAutoEnd(true)}
+          className="font-medium text-blue-700 underline underline-offset-2 hover:text-blue-900"
         >
-          {part}
-        </a>
+          {part.includes("doctorId=")
+            ? "Book this doctor"
+            : /^\/patient\/appointments$/.test(part)
+              ? "Appointments"
+              : part}
+        </Link>
       );
     });
   }
@@ -562,7 +591,47 @@ export default function MediSupportAyushUI() {
                     key={m.id}
                     className="rounded-xl px-3 py-2 bg-[#151616]/5 border border-[#151616]/20 text-[#151616] text-sm font-poppins max-w-[95%]"
                   >
-                    {renderTextWithLinks(m.text)}
+                    <div className="whitespace-pre-wrap">{renderTextWithLinks(m.text)}</div>
+                    {m.consultAction === "consult_now" && (
+                        <div className="mt-3 flex flex-col gap-2 border-t border-[#151616]/15 pt-3">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#151616]/70">
+                            Book a doctor
+                          </p>
+                          {(m.recommendedDoctors ?? []).map((d) => (
+                            <Link
+                              key={d.id}
+                              href={`/patient/appointments?doctorId=${encodeURIComponent(d.id)}`}
+                              className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-[#151616] bg-[#f9c80e] px-3 py-2 text-center text-sm font-bold text-[#151616] shadow-[2px_2px_0px_0px_#151616] transition-all hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616]"
+                            >
+                              <Calendar className="h-4 w-4 shrink-0" />
+                              <span className="text-left leading-tight">
+                                Dr. {d.name.replace(/^Dr\.?\s*/i, "")} — {d.specialization}
+                                <span className="mt-0.5 block text-xs font-semibold text-[#151616]/75">
+                                  {d.rating.toFixed(1)}★ · {d.yearsOfExperience} yrs
+                                </span>
+                              </span>
+                              <ExternalLink className="h-4 w-4 shrink-0 opacity-80" />
+                            </Link>
+                          ))}
+                          <Link
+                            href="/patient/appointments"
+                            className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#151616]/40 bg-white px-3 py-2 text-center text-xs font-semibold text-[#151616] hover:bg-[#FFFFF4]"
+                          >
+                            Browse all doctors
+                          </Link>
+                        </div>
+                      )}
+                    {m.consultAction === "consult_later" && (
+                      <div className="mt-3 flex flex-col gap-2 border-t border-[#151616]/15 pt-3">
+                        <Link
+                          href="/patient/appointments"
+                          className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-[#151616] bg-[#f9c80e] px-3 py-2.5 text-sm font-bold text-[#151616] shadow-[2px_2px_0px_0px_#151616] transition-all hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616]"
+                        >
+                          <Calendar className="h-4 w-4" />
+                          Open Appointments when you&apos;re ready
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 ))}
                 {isProcessing && (

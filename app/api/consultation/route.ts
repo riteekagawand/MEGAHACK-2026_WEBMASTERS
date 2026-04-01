@@ -70,8 +70,12 @@ function isCannotTakeIntent(text: string): boolean {
 
 function detectConsultIntent(text: string): "now" | "later" | null {
   const t = text.toLowerCase();
-  if (/\b(now|right now|immediately|book now|consult now)\b/.test(t)) return "now";
-  if (/\b(later|after|not now|maybe later)\b/.test(t)) return "later";
+  // Defer first so phrases like "not now" / "later" are not overridden by "now"
+  if (/\bnot now\b/.test(t)) return "later";
+  if (/\b(later|another time|some other time|maybe later|afterwards|tomorrow|next week)\b/.test(t)) return "later";
+  if (/\b(i will|i'll|would|want to|like to)\s+(consult|see|visit|book).*?\blater\b/.test(t)) return "later";
+  if (/\b(now|right now|immediately|book now|consult now|asap|need.*\bnow\b|like to.*\bnow\b)\b/.test(t)) return "now";
+  if (/\b(consult|see|visit)\s+(a\s+)?doctor\s+now\b/.test(t)) return "now";
   if (/(अभी|अबhi|अब|तुरंत|अत्ता|आताच)/i.test(text)) return "now";
   if (/(बाद में|नंतर|पुढे|नंतर करेन|कधी तरी नंतर)/i.test(text)) return "later";
   return null;
@@ -645,10 +649,10 @@ Reply with ONLY one word:
           .join("\n");
         const responseRaw =
           lang === "en"
-            ? `Based on your symptom profile, I recommend consulting a doctor now.\n\nRecommended doctors (ranked by rating, experience, and symptom fit):\n${doctorLines || "1. Top-rated General Physician"}\n\nProceed to booking: ${appointmentUrl}\n\nOpen the page, review the listed doctors, and click "Book Appointment" for your preferred doctor.`
+            ? `Based on your symptom profile, I recommend consulting a doctor now.\n\nRecommended doctors (ranked by rating, experience, and symptom fit):\n${doctorLines || "1. Top-rated General Physician"}\n\nUse the buttons below to open booking for a specific doctor. You can stay on this call and ask more questions anytime.`
             : lang === "hi"
-              ? `आपके लक्षणों के आधार पर अभी डॉक्टर से परामर्श करना बेहतर रहेगा।\n\nअनुशंसित डॉक्टर (रेटिंग, अनुभव और लक्षण-मिलान के आधार पर):\n${doctorLines || "1. टॉप-रेटेड जनरल फिज़िशियन"}\n\nबुकिंग के लिए जाएं: ${appointmentUrl}\n\nपेज खोलें, डॉक्टर चुनें और "Book Appointment" पर क्लिक करें।`
-              : `तुमच्या लक्षणांनुसार आत्ताच डॉक्टरांचा सल्ला घेणे योग्य ठरेल.\n\nशिफारस केलेले डॉक्टर (रेटिंग, अनुभव आणि लक्षण-जुळणीच्या आधारे):\n${doctorLines || "1. टॉप-रेटेड जनरल फिजिशियन"}\n\nबुकिंगसाठी जा: ${appointmentUrl}\n\nपेज उघडा, डॉक्टर निवडा आणि "Book Appointment" वर क्लिक करा.`;
+              ? `आपके लक्षणों के आधार पर अभी डॉक्टर से परामर्श करना बेहतर रहेगा।\n\nअनुशंसित डॉक्टर (रेटिंग, अनुभव और लक्षण-मिलान के आधार पर):\n${doctorLines || "1. टॉप-रेटेड जनरल फिज़िशियन"}\n\nनीचे दिए बटन से चुने हुए डॉक्टर के लिए बुकिंग खोलें। आप इस कॉल पर रहकर और सवाल पूछ सकते हैं।`
+              : `तुमच्या लक्षणांनुसार आत्ताच डॉक्टरांचा सल्ला घेणे योग्य ठरेल.\n\nशिफारस केलेले डॉक्टर (रेटिंग, अनुभव आणि लक्षण-जुळणीच्या आधारे):\n${doctorLines || "1. टॉप-रेटेड जनरल फिजिशियन"}\n\nखालील बटणांद्वारे विशिष्ट डॉक्टरसाठी बुकिंग उघडा. तुम्ही या कॉलवर राहून अधिक प्रश्न विचारू शकता.`;
 
         const response = responseRaw.replace(/\*/g, "");
         if (sessionId) addAIMessage(sessionId, response);
@@ -658,24 +662,25 @@ Reply with ONLY one word:
           action: "consult_now",
           appointmentUrl,
           recommendedDoctors: doctors,
-          endChat: true,
+          endChat: false,
         });
       }
 
       if (consultIntent === "later") {
         const response =
           lang === "en"
-            ? `No problem. If you want to consult later, open ${appointmentUrl} anytime.\n\nTake care, stay hydrated, and monitor your symptoms. Chat ended.`
+            ? `No problem. Whenever you are ready, you can book a doctor from Appointments in the menu, or use the button below — stay as long as you like on this call.\n\nTake care, stay hydrated, and monitor your symptoms. Feel free to ask if you need anything else.`
             : lang === "hi"
-              ? `कोई बात नहीं। बाद में परामर्श लेना हो तो कभी भी ${appointmentUrl} खोलें।\n\nअपना ध्यान रखें, पानी पिएं और लक्षण मॉनिटर करें। चैट समाप्त।`
-              : `काही हरकत नाही. नंतर सल्ला घ्यायचा असल्यास कधीही ${appointmentUrl} उघडा.\n\nकाळजी घ्या, पाणी प्या आणि लक्षणे लक्षात ठेवा. चॅट समाप्त.`;
+              ? `कोई बात नहीं। जब चाहें तब मेनू में Appointments से डॉक्टर बुक कर सकते हैं, या नीचे दिए बटन का उपयोग करें — इस कॉल पर जितनी देर चाहें रह सकते हैं।\n\nअपना ध्यान रखें, पानी पिएं और लक्षणों पर नज़र रखें। और सवाल हों तो पूछें।`
+              : `काही हरकत नाही. तुम्ही तयार झाल्यावर मेनूमधील Appointments वरून डॉक्टर बुक करू शकता, किंवा खालील बटण वापरा — या कॉलवर तुम्ही इच्छेनुसार वेळ घेऊ शकता.\n\nकाळजी घ्या, पाणी प्या आणि लक्षणांवर लक्ष ठेवा. आणखी काही असल्यास विचारा.`;
         if (sessionId) addAIMessage(sessionId, response);
         return NextResponse.json({
           response,
           nextStage: "advice" as ConsultationStage,
           action: "consult_later",
           appointmentUrl,
-          endChat: true,
+          recommendedDoctors: [] as DoctorLite[],
+          endChat: false,
         });
       }
 

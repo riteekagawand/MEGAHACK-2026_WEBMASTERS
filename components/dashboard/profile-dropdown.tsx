@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown, User, Settings, LogOut, Shield } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { clearLocalStoragePreservingConsultationHistory } from "@/lib/consultation-history-storage"
 
 export function ProfileDropdown() {
     const { data: session } = useSession()
@@ -16,8 +17,7 @@ export function ProfileDropdown() {
     const handleLogout = async () => {
         // Clear any cached data and sign out completely
         try {
-            // Clear local storage and session storage
-            localStorage.clear()
+            clearLocalStoragePreservingConsultationHistory()
             sessionStorage.clear()
             
             // Sign out with redirect to login

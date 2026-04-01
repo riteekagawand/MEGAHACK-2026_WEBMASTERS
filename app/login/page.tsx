@@ -1,6 +1,6 @@
 "use client"
 
-import { getSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { GoogleSignInButton } from "@/components/auth/google-signin-button"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
@@ -10,33 +10,65 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Brain, Stethoscope, Users, ArrowLeft } from "lucide-react"
 
+function LoginLoader({ message }: { message: string }) {
+    return (
+        <div className="min-h-screen bg-[#FFFFF4] relative overflow-hidden flex flex-col items-center justify-center px-6">
+            <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                    backgroundImage: `radial-gradient(#151616 1px, transparent 1px)`,
+                    backgroundSize: "48px 48px",
+                    opacity: "0.05",
+                }}
+            />
+            <div className="relative z-10 flex flex-col items-center gap-5">
+                <div
+                    className="h-14 w-14 rounded-full border-4 border-[#151616]/15 border-t-[#f9c80e] animate-spin"
+                    aria-hidden
+                />
+                <p className="font-poppins text-lg text-[#151616]/85 text-center max-w-sm">{message}</p>
+            </div>
+        </div>
+    )
+}
+
 export default function Login() {
-    const [loading, setLoading] = useState(false)
+    const { data: session, status } = useSession()
     const router = useRouter()
+    const [redirectMessage, setRedirectMessage] = useState("Redirecting…")
 
     useEffect(() => {
-        const checkSession = async () => {
-            const session = await getSession()
-            if (session) {
-                // Check if user has completed their info
-                try {
-                    const response = await fetch('/api/user/info')
-                    const data = await response.json()
-                    if (data.hasCompletedInfo) {
-                        router.push('/dashboard')
-                    } else {
-                        router.push('/faiz/info')
-                    }
-                } catch (error) {
-                    console.error('Error checking user info:', error)
-                    router.push('/faiz/info')
+        if (status !== "authenticated" || !session) return
+
+        let cancelled = false
+        ;(async () => {
+            setRedirectMessage("Loading your profile…")
+            try {
+                const response = await fetch("/api/user/info")
+                const data = await response.json()
+                if (cancelled) return
+                if (data.hasCompletedInfo) {
+                    router.replace("/dashboard")
+                } else {
+                    router.replace("/faiz/info")
                 }
+            } catch (error) {
+                console.error("Error checking user info:", error)
+                if (!cancelled) router.replace("/faiz/info")
             }
+        })()
+        return () => {
+            cancelled = true
         }
-        checkSession()
-    }, [router])
+    }, [status, session, router])
 
+    if (status === "loading") {
+        return <LoginLoader message="Checking your session…" />
+    }
 
+    if (status === "authenticated") {
+        return <LoginLoader message={redirectMessage} />
+    }
 
     return (
         <div className="min-h-screen bg-[#FFFFF4] relative overflow-hidden">
@@ -52,13 +84,12 @@ export default function Login() {
                 />
             </div>
 
-
             {/* Back to Home */}
             <div className="absolute top-6 left-6 z-50">
                 <Button
                     onClick={() => {
-                        console.log('Button clicked!');
-                        window.location.href = '/';
+                        console.log("Button clicked!")
+                        window.location.href = "/"
                     }}
                     type="button"
                     className="bg-white text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] active:translate-y-2 active:shadow-[1px_1px_0px_0px_#151616] transition-all duration-200 font-poppins font-medium hover:bg-[#FFFFF4] cursor-pointer"
@@ -133,7 +164,6 @@ export default function Login() {
                             </p>
                         </CardContent>
                     </Card>
-
                 </motion.div>
             </div>
         </div>

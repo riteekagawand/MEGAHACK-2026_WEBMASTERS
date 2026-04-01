@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -75,10 +75,29 @@ export default function AppointmentsPage() {
     coinsUsed: 0,
   })
 
+  const appliedDoctorFromQuery = useRef<string | null>(null)
+
   useEffect(() => {
     fetchDoctors()
     fetchAppointments()
   }, [])
+
+  /** Deep-link from Medi-Support (e.g. ?doctorId=...) — opens booking for that doctor */
+  useEffect(() => {
+    if (typeof window === "undefined" || doctors.length === 0) return
+    const params = new URLSearchParams(window.location.search)
+    const doctorId = params.get("doctorId")
+    if (!doctorId) return
+    if (appliedDoctorFromQuery.current === doctorId) return
+    const found = doctors.find((d) => d.id === doctorId)
+    if (!found) return
+    appliedDoctorFromQuery.current = doctorId
+    setSelectedDoctor(found)
+    setCurrentStep("booking")
+    setSelectedDay("")
+    setSelectedTime("")
+    window.history.replaceState({}, "", "/patient/appointments")
+  }, [doctors])
 
   const fetchDoctors = async () => {
     try {

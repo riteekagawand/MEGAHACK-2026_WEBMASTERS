@@ -33,7 +33,6 @@ export async function POST(req: Request) {
       );
     }
 
-    const arrayBuffer = await audio.arrayBuffer();
     const mimeType = audio.type || "audio/webm";
     const contentType = mimeType.includes("webm")
       ? "audio/webm"
@@ -57,7 +56,8 @@ export async function POST(req: Request) {
         Authorization: `Token ${apiKey}`,
         "Content-Type": contentType,
       },
-      body: arrayBuffer,
+      // Avoid duplicating large audio into a second in-memory ArrayBuffer.
+      body: audio,
     });
 
     if (!response.ok) {

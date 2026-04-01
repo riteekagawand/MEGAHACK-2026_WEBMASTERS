@@ -27,6 +27,9 @@ import {
 import {
   readConsultationHistoryFromStorage,
   writeConsultationHistoryToStorage,
+  saveActiveSession,
+  getActiveSession,
+  clearActiveSession,
 } from "@/lib/consultation-history-storage";
 
 type ConsultationStage =
@@ -126,6 +129,20 @@ export default function MediSupportAyushUI() {
       // don't clear if other parts rely on it
       synth.onvoiceschanged = null;
     };
+  }, []);
+
+  // Restore active session on mount if exists
+  useEffect(() => {
+    const activeSession = getActiveSession();
+    if (activeSession) {
+      setMessages(activeSession.messages as ChatMessage[]);
+      setStage(activeSession.stage as ConsultationStage);
+      if (activeSession.preferredLanguage) setPreferredLanguage(activeSession.preferredLanguage as PreferredLang);
+      if (activeSession.sessionId) setSessionId(activeSession.sessionId);
+      setConversationContext(activeSession.conversationContext as Record<string, unknown>);
+      setInCall(true);
+      clearActiveSession(); // Clear once restored
+    }
   }, []);
 
   const speak = useCallback((text: string, lang?: PreferredLang | null) => {
@@ -271,6 +288,21 @@ export default function MediSupportAyushUI() {
     },
     [stage, conversationContext, preferredLanguage, sessionId, isMuted, addMessage, speak]
   );
+
+  // Persist active session whenever messages change during an active call
+  useEffect(() => {
+    if (inCall && messages.length > 0) {
+      saveActiveSession({
+        id: sessionId || "temp",
+        messages,
+        stage,
+        preferredLanguage,
+        sessionId,
+        conversationContext: conversationContext as Record<string, unknown>,
+        date: Date.now(),
+      });
+    }
+  }, [messages, inCall, sessionId, stage, preferredLanguage, conversationContext]);
 
   const transcribeAndProcess = useCallback(
     async (blob: Blob) => {
@@ -434,6 +466,8 @@ export default function MediSupportAyushUI() {
         writeConsultationHistoryToStorage(updated);
         return updated;
       });
+      // Clear active session when call ends
+      clearActiveSession();
     }
     setInCall(false);
     setSessionId(null);

@@ -63,6 +63,8 @@ export default function AppointmentsPage() {
   const [currentStep, setCurrentStep] = useState<"doctors" | "booking" | "payment">("doctors")
   const [loading, setLoading] = useState(false)
   const [appointments, setAppointments] = useState<Appointment[]>([])
+  const [expandedDoctors, setExpandedDoctors] = useState<Record<string, boolean>>({})
+  const [expandedBookingBio, setExpandedBookingBio] = useState(false)
   const [discountData, setDiscountData] = useState<{
     useCoinDiscount: boolean;
     discountAmount: number;
@@ -74,6 +76,22 @@ export default function AppointmentsPage() {
     finalAmount: 0,
     coinsUsed: 0,
   })
+
+  const toggleDoctorExpand = (doctorId: string) => {
+    setExpandedDoctors(prev => ({
+      ...prev,
+      [doctorId]: !prev[doctorId]
+    }))
+  }
+
+  const truncateBio = (bio: string, maxLength: number = 100) => {
+    if (bio.length <= maxLength) return bio
+    return bio.slice(0, maxLength) + "..."
+  }
+
+  const toggleBookingBioExpand = () => {
+    setExpandedBookingBio(prev => !prev)
+  }
 
   const appliedDoctorFromQuery = useRef<string | null>(null)
 
@@ -424,13 +442,25 @@ export default function AppointmentsPage() {
                       </div>
                     </div>
                   </div>
-                  <p className="text-[#151616]/70 text-sm">{selectedDoctor.bio}</p>
-                  <div className="flex items-center gap-2 p-3 bg-[#f9c80e]/20 rounded-xl border-2 border-[#151616]">
-                    <IndianRupee className="w-5 h-5 text-green-600" />
-                    <span className="font-bold text-[#151616]">
-                      ₹{selectedDoctor.consultationFee.toLocaleString()}
-                    </span>
-                    <span className="text-[#151616]/70 text-sm">consultation fee</span>
+                  <div className="space-y-3">
+                    <p className="text-[#151616]/70 text-sm">
+                      {expandedBookingBio ? selectedDoctor.bio : truncateBio(selectedDoctor.bio, 150)}
+                      {selectedDoctor.bio.length > 150 && (
+                        <button
+                          onClick={toggleBookingBioExpand}
+                          className="text-[#f9c80e] hover:text-[#f9c80e]/80 font-medium ml-1 underline"
+                        >
+                          {expandedBookingBio ? 'Read Less' : 'Read More'}
+                        </button>
+                      )}
+                    </p>
+                    <div className="flex items-center gap-2 p-3 bg-[#f9c80e]/20 rounded-xl border-2 border-[#151616]">
+                      <IndianRupee className="w-5 h-5 text-green-600" />
+                      <span className="font-bold text-[#151616]">
+                        ₹{selectedDoctor.consultationFee.toLocaleString()}
+                      </span>
+                      <span className="text-[#151616]/70 text-sm">consultation fee</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -657,7 +687,19 @@ export default function AppointmentsPage() {
                     </div>
                   </div>
 
-                  <p className="text-[#151616]/70 text-sm mb-4">{doctor.bio}</p>
+                  <div className="mb-4">
+                    <p className="text-[#151616]/70 text-sm min-h-[3rem]">
+                      {expandedDoctors[doctor.id] ? doctor.bio : truncateBio(doctor.bio)}
+                      {doctor.bio.length > 100 && (
+                        <button
+                          onClick={() => toggleDoctorExpand(doctor.id)}
+                          className="text-[#f9c80e] hover:text-[#f9c80e]/80 font-medium ml-1 underline"
+                        >
+                          {expandedDoctors[doctor.id] ? 'Read Less' : 'Read More'}
+                        </button>
+                      )}
+                    </p>
+                  </div>
 
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { FileText, Upload, Send, TrendingUp, AlertTriangle, CheckCircle, Clock, Activity, BarChart3, Zap, Leaf, Apple, Calendar, ArrowRight, Shield, Heart, Target } from "lucide-react"
+import { FileText, Upload, Send, TrendingUp, AlertTriangle, CheckCircle, Clock, Activity, BarChart3, Zap, Leaf, Apple, Calendar, ArrowRight, Shield, Heart, Target, Utensils } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
@@ -48,6 +48,8 @@ export default function LabAnalyzerPage() {
     const [analysis, setAnalysis] = useState<LabAnalysis | null>(null)
     const [error, setError] = useState<string | null>(null)
     const [reminderMessage, setReminderMessage] = useState<string | null>(null)
+    const [isSavingReport, setIsSavingReport] = useState(false)
+    const [reportSaved, setReportSaved] = useState(false)
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
@@ -85,6 +87,7 @@ export default function LabAnalyzerPage() {
         }
 
         setIsAnalyzing(true)
+        setReportSaved(false)
         setError(null)
 
         try {
@@ -107,6 +110,9 @@ export default function LabAnalyzerPage() {
 
             const result = await response.json()
             setAnalysis(result)
+            
+            // Save to database
+            await saveLabReport(result)
         } catch (error) {
             console.error('Error analyzing lab report:', error)
             setError('Failed to analyze lab report. Please try again.')
@@ -115,129 +121,81 @@ export default function LabAnalyzerPage() {
         }
     }
 
-    const [reminders, setReminders] = useState<{id: string, title: string, time: string, type: string, enabled: boolean}[]>([])
-    const [newReminderTitle, setNewReminderTitle] = useState("")
-    const [newReminderTime, setNewReminderTime] = useState("")
-    const [newReminderType, setNewReminderType] = useState("medication")
-    const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | "default">("default")
-    const DEFAULT_RECEIVER_NUMBER = "917709209944" // Patient's phone number (RECEIVER)
-    const [receiverNumber, setReceiverNumber] = useState(DEFAULT_RECEIVER_NUMBER)
-    const [whatsappEnabled, setWhatsappEnabled] = useState(true)
-    const [messageLog, setMessageLog] = useState<{time: string, message: string, status: 'sent' | 'failed' | 'pending', method: string}[]>([])
-
-    const addReminder = () => {
-        if (!newReminderTitle || !newReminderTime) {
-            setReminderMessage("Please enter both reminder title and time")
-            return
-        }
-
-        const reminder = {
-            id: Date.now().toString(),
-            title: newReminderTitle,
-            time: newReminderTime,
-            type: newReminderType,
-            enabled: true
-        }
-
-        setReminders([...reminders, reminder])
-        setNewReminderTitle("")
-        setNewReminderTime("")
-        setReminderMessage(`Reminder "${reminder.title}" added for ${reminder.time}`)
-        
-        // Clear message after 3 seconds
-        setTimeout(() => setReminderMessage(null), 3000)
-    }
-
-    const toggleReminder = (id: string) => {
-        setReminders(reminders.map(r => 
-            r.id === id ? { ...r, enabled: !r.enabled } : r
-        ))
-    }
-
-    const deleteReminder = (id: string) => {
-        setReminders(reminders.filter(r => r.id !== id))
-    }
-
-    const getReminderTypeIcon = (type: string) => {
-        switch (type) {
-            case "medication": return <Activity className="w-4 h-4" />
-            case "exercise": return <TrendingUp className="w-4 h-4" />
-            case "diet": return <Apple className="w-4 h-4" />
-            case "appointment": return <Calendar className="w-4 h-4" />
-            default: return <Clock className="w-4 h-4" />
-        }
-    }
-
-    const getReminderTypeColor = (type: string) => {
-        switch (type) {
-            case "medication": return "bg-blue-100 text-blue-700 border-blue-300"
-            case "exercise": return "bg-green-100 text-green-700 border-green-300"
-            case "diet": return "bg-orange-100 text-orange-700 border-orange-300"
-            case "appointment": return "bg-purple-100 text-purple-700 border-purple-300"
-            default: return "bg-gray-100 text-gray-700 border-gray-300"
-        }
-    }
-
-    // Request notification permission
-    const requestNotificationPermission = async () => {
-        if ("Notification" in window) {
-            const permission = await Notification.requestPermission()
-            setNotificationPermission(permission)
-            return permission === "granted"
-        }
-        return false
-    }
-
-    // Send browser notification
-    const sendNotification = (title: string, body: string) => {
-        if ("Notification" in window && Notification.permission === "granted") {
-            new Notification(title, {
-                body,
-                icon: "/favicon.ico",
-                badge: "/favicon.ico",
-                tag: "health-reminder",
-                requireInteraction: true,
-            })
-        }
-    }
-
-    // Send WhatsApp notification using UltraMsg (FREE tier available)
-    const sendWhatsAppNotification = async (phoneNumber: string, message: string) => {
+    const saveLabReport = async (analysisData: LabAnalysis): Promise<void> => {
+        setIsSavingReport(true)
         try {
-            // Remove any non-digit characters
-            const cleanNumber = phoneNumber.replace(/\D/g, '')
-            
-            // Try multiple free WhatsApp APIs
-            
-            // Method 1: CallMeBot (if API key is configured)
-            const callMeBotKey = process.env.NEXT_PUBLIC_CALLMEBOT_API_KEY
-            if (callMeBotKey && callMeBotKey !== "your_callmebot_api_key") {
-                const callMeUrl = `https://api.callmebot.com/whatsapp.php?phone=${cleanNumber}&text=${encodeURIComponent(message)}&apikey=${callMeBotKey}`
-                const response = await fetch(callMeUrl)
-                if (response.ok) {
-                    console.log('WhatsApp sent via CallMeBot')
-                    return { success: true, method: 'CallMeBot' }
-                }
-            }
-            
-            // Method 2: Use our own API endpoint (we'll create this)
-            // This will use a WhatsApp Business API or similar service
-            const apiResponse = await fetch('/api/send-whatsapp', {
+            const response = await fetch('/api/lab-reports', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
-                    phone: cleanNumber,
-                    message: message
-                })
+                    reportType: analysisData.reportType,
+                    testDate: analysisData.testDate,
+                    keyFindings: analysisData.keyFindings,
+                    overallAssessment: analysisData.overallAssessment,
+                    recommendations: analysisData.recommendations,
+                    redFlags: analysisData.redFlags,
+                    confidence: analysisData.confidence,
+                    additionalInfo: additionalInfo.trim(),
+                }),
             })
-            
-            if (apiResponse.ok) {
-                const result = await apiResponse.json()
-                console.log('WhatsApp sent via API:', result)
-                return { success: true, method: 'API' }
+
+            if (!response.ok) {
+                let message = "Failed to save lab report"
+                try {
+                    const body = await response.json()
+                    if (typeof body?.error === "string" && body.error.trim()) {
+                        message = body.error
+                    }
+                } catch {
+                    // Ignore response parse errors and keep generic message
+                }
+
+                setReportSaved(false)
+                setError(`Analysis completed, but report was not saved: ${message}`)
+                return
+            }
+
+            setReportSaved(true)
+        } catch (error) {
+            console.error('Error saving lab report:', error)
+            setReportSaved(false)
+            setError('Analysis completed, but report could not be saved. Please try again.')
+        } finally {
+            setIsSavingReport(false)
+        }
+    }
+
+    const setReminder = async () => {
+        setIsSettingReminder(true)
+        setReminderMessage(null)
+
+        try {
+            const reminderTime = new Date()
+            reminderTime.setHours(reminderTime.getHours() + 24)
+
+            const requestBody = {
+                message: "Reminder set successfully! You will be notified about your medicine schedule✅",
+                user: "Hemant",
+                time: reminderTime.toISOString()
             }
             
-            return { success: false, error: 'All methods failed' }
+            const webhookUrl = 'https://n8n.alightbeast.in/webhook/aaaa8f9d-0979-48da-aefd-1f6ecc1ad44e'
+
+            const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            })
+
+            if (response.ok) {
+                setReminderMessage("Reminder set successfully! You will be notified about your medicine schedule.")
+            } else {
+                throw new Error('Failed to set reminder')
+            }
         } catch (error) {
             console.error('Error sending WhatsApp:', error)
             return { success: false, error: error }
@@ -804,193 +762,64 @@ export default function LabAnalyzerPage() {
                                         </AlertDescription>
                                     </Alert>
                                 )}
+                                <Button
+                                    onClick={setReminder}
+                                    disabled={isSettingReminder}
+                                    className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] disabled:opacity-50 disabled:cursor-not-allowed font-poppins font-bold text-lg py-6"
+                                >
+                                    {isSettingReminder ? (
+                                        <>
+                                            <motion.div
+                                                animate={{ rotate: 360 }}
+                                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                                className="w-5 h-5 border-2 border-[#151616] border-t-transparent rounded-full mr-2"
+                                            />
+                                            Setting Reminder...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Calendar className="w-5 h-5 mr-2" />
+                                            Set Medicine Reminder
+                                        </>
+                                    )}
+                                </Button>
+                            </CardContent>
+                        </Card>
 
-                                {/* Smart Suggested Reminders Based on Lab Results */}
-                                <div className="bg-blue-50 p-4 rounded-xl border-2 border-blue-200">
-                                    <h4 className="font-poppins font-bold text-blue-800 mb-3 flex items-center gap-2">
-                                        <Target className="w-5 h-5" />
-                                        AI-Suggested Reminders
-                                    </h4>
-                                    <p className="text-sm font-poppins text-blue-700 mb-3">
-                                        Based on your lab results, we recommend these reminders:
+                        {/* Get Nutrition Recommendations */}
+                        <Card className="border-2 border-green-500 shadow-[4px_4px_0px_0px_green-500] bg-green-50">
+                            <CardHeader>
+                                <CardTitle className="font-poppins font-bold text-green-700 flex items-center gap-2">
+                                    <Utensils className="w-5 h-5" />
+                                    Get Nutrition Recommendations
+                                </CardTitle>
+                                <CardDescription className="font-poppins">
+                                    Get personalized diet plan based on your lab report analysis
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    <p className="text-sm font-poppins text-green-800">
+                                        Based on your lab report findings, our AI can create a personalized nutrition plan to address deficiencies and improve your health markers.
                                     </p>
-                                    <div className="space-y-2">
-                                        {analysis.recommendations.immediate.slice(0, 3).map((rec, idx) => {
-                                            // Generate smart time based on recommendation type
-                                            const getSmartTime = () => {
-                                                const hour = 8 + idx * 4; // 8am, 12pm, 4pm
-                                                return `${hour.toString().padStart(2, '0')}:00`;
-                                            };
-                                            const smartTime = getSmartTime();
-                                            const shortTitle = rec.split(' ').slice(0, 4).join(' ');
-                                            
-                                            return (
-                                                <div key={idx} className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-200">
-                                                    <div>
-                                                        <p className="font-poppins font-medium text-[#151616] text-sm">{shortTitle}...</p>
-                                                        <p className="text-xs font-poppins text-[#151616]/60">Suggested time: {smartTime}</p>
-                                                    </div>
-                                                    <Button
-                                                        onClick={() => {
-                                                            setNewReminderTitle(shortTitle);
-                                                            setNewReminderTime(smartTime);
-                                                            setNewReminderType(idx === 0 ? 'medication' : idx === 1 ? 'diet' : 'exercise');
-                                                            // Auto-add the reminder
-                                                            setTimeout(() => addReminder(), 100);
-                                                        }}
-                                                        size="sm"
-                                                        className="bg-blue-500 text-white border-2 border-blue-600 hover:bg-blue-600 font-poppins"
-                                                    >
-                                                        Add at {smartTime}
-                                                    </Button>
-                                                </div>
-                                            );
-                                        })}
+                                    <div className="flex flex-col sm:flex-row gap-3">
+                                        <Button
+                                            onClick={() => window.location.href = '/patient/nutrition?fromReport=true'}
+                                            className="flex-1 bg-green-600 text-white border-2 border-green-700 shadow-[4px_4px_0px_0px_green-700] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_green-700] font-poppins font-bold"
+                                        >
+                                            <Utensils className="w-4 h-4 mr-2" />
+                                            Get Nutrition Plan
+                                        </Button>
+                                        <Button
+                                            onClick={() => window.location.href = '/patient/nutrition'}
+                                            variant="outline"
+                                            className="flex-1 border-2 border-green-600 text-green-700 hover:bg-green-100 font-poppins font-medium"
+                                        >
+                                            <Apple className="w-4 h-4 mr-2" />
+                                            Upload Different Report
+                                        </Button>
                                     </div>
                                 </div>
-
-                                {/* Add New Reminder Form */}
-                                <div className="bg-white p-4 rounded-xl border-2 border-[#151616] space-y-3">
-                                    <h4 className="font-poppins font-bold text-[#151616]">Add Custom Reminder</h4>
-                                    
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div>
-                                            <label className="text-xs font-poppins text-[#151616]/70 mb-1 block">Reminder Title</label>
-                                            <input
-                                                type="text"
-                                                placeholder="e.g., Take Iron Supplement"
-                                                value={newReminderTitle}
-                                                onChange={(e) => setNewReminderTitle(e.target.value)}
-                                                className="w-full px-3 py-2 border-2 border-[#151616] rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-[#f9c80e]"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-poppins text-[#151616]/70 mb-1 block">Time</label>
-                                            <input
-                                                type="time"
-                                                value={newReminderTime}
-                                                onChange={(e) => setNewReminderTime(e.target.value)}
-                                                className="w-full px-3 py-2 border-2 border-[#151616] rounded-lg font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-[#f9c80e]"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="text-xs font-poppins text-[#151616]/70 mb-2 block">Reminder Type</label>
-                                        <div className="flex flex-wrap gap-2">
-                                            {[
-                                                { value: "medication", label: "Medication", icon: Activity },
-                                                { value: "exercise", label: "Exercise", icon: TrendingUp },
-                                                { value: "diet", label: "Diet", icon: Apple },
-                                                { value: "appointment", label: "Appointment", icon: Calendar },
-                                            ].map((type) => (
-                                                <button
-                                                    key={type.value}
-                                                    onClick={() => setNewReminderType(type.value)}
-                                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 font-poppins text-sm transition-all ${
-                                                        newReminderType === type.value
-                                                            ? "bg-[#f9c80e] border-[#151616] text-[#151616]"
-                                                            : "bg-white border-[#151616]/30 text-[#151616]/70 hover:border-[#151616]"
-                                                    }`}
-                                                >
-                                                    <type.icon className="w-4 h-4" />
-                                                    {type.label}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <Button
-                                        onClick={addReminder}
-                                        className="w-full bg-[#f9c80e] text-[#151616] border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#151616] font-poppins font-bold"
-                                    >
-                                        <Calendar className="w-4 h-4 mr-2" />
-                                        Add Reminder
-                                    </Button>
-                                </div>
-
-                                {/* Reminders List */}
-                                {reminders.length > 0 && (
-                                    <div className="space-y-2">
-                                        <h4 className="font-poppins font-bold text-[#151616] flex items-center gap-2">
-                                            <Clock className="w-4 h-4" />
-                                            Your Reminders ({reminders.length})
-                                        </h4>
-                                        <div className="space-y-2 max-h-64 overflow-y-auto">
-                                            {reminders.map((reminder) => (
-                                                <div
-                                                    key={reminder.id}
-                                                    className={`flex items-center justify-between p-3 rounded-lg border-2 transition-all ${
-                                                        reminder.enabled 
-                                                            ? "bg-white border-[#151616]" 
-                                                            : "bg-gray-100 border-gray-300 opacity-60"
-                                                    }`}
-                                                >
-                                                    <div className="flex items-center gap-3">
-                                                        <div className={`p-2 rounded-lg border ${getReminderTypeColor(reminder.type)}`}>
-                                                            {getReminderTypeIcon(reminder.type)}
-                                                        </div>
-                                                        <div>
-                                                            <p className={`font-poppins font-medium ${reminder.enabled ? "text-[#151616]" : "text-[#151616]/50 line-through"}`}>
-                                                                {reminder.title}
-                                                            </p>
-                                                            <p className="text-xs font-poppins text-[#151616]/60">
-                                                                {reminder.time} • {reminder.type.charAt(0).toUpperCase() + reminder.type.slice(1)}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <button
-                                                            onClick={() => toggleReminder(reminder.id)}
-                                                            className={`p-2 rounded-lg border-2 transition-all ${
-                                                                reminder.enabled
-                                                                    ? "bg-green-100 border-green-500 text-green-700"
-                                                                    : "bg-gray-100 border-gray-300 text-gray-500"
-                                                            }`}
-                                                            title={reminder.enabled ? "Disable" : "Enable"}
-                                                        >
-                                                            {reminder.enabled ? <CheckCircle className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
-                                                        </button>
-                                                        <button
-                                                            onClick={() => deleteReminder(reminder.id)}
-                                                            className="p-2 rounded-lg border-2 border-red-300 bg-red-50 text-red-600 hover:bg-red-100 transition-all"
-                                                            title="Delete"
-                                                        >
-                                                            <AlertTriangle className="w-4 h-4" />
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Quick Suggestions Based on Analysis */}
-                                {analysis.recommendations.immediate.length > 0 && reminders.length === 0 && (
-                                    <div className="bg-blue-50 p-4 rounded-xl border-2 border-blue-200">
-                                        <h4 className="font-poppins font-bold text-blue-800 mb-2 flex items-center gap-2">
-                                            <Target className="w-4 h-4" />
-                                            Suggested Reminders
-                                        </h4>
-                                        <p className="text-sm font-poppins text-blue-700 mb-3">
-                                            Based on your lab results, consider setting reminders for:
-                                        </p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {analysis.recommendations.immediate.slice(0, 3).map((rec, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => {
-                                                        setNewReminderTitle(rec.split(' ').slice(0, 4).join(' ') + "...")
-                                                        setNewReminderType("medication")
-                                                    }}
-                                                    className="text-xs px-3 py-1 bg-white border border-blue-300 rounded-full font-poppins text-blue-700 hover:bg-blue-100 transition-all"
-                                                >
-                                                    + {rec.split(' ').slice(0, 3).join(' ')}...
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
                             </CardContent>
                         </Card>
 

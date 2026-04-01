@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 
 type SymptomAnalysisResult = {
-  structuredSymptoms?: string[];
+  structuredSymptoms?: Array<string | { symptom: string; duration?: string }>;
   analysis?: string;
   categories?: string[];
   severity?: string;
@@ -116,14 +116,17 @@ export default function SymptomCheckerPage() {
                     Structured Symptoms
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {result.structuredSymptoms.map((s, idx) => (
-                      <Badge
-                        key={`${s}-${idx}`}
-                        className="bg-[#f9c80e] text-[#151616] border-[#151616] font-poppins text-xs"
-                      >
-                        {s}
-                      </Badge>
-                    ))}
+                    {result.structuredSymptoms.map((s, idx) => {
+                      const symptomText = typeof s === 'string' ? s : s.symptom;
+                      return (
+                        <Badge
+                          key={`${symptomText}-${idx}`}
+                          className="bg-[#f9c80e] text-[#151616] border-[#151616] font-poppins text-xs"
+                        >
+                          {symptomText}
+                        </Badge>
+                      );
+                    })}
                   </div>
                 </div>
               )}

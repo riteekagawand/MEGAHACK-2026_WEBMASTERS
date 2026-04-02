@@ -12,7 +12,9 @@ import {
   IndianRupee,
   Stethoscope,
   MessageCircle,
-  Star
+  Star,
+  Video,
+  ExternalLink
 } from "lucide-react"
 
 interface Appointment {
@@ -26,6 +28,8 @@ interface Appointment {
   status: "scheduled" | "completed" | "cancelled"
   consultationFee: number
   paymentId?: string
+  consultationType?: "virtual" | "physical"
+  meetingLink?: string
   createdAt: string
 }
 
@@ -70,6 +74,10 @@ export function AppointmentHistory() {
       month: 'long', 
       day: 'numeric' 
     })
+  }
+
+  const handleJoinMeeting = (meetingLink: string) => {
+    window.open(meetingLink, '_blank', 'noopener,noreferrer')
   }
 
   const isUpcoming = (dateString: string, timeString: string) => {
@@ -145,13 +153,24 @@ export function AppointmentHistory() {
                       <p className="text-sm font-bold text-[#151616] mt-1">
                         ₹{appointment.consultationFee.toLocaleString()}
                       </p>
-                      <Button
-                        size="sm"
-                        className="mt-2 bg-white text-[#151616] border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] text-xs"
-                      >
-                        <MessageCircle className="w-3 h-3 mr-1" />
-                        Join Call
-                      </Button>
+                      {appointment.consultationType === "virtual" && appointment.meetingLink ? (
+                        <Button
+                          size="sm"
+                          onClick={() => handleJoinMeeting(appointment.meetingLink!)}
+                          className="mt-2 bg-purple-600 text-white border-2 border-purple-800 shadow-[2px_2px_0px_0px_#5B2A6E] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#5B2A6E] text-xs"
+                        >
+                          <Video className="w-3 h-3 mr-1" />
+                          Join Meeting
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          className="mt-2 bg-white text-[#151616] border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#151616] text-xs"
+                        >
+                          <MessageCircle className="w-3 h-3 mr-1" />
+                          Join Call
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </motion.div>

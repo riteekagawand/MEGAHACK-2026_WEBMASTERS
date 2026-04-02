@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Brain, FileText, Users, TrendingUp, Stethoscope, Activity, Plus, BarChart3, Calendar, Clock, IndianRupee, UserCheck } from "lucide-react"
+import { Brain, FileText, Users, TrendingUp, Stethoscope, Activity, Plus, BarChart3, Calendar, Clock, IndianRupee, UserCheck, Video, ExternalLink } from "lucide-react"
 
 interface DoctorAppointment {
   id: string
@@ -18,6 +18,8 @@ interface DoctorAppointment {
   status: string
   consultationFee: number
   paymentStatus: string
+  consultationType?: "virtual" | "physical"
+  meetingLink?: string
 }
 
 export default function MedicalDashboard() {
@@ -203,6 +205,21 @@ export default function MedicalDashboard() {
                           <IndianRupee className="w-3 h-3" />
                           <span>₹{appointment.consultationFee}</span>
                         </div>
+                        {appointment.consultationType === "virtual" && appointment.meetingLink && (
+                          <div className="flex items-center gap-1 mt-2">
+                            <Video className="w-3 h-3 text-purple-600" />
+                            <a
+                              href={appointment.meetingLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-purple-600 hover:underline flex items-center gap-1"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              Join Meeting
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        )}
                       </div>
                     </motion.div>
                   ))}

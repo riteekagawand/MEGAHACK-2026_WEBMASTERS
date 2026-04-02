@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-import Razorpay from "razorpay"
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,10 +22,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const razorpay = new Razorpay({
-      key_id: keyId,
-      key_secret: keySecret,
-    })
+    console.log("Initializing Razorpay with keyId:", keyId)
+    
+    // Dynamic import to avoid SSR issues
+    const Razorpay = (await import("razorpay")).default
+    
+    let razorpay: any;
+    try {
+      razorpay = new Razorpay({
+        key_id: keyId,
+        key_secret: keySecret,
+      })
+      console.log("Razorpay initialized successfully")
+    } catch (initError) {
+      console.error("Failed to initialize Razorpay:", initError)
+      throw new Error("Razorpay initialization failed")
+    }
 
     const options = {
       amount: amount * 100,
@@ -37,7 +48,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    console.log("Creating Razorpay order with options:", options)
+    
+    if (!razorpay.orders) {
+      throw new Error("Razorpay orders API not available")
+    }
+
     const order = await razorpay.orders.create(options)
+    console.log("Order created successfully:", order.id)
 
     return NextResponse.json({
       orderId: order.id,

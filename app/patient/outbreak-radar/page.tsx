@@ -178,10 +178,10 @@ export default function OutbreakRadarPage() {
   const circleRadius = userLatLng ? 2000 + 20 : 15000 + 200;
 
   return (
-    <div className="h-[calc(100vh-120px)] p-4 overflow-hidden flex flex-col">
-      <div className="h-full max-w-7xl mx-auto w-full flex flex-col gap-3">
+    <div className="h-[calc(100vh-7rem)] px-4 pt-1 pb-3 overflow-hidden flex flex-col">
+      <div className="max-w-7xl mx-auto w-full flex flex-col h-full gap-2">
         {/* Compact Header */}
-        <div className="flex items-center justify-between bg-white border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] rounded-xl px-6 py-4 flex-shrink-0">
+        <div className="flex items-center justify-between bg-white border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] rounded-xl px-4 py-1.5 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-[#f9c80e] rounded-lg border-2 border-[#151616] flex items-center justify-center shadow-[2px_2px_0px_0px_#151616]">
               <Activity className="w-5 h-5 text-[#151616]" />
@@ -286,7 +286,7 @@ export default function OutbreakRadarPage() {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 flex-1 min-h-0">
           {/* Map */}
           <div className="lg:col-span-2 h-full min-h-0">
             <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] overflow-hidden h-full flex flex-col">
@@ -403,84 +403,73 @@ export default function OutbreakRadarPage() {
           </div>
 
           {/* Right Panel */}
-          <div className="flex flex-col gap-3 h-full min-h-0">
+          <div className="flex flex-col gap-1.5 h-full min-h-0">
             {/* Legend */}
-            <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] bg-white flex-1 flex flex-col">
-              <CardHeader className="py-3 px-4 border-b border-[#151616]/10 flex-shrink-0">
-                <CardTitle className="font-poppins text-sm text-[#151616] flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4" />
-                  Severity Guide
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 flex-1 flex flex-col justify-center">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-start gap-3 p-3 rounded bg-green-50 border border-green-200">
-                    <div className="w-4 h-4 rounded mt-0.5 flex-shrink-0" style={{ background: "rgb(0, 255, 0)" }}></div>
-                    <div>
-                      <span className="text-xs font-poppins font-bold text-green-800 block">Low Risk</span>
-                      <span className="text-[10px] font-poppins text-green-700">Minimal cases, no action needed</span>
-                    </div>
+            <Card className="border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] bg-white flex-shrink-0">
+              <CardContent className="p-2">
+                <div className="grid grid-cols-4 gap-1">
+                  <div className="flex flex-col items-center p-1 rounded bg-green-50 border border-green-200">
+                    <div className="w-3 h-3 rounded-sm" style={{ background: "rgb(0, 255, 0)" }}></div>
+                    <span className="text-[9px] font-poppins text-green-800 mt-0.5">Low</span>
                   </div>
-                  <div className="flex items-start gap-3 p-3 rounded bg-yellow-50 border border-yellow-200">
-                    <div className="w-4 h-4 rounded mt-0.5 flex-shrink-0" style={{ background: "rgb(255, 255, 0)" }}></div>
-                    <div>
-                      <span className="text-xs font-poppins font-bold text-yellow-800 block">Medium Risk</span>
-                      <span className="text-[10px] font-poppins text-yellow-700">Moderate spread, stay cautious</span>
-                    </div>
+                  <div className="flex flex-col items-center p-1 rounded bg-yellow-50 border border-yellow-200">
+                    <div className="w-3 h-3 rounded-sm" style={{ background: "rgb(255, 255, 0)" }}></div>
+                    <span className="text-[9px] font-poppins text-yellow-800 mt-0.5">Med</span>
                   </div>
-                  <div className="flex items-start gap-3 p-3 rounded bg-orange-50 border border-orange-200">
-                    <div className="w-4 h-4 rounded mt-0.5 flex-shrink-0" style={{ background: "rgb(255, 128, 0)" }}></div>
-                    <div>
-                      <span className="text-xs font-poppins font-bold text-orange-800 block">High Risk</span>
-                      <span className="text-[10px] font-poppins text-orange-700">Significant outbreak, take precautions</span>
-                    </div>
+                  <div className="flex flex-col items-center p-1 rounded bg-orange-50 border border-orange-200">
+                    <div className="w-3 h-3 rounded-sm" style={{ background: "rgb(255, 128, 0)" }}></div>
+                    <span className="text-[9px] font-poppins text-orange-800 mt-0.5">High</span>
                   </div>
-                  <div className="flex items-start gap-3 p-3 rounded bg-red-50 border border-red-200">
-                    <div className="w-4 h-4 rounded mt-0.5 flex-shrink-0" style={{ background: "rgb(255, 0, 0)" }}></div>
-                    <div>
-                      <span className="text-xs font-poppins font-bold text-red-800 block">Severe Risk</span>
-                      <span className="text-[10px] font-poppins text-red-700">Critical outbreak, avoid travel</span>
-                    </div>
+                  <div className="flex flex-col items-center p-1 rounded bg-red-50 border border-red-200">
+                    <div className="w-3 h-3 rounded-sm" style={{ background: "rgb(255, 0, 0)" }}></div>
+                    <span className="text-[9px] font-poppins text-red-800 mt-0.5">Severe</span>
                   </div>
-                </div>
-                <div className="mt-4 p-3 bg-blue-50 rounded border border-blue-200">
-                  <p className="text-[10px] font-poppins text-blue-800 text-center">
-                    <strong>Tip:</strong> Click on map circles to see detailed outbreak information
-                  </p>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Outbreaks List */}
-            <Card className="border-2 border-[#151616] shadow-[4px_4px_0px_0px_#151616] bg-white flex-1 flex flex-col">
-              <CardHeader className="py-3 px-4 border-b border-[#151616]/10 flex-shrink-0">
-                <CardTitle className="font-poppins text-sm text-[#151616] flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  {userLatLng ? `Near ${userCity}` : "India Hotspots"}
+            {/* Outbreaks List or Predictive Alerts */}
+            <Card className="border-2 border-[#151616] shadow-[2px_2px_0px_0px_#151616] bg-white flex-1 min-h-0 flex flex-col">
+              <CardHeader className="py-1.5 px-3 border-b border-[#151616]/10 flex-shrink-0">
+                <CardTitle className="font-poppins text-xs text-[#151616] flex items-center gap-2">
+                  {userLatLng ? (
+                    <>
+                      <TrendingUp className="w-3 h-3" />
+                      Predictive Alerts for {userCity}
+                    </>
+                  ) : (
+                    <>
+                      <MapPin className="w-3 h-3" />
+                      India Hotspots
+                    </>
+                  )}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-3 space-y-2 overflow-y-auto flex-1">
+              <CardContent className="p-2 space-y-1.5 overflow-y-auto flex-1">
                 {!userLatLng ? (
                   // Country view - simple list
                   outbreaks.slice(0, 8).map((o, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 rounded bg-gray-50 border border-[#151616]/10"
+                      className="flex items-center justify-between p-1.5 rounded-lg bg-gray-50 border border-[#151616]/10 hover:border-[#151616]/30 transition-all"
                     >
                       <div className="flex items-center gap-2">
                         <div 
-                          className="w-2.5 h-2.5 rounded-full"
+                          className="w-2 h-2 rounded-full"
                           style={{ backgroundColor: getHeatmapColor(o.riskScore) }}
                         />
-                        <span className="text-sm font-poppins text-[#151616]">{o.state}</span>
-                        <span className="text-xs text-[#151616]/50">• {o.disease}</span>
+                        <div>
+                          <div className="font-medium text-[#151616] text-[10px] font-poppins leading-tight">
+                            {o.state}
+                          </div>
+                          <div className="text-[9px] text-[#151616]/60 font-poppins">
+                            {o.disease} • {o.cases ?? "?"} cases
+                          </div>
+                        </div>
                       </div>
                       <Badge
-                        className="text-xs font-bold border-0 px-2 py-0.5"
-                        style={{
-                          backgroundColor: getHeatmapColor(o.riskScore),
-                          color: o.riskScore > 50 ? "white" : "#151616",
-                        }}
+                        className="text-[8px] font-bold border-0 px-1 py-0"
+                        style={getRiskBadgeStyles(o.riskLevel)}
                       >
                         {o.riskLevel.toUpperCase()}
                       </Badge>
@@ -491,22 +480,29 @@ export default function OutbreakRadarPage() {
                   nearbyOutbreaks.map((o, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 rounded border"
+                      className="p-2 rounded-lg border-2 transition-all"
                       style={{
                         borderColor: o.riskScore >= 70 ? "#ef4444" : o.riskScore >= 40 ? "#f97316" : "#22c55e",
                         backgroundColor: o.riskScore >= 70 ? "#fef2f2" : o.riskScore >= 40 ? "#fff7ed" : "#f0fdf4"
                       }}
                     >
-                      <div className="flex items-center gap-2">
-                        <div 
-                          className="w-2.5 h-2.5 rounded-full"
-                          style={{ backgroundColor: getHeatmapColor(o.riskScore) }}
-                        />
-                        <span className="text-sm font-poppins font-medium text-[#151616]">{o.disease}</span>
-                        <span className="text-xs text-[#151616]/60">• {o.cases ?? "?"} cases</span>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-1.5">
+                          <AlertCircle className="w-3 h-3" style={{ color: getHeatmapColor(o.riskScore) }} />
+                          <span className="font-bold text-[10px] font-poppins text-[#151616]">{o.disease}</span>
+                        </div>
+                        <Badge
+                          className="text-[8px] font-bold border-0 px-1 py-0"
+                          style={getRiskBadgeStyles(o.riskLevel)}
+                        >
+                          {o.riskLevel.toUpperCase()}
+                        </Badge>
                       </div>
-                      <Badge
-                        className="text-xs font-bold border-0 px-2 py-0.5"
+                      <div className="text-[9px] text-[#151616]/70 font-poppins mb-1">
+                        📍 {o.state} • {o.cases ?? "?"} cases • {o.deaths ?? 0} deaths
+                      </div>
+                      <div
+                        className="text-[9px] font-poppins font-medium p-1 rounded"
                         style={{
                           backgroundColor: o.riskScore >= 70 ? "#fee2e2" : o.riskScore >= 40 ? "#ffedd5" : "#dcfce7",
                           color: o.riskScore >= 70 ? "#991b1b" : o.riskScore >= 40 ? "#9a3412" : "#166534"
@@ -517,9 +513,10 @@ export default function OutbreakRadarPage() {
                     </div>
                   ))
                 ) : (
-                  <div className="p-4 bg-green-50 rounded border border-green-200 text-center">
-                    <ShieldCheck className="w-8 h-8 text-green-500 mx-auto mb-2" />
-                    <p className="text-sm font-poppins font-bold text-green-900">All Clear!</p>
+                  <div className="p-3 bg-green-50 rounded-lg border border-green-200 text-center">
+                    <ShieldCheck className="w-6 h-6 text-green-500 mx-auto mb-1" />
+                    <p className="text-xs font-poppins font-bold text-green-900">All Clear!</p>
+                    <p className="text-[10px] font-poppins text-green-700">No outbreaks nearby.</p>
                   </div>
                 )}
               </CardContent>

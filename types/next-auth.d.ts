@@ -6,6 +6,7 @@ declare module "next-auth" {
     accessToken?: string
     role?: string
     hasCompletedInfo?: boolean
+    verificationStatus?: "pending" | "verified" | "rejected"
   }
 }
 
@@ -14,6 +15,7 @@ declare module "next-auth/jwt" {
     accessToken?: string
     role?: string
     hasCompletedInfo?: boolean
+    verificationStatus?: "pending" | "verified" | "rejected"
   }
 }
 

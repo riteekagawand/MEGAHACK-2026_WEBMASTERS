@@ -51,7 +51,7 @@ export async function GET(request: Request) {
       return acc;
     }, {} as Record<string, number>);
 
-    const topConditions = Object.entries(conditionCounts)
+    const topConditions = (Object.entries(conditionCounts) as Array<[string, number]>)
       .sort(([,a], [,b]) => b - a)
       .slice(0, 10)
       .map(([name, count]) => ({ name, count }));

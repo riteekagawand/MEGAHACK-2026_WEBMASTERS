@@ -25,10 +25,15 @@ export default withAuth(
     }
 
     const userRole = token.role as string
+    const verificationStatus = token.verificationStatus as string | undefined
 
     // Block access to faiz routes for everyone - redirect based on role
     if (pathname.startsWith('/faiz/')) {
       if (userRole === 'clinician') {
+        // Check if clinician is verified
+        if (verificationStatus === 'pending' || verificationStatus === 'rejected') {
+          return NextResponse.redirect(new URL('/medical/verification', request.url))
+        }
         return NextResponse.redirect(new URL('/medical/dashboard', request.url))
       } else if (userRole === 'patient') {
         return NextResponse.redirect(new URL('/patient/dashboard', request.url))
@@ -40,6 +45,32 @@ export default withAuth(
     // Fast role-based redirects
     if (!userRole && pathname !== '/select-role') {
       return NextResponse.redirect(new URL('/select-role', request.url))
+    }
+
+    // Clinician verification check
+    if (userRole === 'clinician') {
+      // Allow access to verification page and API endpoints
+      if (
+        pathname === '/medical/verification' ||
+        pathname.startsWith('/api/doctor/') ||
+        pathname.startsWith('/api/auth/')
+      ) {
+        return NextResponse.next()
+      }
+
+      // Redirect unverified clinicians to verification page
+      if (verificationStatus === 'pending' || !verificationStatus || verificationStatus === 'rejected') {
+        if (pathname !== '/medical/verification' && !pathname.startsWith('/medical/pending-verification')) {
+          return NextResponse.redirect(new URL('/medical/verification', request.url))
+        }
+      }
+
+      // Block pending/rejected clinicians from accessing other medical routes
+      if ((verificationStatus === 'pending' || verificationStatus === 'rejected') && pathname.startsWith('/medical/')) {
+        if (pathname !== '/medical/verification' && !pathname.startsWith('/api/')) {
+          return NextResponse.redirect(new URL('/medical/verification', request.url))
+        }
+      }
     }
 
     // Redirect clinicians to profile setup if they haven't completed it

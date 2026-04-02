@@ -5,19 +5,21 @@ import mongoose from "mongoose"
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB()
     
-    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+    const { id } = await params
+    
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid doctor ID" },
         { status: 400 }
       )
     }
     
-    const doctor = await Doctor.findById(params.id)
+    const doctor = await Doctor.findById(id)
     
     if (!doctor || !doctor.isActive) {
       return NextResponse.json(

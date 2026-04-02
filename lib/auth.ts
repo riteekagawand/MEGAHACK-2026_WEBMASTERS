@@ -10,7 +10,7 @@ console.log("GOOGLE_CLIENT_SECRET exists:", !!process.env.GOOGLE_CLIENT_SECRET);
 // Cache for user state to avoid repeated DB calls
 const userStateCache = new Map<
   string,
-  { role?: string; hasCompletedInfo?: boolean; timestamp: number }
+  { role?: string; hasCompletedInfo?: boolean; verificationStatus?: string; timestamp: number }
 >();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
@@ -20,7 +20,11 @@ async function getUserState(email: string) {
   
   // Return cached data if it's still valid
   if (cached && (now - cached.timestamp) < CACHE_DURATION) {
-    return { role: cached.role, hasCompletedInfo: cached.hasCompletedInfo };
+    return { 
+      role: cached.role, 
+      hasCompletedInfo: cached.hasCompletedInfo,
+      verificationStatus: cached.verificationStatus
+    };
   }
   
   try {
@@ -29,6 +33,7 @@ async function getUserState(email: string) {
     const result = {
       role: patient?.role,
       hasCompletedInfo: patient?.hasCompletedInfo ?? false,
+      verificationStatus: patient?.verificationStatus,
     };
     
     // Cache the result
@@ -40,7 +45,7 @@ async function getUserState(email: string) {
     return result;
   } catch (error) {
     console.error('Error fetching user role:', error);
-    return { role: undefined, hasCompletedInfo: undefined };
+    return { role: undefined, hasCompletedInfo: undefined, verificationStatus: undefined };
   }
 }
 
@@ -74,11 +79,12 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = account.access_token;
       }
       
-      // Fetch role + completion status on initial sign-in or when explicitly triggered
-      if (token.email && (trigger === 'update' || token.role === undefined || token.hasCompletedInfo === undefined)) {
-        const { role, hasCompletedInfo } = await getUserState(token.email);
+      // Fetch role + completion status + verification status on initial sign-in or when explicitly triggered
+      if (token.email && (trigger === 'update' || token.role === undefined || token.hasCompletedInfo === undefined || token.verificationStatus === undefined)) {
+        const { role, hasCompletedInfo, verificationStatus } = await getUserState(token.email);
         token.role = role;
         token.hasCompletedInfo = hasCompletedInfo;
+        token.verificationStatus = verificationStatus;
       }
       
       return token;
@@ -87,6 +93,7 @@ export const authOptions: NextAuthOptions = {
       session.accessToken = token.accessToken;
       session.role = token.role;
       session.hasCompletedInfo = token.hasCompletedInfo;
+      session.verificationStatus = token.verificationStatus;
       return session;
     },
     async redirect({ url, baseUrl }) {

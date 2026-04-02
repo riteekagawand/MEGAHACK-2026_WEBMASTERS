@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb"
 import Appointment from "@/lib/models/Appointment"
 import Doctor from "@/lib/models/Doctor"
 import Payment from "@/lib/models/Payment"
+import { generateGoogleMeetLink } from "@/lib/utils/meeting-link"
 
 export interface Appointment {
   id: string
@@ -17,6 +18,8 @@ export interface Appointment {
   status: "scheduled" | "completed" | "cancelled"
   consultationFee: number
   paymentId?: string
+  consultationType?: "virtual" | "physical"
+  meetingLink?: string
   createdAt: string
 }
 
@@ -48,6 +51,8 @@ export async function GET() {
       status: apt.status,
       consultationFee: apt.consultationFee,
       paymentId: apt.paymentId,
+      consultationType: apt.consultationType,
+      meetingLink: apt.meetingLink,
       createdAt: apt.createdAt.toISOString()
     }))
 
@@ -78,7 +83,7 @@ export async function POST(request: NextRequest) {
     await connectDB()
 
     const body = await request.json()
-    const { doctorId, doctorName, specialization, date, time, consultationFee, paymentId } = body
+    const { doctorId, doctorName, specialization, date, time, consultationFee, paymentId, consultationType } = body
 
     if (!doctorId || !doctorName || !date || !time || !consultationFee) {
       return NextResponse.json(
@@ -107,6 +112,12 @@ export async function POST(request: NextRequest) {
     // Create unique appointment ID
     const appointmentId = `apt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 
+    // Generate Google Meet link for virtual consultations
+    let meetingLink: string | undefined = undefined;
+    if (consultationType === "virtual") {
+      meetingLink = generateGoogleMeetLink(appointmentId, doctorId, date, time);
+    }
+
     // Create the appointment
     const appointment = new Appointment({
       appointmentId,
@@ -120,7 +131,9 @@ export async function POST(request: NextRequest) {
       consultationFee,
       status: "scheduled",
       paymentId,
-      paymentStatus: paymentId ? "completed" : "pending"
+      paymentStatus: paymentId ? "completed" : "pending",
+      consultationType: consultationType || "physical",
+      meetingLink
     })
 
     await appointment.save()
@@ -142,6 +155,8 @@ export async function POST(request: NextRequest) {
         status: appointment.status,
         consultationFee: appointment.consultationFee,
         paymentId: appointment.paymentId,
+        consultationType: appointment.consultationType,
+        meetingLink: appointment.meetingLink,
         createdAt: appointment.createdAt.toISOString()
       },
       success: true 

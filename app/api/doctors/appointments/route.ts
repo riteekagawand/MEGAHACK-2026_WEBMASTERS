@@ -45,6 +45,8 @@ export async function GET() {
       paymentStatus: apt.paymentStatus,
       notes: apt.notes,
       prescription: apt.prescription,
+      consultationType: apt.consultationType,
+      meetingLink: apt.meetingLink,
       createdAt: apt.createdAt.toISOString()
     }))
 

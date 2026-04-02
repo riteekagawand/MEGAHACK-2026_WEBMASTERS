@@ -16,6 +16,8 @@ export interface IAppointment extends Document {
   status: "scheduled" | "completed" | "cancelled" | "no-show";
   paymentId?: string;
   paymentStatus: "pending" | "completed" | "failed" | "refunded";
+  consultationType?: "virtual" | "physical";
+  meetingLink?: string;
   notes?: string;
   prescription?: string;
   createdAt: Date;
@@ -91,6 +93,14 @@ const AppointmentSchema = new Schema<IAppointment>(
       type: String,
       enum: ["pending", "completed", "failed", "refunded"],
       default: "pending",
+    },
+    consultationType: {
+      type: String,
+      enum: ["virtual", "physical"],
+      default: "physical",
+    },
+    meetingLink: {
+      type: String,
     },
     notes: {
       type: String,

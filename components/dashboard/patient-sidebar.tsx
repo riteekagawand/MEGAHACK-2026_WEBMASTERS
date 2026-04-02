@@ -29,7 +29,8 @@ import {
   Stethoscope,
   ClipboardList,
   HeartHandshake,
-  Apple
+  Apple,
+  Video
 } from "lucide-react"
 import { signOut } from "next-auth/react"
 
@@ -69,6 +70,12 @@ const navigationItems = [
     href: "/patient/appointments",
     icon: Calendar,
     description: "Schedule and manage visits"
+  },
+  {
+    title: "Booking History",
+    href: "/patient/booking-history",
+    icon: Video,
+    description: "View meeting links & details"
   },
   {
     title: "Medi Support",

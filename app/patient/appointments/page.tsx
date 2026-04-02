@@ -16,7 +16,9 @@ import {
   ArrowLeft,
   CreditCard,
   Stethoscope,
-  Coins
+  Coins,
+  Video,
+  Building
 } from "lucide-react"
 import CoinDiscount from "@/components/payment/coin-discount"
 
@@ -46,6 +48,8 @@ interface Appointment {
   status: "scheduled" | "completed" | "cancelled"
   consultationFee: number
   paymentId?: string
+  consultationType?: "virtual" | "physical"
+  meetingLink?: string
   createdAt: string
 }
 
@@ -60,6 +64,7 @@ export default function AppointmentsPage() {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
   const [selectedDay, setSelectedDay] = useState<string>("")
   const [selectedTime, setSelectedTime] = useState<string>("")
+  const [consultationType, setConsultationType] = useState<"virtual" | "physical">("physical")
   const [currentStep, setCurrentStep] = useState<"doctors" | "booking" | "payment">("doctors")
   const [loading, setLoading] = useState(false)
   const [appointments, setAppointments] = useState<Appointment[]>([])
@@ -105,6 +110,7 @@ export default function AppointmentsPage() {
     setCurrentStep("booking")
     setSelectedDay("")
     setSelectedTime("")
+    setConsultationType("physical") // Default to physical
   }
 
   const handleBookAppointment = async () => {
@@ -257,7 +263,8 @@ export default function AppointmentsPage() {
           originalFee: selectedDoctor?.consultationFee,
           discountAmount: discountData.useCoinDiscount ? discountData.discountAmount : 0,
           coinsUsed: discountData.useCoinDiscount ? discountData.coinsUsed : 0,
-          paymentId
+          paymentId,
+          consultationType
         })
       })
 
@@ -430,6 +437,39 @@ export default function AppointmentsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  {/* Consultation Type Selection */}
+                  <div>
+                    <label className="block text-sm font-medium text-[#151616] mb-3">
+                      Consultation Type
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button
+                        onClick={() => setConsultationType("physical")}
+                        className={`h-auto py-4 flex flex-col items-center gap-2 border-2 transition-all ${
+                          consultationType === "physical"
+                            ? "bg-[#f9c80e] text-[#151616] border-[#151616] shadow-[2px_2px_0px_0px_#151616]"
+                            : "bg-white text-[#151616] border-[#151616] hover:bg-[#f9c80e]/20 shadow-[2px_2px_0px_0px_#151616]"
+                        }`}
+                      >
+                        <Building className="w-8 h-8" />
+                        <span className="font-medium">In-Person</span>
+                        <span className="text-xs opacity-70">Visit doctor's clinic</span>
+                      </Button>
+                      <Button
+                        onClick={() => setConsultationType("virtual")}
+                        className={`h-auto py-4 flex flex-col items-center gap-2 border-2 transition-all ${
+                          consultationType === "virtual"
+                            ? "bg-[#f9c80e] text-[#151616] border-[#151616] shadow-[2px_2px_0px_0px_#151616]"
+                            : "bg-white text-[#151616] border-[#151616] hover:bg-[#f9c80e]/20 shadow-[2px_2px_0px_0px_#151616]"
+                        }`}
+                      >
+                        <Video className="w-8 h-8" />
+                        <span className="font-medium">Virtual</span>
+                        <span className="text-xs opacity-70">Google Meet call</span>
+                      </Button>
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-[#151616] mb-2">
                       Available Days
@@ -486,6 +526,21 @@ export default function AppointmentsPage() {
                       <p className="text-sm text-green-700">
                         <strong>{selectedDoctor.name}</strong> on <strong>{selectedDay}</strong> at <strong>{selectedTime}</strong>
                       </p>
+                      <div className="mt-2 text-sm text-green-700">
+                        <p className="flex items-center gap-2">
+                          {consultationType === "virtual" ? (
+                            <>
+                              <Video className="w-4 h-4" />
+                              <span><strong>Virtual Consultation</strong> via Google Meet</span>
+                            </>
+                          ) : (
+                            <>
+                              <Building className="w-4 h-4" />
+                              <span><strong>In-Person Visit</strong> at clinic</span>
+                            </>
+                          )}
+                        </p>
+                      </div>
                       {discountData.useCoinDiscount ? (
                         <div className="text-sm text-green-700">
                           <p className="line-through opacity-60">

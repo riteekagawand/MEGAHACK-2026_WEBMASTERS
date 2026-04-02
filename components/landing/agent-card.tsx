@@ -27,7 +27,7 @@ export const AgentCard = ({ title, description, example, icon, delay, step }: Ag
                         <div className="w-12 h-12 bg-[#f9c80e] rounded-xl border-2 border-[#151616] flex items-center justify-center">
                             {icon}
                         </div>
-                        <Badge variant="neutral" className="border-[#151616] text-[#151616] font-poppins font-medium">
+                        <Badge variant="outline" className="border-[#151616] text-[#151616] font-poppins font-medium">
                             Step {step}
                         </Badge>
                     </div>

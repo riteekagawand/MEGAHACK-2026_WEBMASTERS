@@ -4,6 +4,7 @@ export interface IPatient extends Document {
   userId: string;
   role: "clinician" | "patient";
   hasCompletedInfo: boolean;
+  verificationStatus?: "pending" | "verified" | "rejected"; // For clinicians only
   personalInfo: {
     name?: string;
     age?: number;
@@ -53,6 +54,11 @@ const PatientSchema = new Schema<IPatient>(
     hasCompletedInfo: {
       type: Boolean,
       default: false,
+    },
+    verificationStatus: {
+      type: String,
+      enum: ["pending", "verified", "rejected"],
+      default: "pending",
     },
     personalInfo: {
       name: String,

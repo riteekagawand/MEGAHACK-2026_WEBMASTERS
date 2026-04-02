@@ -600,10 +600,10 @@ export default function TestKaustubhPage() {
                                                             }`}
                                                     />
                                                     <Badge
-                                                        variant="neutral"
+                                                        variant="outline"
                                                         className={`border-[#151616] font-poppins text-xs ${agentResult.status === "completed" ? "bg-green-100" :
                                                             agentResult.status === "processing" ? "bg-yellow-100" :
-                                                                agentResult.status === "error" ? "bg-red-100" : ""
+                                                                agentResult.status === "error" ? "bg-red-100" : "bg-gray-100"
                                                             }`}
                                                     >
                                                         {agentResult.status}

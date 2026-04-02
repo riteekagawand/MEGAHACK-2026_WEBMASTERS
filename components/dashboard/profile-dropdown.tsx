@@ -40,7 +40,7 @@ export function ProfileDropdown() {
         <div className="relative">
             <Button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`flex items-center gap-3 px-4 py-2 border-2 border-[#151616] transition-all duration-300 font-poppins font-medium text-[#151616] ${
+                className={`flex items-center gap-3 px-3 py-2 border-2 border-[#151616] transition-all duration-300 font-poppins font-medium text-[#151616] h-[44px] ${
                     isOpen
                         ? "bg-gradient-to-r from-[#f9c80e] to-[#f9c80e]/80 shadow-[4px_4px_0px_0px_#151616] translate-y-1"
                         : "bg-gradient-to-r from-[#FFFFF4] to-white shadow-[4px_4px_0px_0px_#f9c80e] hover:bg-gradient-to-r hover:from-[#f9c80e]/20 hover:to-[#f9c80e]/10 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#f9c80e]"

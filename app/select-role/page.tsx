@@ -51,7 +51,8 @@ export default function SelectRolePage() {
         
         // Use router.push for better navigation
         if (role === 'clinician') {
-          router.push('/medical/dashboard')
+          // Redirect clinicians to verification page first
+          router.push('/medical/verification')
         } else {
           router.push('/patient/dashboard')
         }
